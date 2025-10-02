@@ -74,7 +74,7 @@ body {
 }
 
 .subtitle {
-  font-size: 0.875rem;
+  font-size: 0.75rem;
   color: var(--text-muted);
   font-weight: 300;
 }
@@ -230,7 +230,7 @@ input:disabled {
   align-items: center;
   gap: 0.5rem;
   padding: 0.5rem 0.75rem;
-  font-size: 0.875rem;
+  font-size: 0.75rem;
   color: var(--text-muted);
 }
 
@@ -437,7 +437,7 @@ input:disabled {
   border: none;
   color: var(--text-primary);
   font-family: 'IBM Plex Mono', monospace;
-  font-size: 0.875rem;
+  font-size: 0.75rem;
   font-weight: 500;
   cursor: pointer;
   transition: color 0.2s;
