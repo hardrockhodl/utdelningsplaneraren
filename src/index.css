@@ -572,7 +572,7 @@ input:disabled {
 
 .total-card.highlight {
   border: 2px solid var(--accent-green);
-  background-color: rgba(15, 146, 233, 0.05);
+  background-color: rgba(39, 180, 35, 0.15);
 }
 
 .setting-hint {
