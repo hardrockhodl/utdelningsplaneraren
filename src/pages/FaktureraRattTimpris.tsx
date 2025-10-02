@@ -27,7 +27,7 @@ const SCENARIO_HOURS = [120, 140, 160, 180] as const;
 
 export function FaktureraRattTimpris() {
   const [inputs, setInputs] = useState<HourlyRateInputs>({
-    desiredNetSalary: 50000,
+    desiredNetSalary: 30000,
     municipalTax: 32,
     employerContribution: 31.42,
     businessCosts: 5000,
