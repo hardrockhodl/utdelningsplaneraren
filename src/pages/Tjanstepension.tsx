@@ -152,93 +152,95 @@ export function Tjanstepension() {
           </div>
         </div>
 
-        <div className="results-section">
-          <h2 className="section-title">Beräkning</h2>
-          <div className="settings-panel">
-            <div className="calculation-breakdown">
-              <div className="breakdown-item">
-                <div className="breakdown-label">Tröskel (7,5 × IBB)</div>
-                <div className="breakdown-value">{result.ibbThreshold.toLocaleString('sv-SE')} kr/mån</div>
-              </div>
-
-              <div className="breakdown-separator"></div>
-
-              <div className="breakdown-item">
-                <div className="breakdown-label">Lön upp till tröskel</div>
-                <div className="breakdown-value">{result.salaryUpToThreshold.toLocaleString('sv-SE')} kr</div>
-              </div>
-
-              <div className="breakdown-item">
-                <div className="breakdown-label">× Premie ({lowerRate}%)</div>
-                <div className="breakdown-value highlight-green">
-                  = {result.lowerPart.toLocaleString('sv-SE', { maximumFractionDigits: 0 })} kr
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 400px), 1fr))', gap: '1.5rem' }}>
+          <div className="results-section">
+            <h2 className="section-title">Beräkning</h2>
+            <div className="settings-panel">
+              <div className="calculation-breakdown">
+                <div className="breakdown-item">
+                  <div className="breakdown-label">Tröskel (7,5 × IBB)</div>
+                  <div className="breakdown-value">{result.ibbThreshold.toLocaleString('sv-SE')} kr/mån</div>
                 </div>
-              </div>
 
-              {result.salaryAboveThreshold > 0 && (
-                <>
-                  <div className="breakdown-separator"></div>
+                <div className="breakdown-separator"></div>
 
-                  <div className="breakdown-item">
-                    <div className="breakdown-label">Lön över tröskel</div>
-                    <div className="breakdown-value">{result.salaryAboveThreshold.toLocaleString('sv-SE')} kr</div>
+                <div className="breakdown-item">
+                  <div className="breakdown-label">Lön upp till tröskel</div>
+                  <div className="breakdown-value">{result.salaryUpToThreshold.toLocaleString('sv-SE')} kr</div>
+                </div>
+
+                <div className="breakdown-item">
+                  <div className="breakdown-label">× Premie ({lowerRate}%)</div>
+                  <div className="breakdown-value highlight-green">
+                    = {result.lowerPart.toLocaleString('sv-SE', { maximumFractionDigits: 0 })} kr
                   </div>
+                </div>
 
-                  <div className="breakdown-item">
-                    <div className="breakdown-label">× Premie ({higherRate}%)</div>
-                    <div className="breakdown-value highlight-green">
-                      = {result.higherPart.toLocaleString('sv-SE', { maximumFractionDigits: 0 })} kr
+                {result.salaryAboveThreshold > 0 && (
+                  <>
+                    <div className="breakdown-separator"></div>
+
+                    <div className="breakdown-item">
+                      <div className="breakdown-label">Lön över tröskel</div>
+                      <div className="breakdown-value">{result.salaryAboveThreshold.toLocaleString('sv-SE')} kr</div>
                     </div>
+
+                    <div className="breakdown-item">
+                      <div className="breakdown-label">× Premie ({higherRate}%)</div>
+                      <div className="breakdown-value highlight-green">
+                        = {result.higherPart.toLocaleString('sv-SE', { maximumFractionDigits: 0 })} kr
+                      </div>
+                    </div>
+                  </>
+                )}
+
+                <div className="breakdown-separator"></div>
+
+                <div className="breakdown-item total">
+                  <div className="breakdown-label">Total tjänstepension per månad</div>
+                  <div className="breakdown-value">
+                    {result.totalMonthly.toLocaleString('sv-SE', { maximumFractionDigits: 0 })} kr
                   </div>
-                </>
-              )}
-
-              <div className="breakdown-separator"></div>
-
-              <div className="breakdown-item total">
-                <div className="breakdown-label">Total tjänstepension per månad</div>
-                <div className="breakdown-value">
-                  {result.totalMonthly.toLocaleString('sv-SE', { maximumFractionDigits: 0 })} kr
                 </div>
               </div>
             </div>
           </div>
-        </div>
 
-        <div className="results-section">
-          <h2 className="section-title">Resultat</h2>
-          <div className="totals-grid">
-            <div className="total-card">
-              <div className="card-icon" style={{ backgroundColor: 'rgba(15, 146, 233, 0.15)' }}>
-                <PiggyBank size={24} style={{ color: 'var(--accent-blue)' }} />
-              </div>
-              <div className="card-content">
-                <div className="card-label">Tjänstepension per månad</div>
-                <div className="card-value">
-                  {result.totalMonthly.toLocaleString('sv-SE', { maximumFractionDigits: 0 })} kr
+          <div className="results-section">
+            <h2 className="section-title">Resultat</h2>
+            <div className="totals-grid">
+              <div className="total-card">
+                <div className="card-icon" style={{ backgroundColor: 'rgba(15, 146, 233, 0.15)' }}>
+                  <PiggyBank size={24} style={{ color: 'var(--accent-blue)' }} />
+                </div>
+                <div className="card-content">
+                  <div className="card-label">Tjänstepension per månad</div>
+                  <div className="card-value">
+                    {result.totalMonthly.toLocaleString('sv-SE', { maximumFractionDigits: 0 })} kr
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <div className="total-card">
-              <div className="card-icon" style={{ backgroundColor: 'rgba(39, 180, 35, 0.15)' }}>
-                <PiggyBank size={24} style={{ color: 'var(--accent-green)' }} />
-              </div>
-              <div className="card-content">
-                <div className="card-label">Tjänstepension per år</div>
-                <div className="card-value">
-                  {result.totalYearly.toLocaleString('sv-SE', { maximumFractionDigits: 0 })} kr
+              <div className="total-card">
+                <div className="card-icon" style={{ backgroundColor: 'rgba(39, 180, 35, 0.15)' }}>
+                  <PiggyBank size={24} style={{ color: 'var(--accent-green)' }} />
+                </div>
+                <div className="card-content">
+                  <div className="card-label">Tjänstepension per år</div>
+                  <div className="card-value">
+                    {result.totalYearly.toLocaleString('sv-SE', { maximumFractionDigits: 0 })} kr
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <div className="total-card">
-              <div className="card-icon" style={{ backgroundColor: 'rgba(249, 220, 92, 0.15)' }}>
-                <Calculator size={24} style={{ color: 'var(--accent-orange)' }} />
-              </div>
-              <div className="card-content">
-                <div className="card-label">Andel av lön</div>
-                <div className="card-value">{result.percentageOfSalary.toFixed(2)}%</div>
+              <div className="total-card">
+                <div className="card-icon" style={{ backgroundColor: 'rgba(249, 220, 92, 0.15)' }}>
+                  <Calculator size={24} style={{ color: 'var(--accent-orange)' }} />
+                </div>
+                <div className="card-content">
+                  <div className="card-label">Andel av lön</div>
+                  <div className="card-value">{result.percentageOfSalary.toFixed(2)}%</div>
+                </div>
               </div>
             </div>
           </div>
