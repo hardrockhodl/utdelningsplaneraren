@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Calculator, Loader } from 'lucide-react';
+import { Calculator, Loader, Wallet, TrendingUp, Clock } from 'lucide-react';
 import { calculateHourlyRateFromNetSalary, HourlyRateInput } from '../lib/calculations';
 import { Kommune } from '../types';
 import { fetchKommuner, findKommun } from '../lib/skatteverket';
@@ -524,104 +524,51 @@ export function FaktureraRattTimpris() {
             </div>
 
           <h3 className="section-subtitle">Årlig översikt</h3>
-          <div className="table-container">
-            <table className="year-table">
-                <tbody>
-                  <tr style={{ borderBottom: '1px solid var(--border-color)' }}>
-                    <th
-                      scope="row"
-                      style={{
-                        padding: '0.5rem 0.75rem',
-                        fontWeight: 500,
-                        color: 'var(--text-secondary)',
-                        textAlign: 'left',
-                        backgroundColor: 'var(--stripe-bg, rgba(0,0,0,0.02))',
-                      }}
-                    >
-                      Årlig bruttolön
-                    </th>
-                    <td
-                      style={{
-                        padding: '0.5rem 0.75rem',
-                        textAlign: 'right',
-                        color: 'var(--text-secondary)',
-                        backgroundColor: 'var(--stripe-bg, rgba(0,0,0,0.02))',
-                      }}
-                    >
-                      {mainResults.annualGrossSalary.toLocaleString('sv-SE', { maximumFractionDigits: 0 })} kr
-                    </td>
-                  </tr>
-                  <tr style={{ borderBottom: '1px solid var(--border-color)' }}>
-                    <th
-                      scope="row"
-                      style={{
-                        padding: '0.5rem 0.75rem',
-                        fontWeight: 500,
-                        color: 'var(--text-secondary)',
-                        textAlign: 'left',
-                      }}
-                    >
-                      Årlig total kostnad
-                    </th>
-                    <td
-                      style={{
-                        padding: '0.5rem 0.75rem',
-                        textAlign: 'right',
-                        color: 'var(--text-secondary)',
-                      }}
-                    >
-                      {mainResults.annualCost.toLocaleString('sv-SE', { maximumFractionDigits: 0 })} kr
-                    </td>
-                  </tr>
-                  <tr style={{ borderBottom: '1px solid var(--border-color)' }}>
-                    <th
-                      scope="row"
-                      style={{
-                        padding: '0.5rem 0.75rem',
-                        fontWeight: 500,
-                        color: 'var(--text-secondary)',
-                        textAlign: 'left',
-                        backgroundColor: 'var(--stripe-bg, rgba(0,0,0,0.02))',
-                      }}
-                    >
-                      Årlig omsättning
-                    </th>
-                    <td
-                      style={{
-                        padding: '0.5rem 0.75rem',
-                        textAlign: 'right',
-                        color: 'var(--text-secondary)',
-                        backgroundColor: 'var(--stripe-bg, rgba(0,0,0,0.02))',
-                      }}
-                    >
-                      {mainResults.annualRevenue.toLocaleString('sv-SE', { maximumFractionDigits: 0 })} kr
-                    </td>
-                  </tr>
-                  <tr style={{ borderBottom: '1px solid var(--border-color)' }}>
-                    <th
-                      scope="row"
-                      style={{
-                        padding: '0.5rem 0.75rem',
-                        fontWeight: 500,
-                        color: 'var(--text-secondary)',
-                        textAlign: 'left',
-                      }}
-                    >
-                      Total fakturerbara timmar per år
-                    </th>
-                    <td
-                      style={{
-                        padding: '0.5rem 0.75rem',
-                        textAlign: 'right',
-                        color: 'var(--text-secondary)',
-                      }}
-                    >
-                      {(inputs.billableHours * 12).toLocaleString('sv-SE')} timmar
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+          <div className="totals-grid">
+            <div className="total-card">
+              <div className="card-icon" style={{ color: '#27b423' }}>
+                <Wallet size={24} />
+              </div>
+              <div className="card-content">
+                <div className="card-label">Årlig bruttolön</div>
+                <div className="card-value">{mainResults.annualGrossSalary.toLocaleString('sv-SE', { maximumFractionDigits: 0 })} kr</div>
+                <div className="card-sublabel">före skatt</div>
+              </div>
             </div>
+
+            <div className="total-card">
+              <div className="card-icon" style={{ color: '#27b423' }}>
+                <Calculator size={24} />
+              </div>
+              <div className="card-content">
+                <div className="card-label">Årlig total kostnad</div>
+                <div className="card-value">{mainResults.annualCost.toLocaleString('sv-SE', { maximumFractionDigits: 0 })} kr</div>
+                <div className="card-sublabel">inkl. buffert</div>
+              </div>
+            </div>
+
+            <div className="total-card highlight">
+              <div className="card-icon" style={{ color: '#27b423' }}>
+                <TrendingUp size={24} />
+              </div>
+              <div className="card-content">
+                <div className="card-label">Årlig omsättning</div>
+                <div className="card-value">{mainResults.annualRevenue.toLocaleString('sv-SE', { maximumFractionDigits: 0 })} kr</div>
+                <div className="card-sublabel">exkl. moms</div>
+              </div>
+            </div>
+
+            <div className="total-card">
+              <div className="card-icon" style={{ color: '#27b423' }}>
+                <Clock size={24} />
+              </div>
+              <div className="card-content">
+                <div className="card-label">Total fakturerbara timmar per år</div>
+                <div className="card-value">{(inputs.billableHours * 12).toLocaleString('sv-SE')} h</div>
+                <div className="card-sublabel">baserat på {inputs.billableHours} tim/mån</div>
+              </div>
+            </div>
+          </div>
         </div>
       </main>
     </div>
