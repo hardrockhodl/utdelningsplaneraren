@@ -99,7 +99,9 @@ export function LonEfterSkatt() {
             <h2>Inställningar</h2>
           </div>
 
-          <div className="settings-grid">
+          {/* --- SETTINGS GRID SOM RAD --- */}
+          <div className="settings-grid" style={{ display: 'flex', gap: '2rem', alignItems: 'flex-start' }}>
+            {/* Bruttolön */}
             <div className="setting-item">
               <label className="setting-label" title="Din månadslön före skatt">
                 Bruttolön per månad
@@ -114,69 +116,67 @@ export function LonEfterSkatt() {
                 />
                 <span className="suffix">kr</span>
               </div>
-              <div className="setting-item">
-                <div className="setting-item inkomsttyp">
-                  <label className="setting-label" title="Välj typ av inkomst för korrekt skattetabell">
-                    Inkomsttyp
-                  </label>
-                <div className="setting-item">
-                  <label className="setting-label" title="Välj typ av inkomst för korrekt skattetabell">
-                    Inkomsttyp
-                  </label>
-                  <select
-                    value={selectedColumn}
-                    onChange={(e) => setSelectedColumn(Number(e.target.value))}
-                  >
-                    {Object.entries(TAX_COLUMNS).map(([key, value]) => (
-                      <option key={key} value={key}>
-                        {value.name}
-                      </option>
-                    ))}
-                  </select>
-                  <div
-                    style={{
-                      marginTop: '0.5rem',
-                      backgroundColor: '#FFF9C4',   // ljusgul
-                      border: '2px solid #FFEB3B',  // gul ram
-                      borderRadius: '6px',
-                      padding: '0.5rem 0.75rem',
-                      fontSize: '0.8rem',
-                      lineHeight: '1.4',
-                      color: 'var(--text-muted)',
-                    }}
-                  >
-                    {TAX_COLUMNS[selectedColumn as keyof typeof TAX_COLUMNS].description}
-                  </div>
-                </div>
-              </div>
-            
             </div>
+
+            {/* Inkomsttyp */}
             <div className="setting-item">
-              <div className="setting-item kommun-selector">
-                <label className="setting-label" title="Välj din kommun för att få rätt skattesatser">
-                  Kommun
-                </label>
-                {loading ? (
-                  <div className="loading-container">
-                    <Loader size={16} className="spinner" />
-                    <span>Laddar kommuner...</span>
-                  </div>
-                ) : (
-                  <select
-                    value={selectedKommun?.KommunId || ''}
-                    onChange={handleKommunChange}
-                    disabled={kommuner.length === 0}
-                  >
-                    <option value="">Välj kommun</option>
-                    {kommuner.map((kommun) => (
-                      <option key={kommun.KommunId} value={kommun.KommunId}>
-                        {kommun.Kommun}
-                      </option>
-                    ))}
-                  </select>
-                )}
+              <label className="setting-label" title="Välj typ av inkomst för korrekt skattetabell">
+                Inkomsttyp
+              </label>
+              <select
+                value={selectedColumn}
+                onChange={(e) => setSelectedColumn(Number(e.target.value))}
+                style={{ minWidth: 200 }}
+              >
+                {Object.entries(TAX_COLUMNS).map(([key, value]) => (
+                  <option key={key} value={key}>
+                    {value.name}
+                  </option>
+                ))}
+              </select>
+              <div
+                style={{
+                  marginTop: '6px',
+                  background: '#FFF9C4',
+                  border: '2px solid #FFEB3B',
+                  borderRadius: 8,
+                  padding: '8px 10px',
+                  fontSize: '0.8rem',
+                  lineHeight: 1.4,
+                  color: 'var(--text-muted)',
+                }}
+              >
+                {TAX_COLUMNS[selectedColumn as keyof typeof TAX_COLUMNS].description}
               </div>
             </div>
+
+            {/* Kommun */}
+            <div className="setting-item">
+              <label className="setting-label" title="Välj din kommun för att få rätt skattesatser">
+                Kommun
+              </label>
+              {loading ? (
+                <div className="loading-container">
+                  <Loader size={16} className="spinner" />
+                  <span>Laddar kommuner...</span>
+                </div>
+              ) : (
+                <select
+                  value={selectedKommun?.KommunId || ''}
+                  onChange={handleKommunChange}
+                  disabled={kommuner.length === 0}
+                >
+                  <option value="">Välj kommun</option>
+                  {kommuner.map((kommun) => (
+                    <option key={kommun.KommunId} value={kommun.KommunId}>
+                      {kommun.Kommun}
+                    </option>
+                  ))}
+                </select>
+              )}
+            </div>
+
+            {/* Kyrkoskatt */}
             <div className="setting-item">
               <label className="checkbox-label">
                 <input
@@ -190,11 +190,13 @@ export function LonEfterSkatt() {
           </div>
         </div>
 
+        {/* --- RESULTAT --- */}
         {result && (
           <>
             <div className="results-section">
               <h2 className="section-title">Resultat</h2>
               <div className="totals-grid">
+                {/* Brutto */}
                 <div className="total-card">
                   <div className="card-icon" style={{ backgroundColor: 'rgba(15, 146, 233, 0.15)' }}>
                     <Calculator size={24} style={{ color: 'var(--accent-blue)' }} />
@@ -205,6 +207,7 @@ export function LonEfterSkatt() {
                   </div>
                 </div>
 
+                {/* Skatt */}
                 <div className="total-card">
                   <div className="card-icon" style={{ backgroundColor: 'rgba(215, 38, 56, 0.15)' }}>
                     <Calculator size={24} style={{ color: 'var(--accent-red)' }} />
@@ -215,6 +218,7 @@ export function LonEfterSkatt() {
                   </div>
                 </div>
 
+                {/* Netto */}
                 <div className="total-card">
                   <div className="card-icon" style={{ backgroundColor: 'rgba(39, 180, 35, 0.15)' }}>
                     <Calculator size={24} style={{ color: 'var(--accent-green)' }} />
@@ -225,6 +229,7 @@ export function LonEfterSkatt() {
                   </div>
                 </div>
 
+                {/* Effektiv */}
                 <div className="total-card">
                   <div className="card-icon" style={{ backgroundColor: 'rgba(249, 220, 92, 0.15)' }}>
                     <Calculator size={24} style={{ color: 'var(--accent-orange)' }} />
@@ -237,6 +242,7 @@ export function LonEfterSkatt() {
               </div>
             </div>
 
+            {/* Skatteuppdelning */}
             {selectedKommun && (
               <div className="results-section">
                 <h2 className="section-title">Skatteuppdelning i {selectedKommun.Kommun}</h2>
@@ -273,18 +279,6 @@ export function LonEfterSkatt() {
                 </div>
               </div>
             )}
-
-            <div className="results-section">
-              <h2 className="section-title">Information</h2>
-              <div className="settings-panel">
-                <p style={{ color: 'var(--text-secondary)', lineHeight: '1.1', marginBottom: '0.75rem' }}>
-                  <strong>Vald inkomsttyp:</strong> {TAX_COLUMNS[selectedColumn as keyof typeof TAX_COLUMNS].name}
-                </p>
-                <p style={{ color: 'var(--text-muted)', lineHeight: '1.1', fontSize: '0.75rem' }}>
-                  {TAX_COLUMNS[selectedColumn as keyof typeof TAX_COLUMNS].description}
-                </p>
-              </div>
-            </div>
           </>
         )}
       </main>
