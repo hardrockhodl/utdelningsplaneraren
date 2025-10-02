@@ -1,5 +1,4 @@
-import { useState } from 'react';
-import { Calculator, ChevronDown } from 'lucide-react';
+import { FileText } from 'lucide-react';
 
 const K10_DATA = {
   gransbelopp: {
@@ -53,14 +52,6 @@ const K10_DATA = {
 };
 
 export function K10Blankett() {
-  const [selectedYear, setSelectedYear] = useState<number>(2025);
-  const [showGransbelopp, setShowGransbelopp] = useState<boolean>(true);
-  const [showUpprakning, setShowUpprakning] = useState<boolean>(false);
-  const [showRanta, setShowRanta] = useState<boolean>(false);
-  const [showTakbeloppUtdelning, setShowTakbeloppUtdelning] = useState<boolean>(false);
-  const [showTakbeloppVinst, setShowTakbeloppVinst] = useState<boolean>(false);
-  const [showLonekrav, setShowLonekrav] = useState<boolean>(false);
-
   const years = Object.keys(K10_DATA.gransbelopp).map(Number).sort((a, b) => b - a);
 
   return (
@@ -77,309 +68,221 @@ export function K10Blankett() {
       </header>
 
       <main className="app-main">
-        <div className="settings-panel">
-          <div className="panel-header">
-            <Calculator size={20} />
-            <h2>Välj inkomstår</h2>
-          </div>
-
-          <div className="setting-item">
-            <label className="setting-label">Inkomstår</label>
-            <select
-              value={selectedYear}
-              onChange={(e) => setSelectedYear(Number(e.target.value))}
+        <div className="results-section">
+          <div
+            style={{
+              overflowX: 'auto',
+              backgroundColor: 'var(--card-bg)',
+              borderRadius: '8px',
+              border: '1px solid var(--border-color)',
+            }}
+          >
+            <table
+              style={{
+                width: '100%',
+                borderCollapse: 'collapse',
+                fontSize: '0.9rem',
+              }}
             >
-              {years.map((year) => (
-                <option key={year} value={year}>
-                  {year}
-                </option>
-              ))}
-            </select>
+              <thead>
+                <tr
+                  style={{
+                    backgroundColor: 'var(--header-bg)',
+                    borderBottom: '2px solid var(--border-color)',
+                  }}
+                >
+                  <th
+                    style={{
+                      padding: '1rem',
+                      textAlign: 'left',
+                      fontWeight: 600,
+                      color: 'var(--text-primary)',
+                      borderRight: '1px solid var(--border-color)',
+                      minWidth: '280px',
+                    }}
+                  >
+                    BELOPP OCH PROCENTSATSER
+                  </th>
+                  {years.map((year) => (
+                    <th
+                      key={year}
+                      style={{
+                        padding: '1rem',
+                        textAlign: 'center',
+                        fontWeight: 600,
+                        color: 'var(--text-primary)',
+                        borderRight: '1px solid var(--border-color)',
+                        minWidth: '120px',
+                      }}
+                    >
+                      {year}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                <tr style={{ borderBottom: '1px solid var(--border-color)' }}>
+                  <td
+                    style={{
+                      padding: '1rem',
+                      fontWeight: 500,
+                      color: 'var(--text-secondary)',
+                      borderRight: '1px solid var(--border-color)',
+                    }}
+                  >
+                    Gränsbelopp enligt förenklingsregeln
+                  </td>
+                  {years.map((year) => (
+                    <td
+                      key={year}
+                      style={{
+                        padding: '1rem',
+                        textAlign: 'center',
+                        color: 'var(--text-secondary)',
+                        borderRight: '1px solid var(--border-color)',
+                      }}
+                    >
+                      {K10_DATA.gransbelopp[year as keyof typeof K10_DATA.gransbelopp].toLocaleString('sv-SE')} kr
+                    </td>
+                  ))}
+                </tr>
+                <tr style={{ borderBottom: '1px solid var(--border-color)' }}>
+                  <td
+                    style={{
+                      padding: '1rem',
+                      fontWeight: 500,
+                      color: 'var(--text-secondary)',
+                      borderRight: '1px solid var(--border-color)',
+                    }}
+                  >
+                    Procentsats för uppräkning av sparat utdelningsutrymme
+                  </td>
+                  {years.map((year) => (
+                    <td
+                      key={year}
+                      style={{
+                        padding: '1rem',
+                        textAlign: 'center',
+                        color: 'var(--text-secondary)',
+                        borderRight: '1px solid var(--border-color)',
+                      }}
+                    >
+                      {K10_DATA.upprakningsprocent[year as keyof typeof K10_DATA.upprakningsprocent].toLocaleString('sv-SE', {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      })}%
+                    </td>
+                  ))}
+                </tr>
+                <tr style={{ borderBottom: '1px solid var(--border-color)' }}>
+                  <td
+                    style={{
+                      padding: '1rem',
+                      fontWeight: 500,
+                      color: 'var(--text-secondary)',
+                      borderRight: '1px solid var(--border-color)',
+                    }}
+                  >
+                    Ränta vid beräkning av omkostnadsbeloppsdelen enligt huvudregeln
+                  </td>
+                  {years.map((year) => (
+                    <td
+                      key={year}
+                      style={{
+                        padding: '1rem',
+                        textAlign: 'center',
+                        color: 'var(--text-secondary)',
+                        borderRight: '1px solid var(--border-color)',
+                      }}
+                    >
+                      {K10_DATA.ranta[year as keyof typeof K10_DATA.ranta].toLocaleString('sv-SE', {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      })}%
+                    </td>
+                  ))}
+                </tr>
+                <tr style={{ borderBottom: '1px solid var(--border-color)' }}>
+                  <td
+                    style={{
+                      padding: '1rem',
+                      fontWeight: 500,
+                      color: 'var(--text-secondary)',
+                      borderRight: '1px solid var(--border-color)',
+                    }}
+                  >
+                    Takbelopp för utdelning som ska beskattas i tjänst
+                  </td>
+                  {years.map((year) => (
+                    <td
+                      key={year}
+                      style={{
+                        padding: '1rem',
+                        textAlign: 'center',
+                        color: 'var(--text-secondary)',
+                        borderRight: '1px solid var(--border-color)',
+                      }}
+                    >
+                      {K10_DATA.takbeloppUtdelning[year as keyof typeof K10_DATA.takbeloppUtdelning].toLocaleString('sv-SE')} kr
+                    </td>
+                  ))}
+                </tr>
+                <tr style={{ borderBottom: '1px solid var(--border-color)' }}>
+                  <td
+                    style={{
+                      padding: '1rem',
+                      fontWeight: 500,
+                      color: 'var(--text-secondary)',
+                      borderRight: '1px solid var(--border-color)',
+                    }}
+                  >
+                    Takbelopp för vinst som ska beskattas i tjänst
+                  </td>
+                  {years.map((year) => (
+                    <td
+                      key={year}
+                      style={{
+                        padding: '1rem',
+                        textAlign: 'center',
+                        color: 'var(--text-secondary)',
+                        borderRight: '1px solid var(--border-color)',
+                      }}
+                    >
+                      {K10_DATA.takbeloppVinst[year as keyof typeof K10_DATA.takbeloppVinst].toLocaleString('sv-SE')} kr
+                    </td>
+                  ))}
+                </tr>
+                <tr>
+                  <td
+                    style={{
+                      padding: '1rem',
+                      fontWeight: 500,
+                      color: 'var(--text-secondary)',
+                      borderRight: '1px solid var(--border-color)',
+                    }}
+                  >
+                    Lönekrav
+                  </td>
+                  {years.map((year) => (
+                    <td
+                      key={year}
+                      style={{
+                        padding: '1rem',
+                        textAlign: 'center',
+                        color: 'var(--text-secondary)',
+                        borderRight: '1px solid var(--border-color)',
+                        fontSize: '0.85rem',
+                        lineHeight: '1.4',
+                      }}
+                    >
+                      {K10_DATA.lonekrav[year as keyof typeof K10_DATA.lonekrav].fast.toLocaleString('sv-SE')} kr eller{' '}
+                      {K10_DATA.lonekrav[year as keyof typeof K10_DATA.lonekrav].alternativ.toLocaleString('sv-SE')} kr + 5% av sammanlagd kontant ersättning
+                    </td>
+                  ))}
+                </tr>
+              </tbody>
+            </table>
           </div>
-        </div>
-
-        {/* Gränsbelopp enligt förenklingsregeln */}
-        <div className="results-section">
-          <button
-            onClick={() => setShowGransbelopp(!showGransbelopp)}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.5rem',
-              background: 'none',
-              border: 'none',
-              color: 'var(--text-primary)',
-              cursor: 'pointer',
-              fontSize: '1.1rem',
-              fontWeight: 600,
-              padding: '0.5rem 0',
-              width: '100%',
-            }}
-          >
-            <ChevronDown
-              size={20}
-              style={{
-                transform: showGransbelopp ? 'rotate(0deg)' : 'rotate(-90deg)',
-                transition: 'transform 0.2s',
-              }}
-            />
-            Gränsbelopp enligt förenklingsregeln
-          </button>
-          {showGransbelopp && (
-            <div className="totals-grid" style={{ gridTemplateColumns: '1fr' }}>
-              <div className="total-card">
-                <div className="card-icon" style={{ backgroundColor: 'rgba(15, 146, 233, 0.15)' }}>
-                  <Calculator size={24} style={{ color: 'var(--accent-blue)' }} />
-                </div>
-                <div className="card-content">
-                  <div className="card-label">Inkomståret {selectedYear}</div>
-                  <div className="card-value">
-                    {K10_DATA.gransbelopp[selectedYear as keyof typeof K10_DATA.gransbelopp].toLocaleString('sv-SE')} kr
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* Procentsats för uppräkning */}
-        <div className="results-section">
-          <button
-            onClick={() => setShowUpprakning(!showUpprakning)}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.5rem',
-              background: 'none',
-              border: 'none',
-              color: 'var(--text-primary)',
-              cursor: 'pointer',
-              fontSize: '1.1rem',
-              fontWeight: 600,
-              padding: '0.5rem 0',
-              width: '100%',
-            }}
-          >
-            <ChevronDown
-              size={20}
-              style={{
-                transform: showUpprakning ? 'rotate(0deg)' : 'rotate(-90deg)',
-                transition: 'transform 0.2s',
-              }}
-            />
-            Procentsats för uppräkning av sparat utdelningsutrymme
-          </button>
-          {showUpprakning && (
-            <div className="totals-grid" style={{ gridTemplateColumns: '1fr' }}>
-              <div className="total-card">
-                <div className="card-icon" style={{ backgroundColor: 'rgba(39, 180, 35, 0.15)' }}>
-                  <Calculator size={24} style={{ color: 'var(--accent-green)' }} />
-                </div>
-                <div className="card-content">
-                  <div className="card-label">Inkomståret {selectedYear}</div>
-                  <div className="card-value">
-                    {K10_DATA.upprakningsprocent[selectedYear as keyof typeof K10_DATA.upprakningsprocent].toLocaleString('sv-SE', {
-                      minimumFractionDigits: 2,
-                      maximumFractionDigits: 2,
-                    })}%
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* Ränta vid beräkning */}
-        <div className="results-section">
-          <button
-            onClick={() => setShowRanta(!showRanta)}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.5rem',
-              background: 'none',
-              border: 'none',
-              color: 'var(--text-primary)',
-              cursor: 'pointer',
-              fontSize: '1.1rem',
-              fontWeight: 600,
-              padding: '0.5rem 0',
-              width: '100%',
-            }}
-          >
-            <ChevronDown
-              size={20}
-              style={{
-                transform: showRanta ? 'rotate(0deg)' : 'rotate(-90deg)',
-                transition: 'transform 0.2s',
-              }}
-            />
-            Ränta vid beräkning av omkostnadsbeloppsdelen enligt huvudregeln
-          </button>
-          {showRanta && (
-            <div className="totals-grid" style={{ gridTemplateColumns: '1fr' }}>
-              <div className="total-card">
-                <div className="card-icon" style={{ backgroundColor: 'rgba(249, 220, 92, 0.15)' }}>
-                  <Calculator size={24} style={{ color: 'var(--accent-orange)' }} />
-                </div>
-                <div className="card-content">
-                  <div className="card-label">Inkomståret {selectedYear}</div>
-                  <div className="card-value">
-                    {K10_DATA.ranta[selectedYear as keyof typeof K10_DATA.ranta].toLocaleString('sv-SE', {
-                      minimumFractionDigits: 2,
-                      maximumFractionDigits: 2,
-                    })}%
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* Takbelopp för utdelning */}
-        <div className="results-section">
-          <button
-            onClick={() => setShowTakbeloppUtdelning(!showTakbeloppUtdelning)}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.5rem',
-              background: 'none',
-              border: 'none',
-              color: 'var(--text-primary)',
-              cursor: 'pointer',
-              fontSize: '1.1rem',
-              fontWeight: 600,
-              padding: '0.5rem 0',
-              width: '100%',
-            }}
-          >
-            <ChevronDown
-              size={20}
-              style={{
-                transform: showTakbeloppUtdelning ? 'rotate(0deg)' : 'rotate(-90deg)',
-                transition: 'transform 0.2s',
-              }}
-            />
-            Takbelopp för utdelning som ska beskattas i tjänst
-          </button>
-          {showTakbeloppUtdelning && (
-            <div className="totals-grid" style={{ gridTemplateColumns: '1fr' }}>
-              <div className="total-card">
-                <div className="card-icon" style={{ backgroundColor: 'rgba(215, 38, 56, 0.15)' }}>
-                  <Calculator size={24} style={{ color: 'var(--accent-red)' }} />
-                </div>
-                <div className="card-content">
-                  <div className="card-label">Inkomståret {selectedYear}</div>
-                  <div className="card-value">
-                    {K10_DATA.takbeloppUtdelning[selectedYear as keyof typeof K10_DATA.takbeloppUtdelning].toLocaleString('sv-SE')} kr
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* Takbelopp för vinst */}
-        <div className="results-section">
-          <button
-            onClick={() => setShowTakbeloppVinst(!showTakbeloppVinst)}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.5rem',
-              background: 'none',
-              border: 'none',
-              color: 'var(--text-primary)',
-              cursor: 'pointer',
-              fontSize: '1.1rem',
-              fontWeight: 600,
-              padding: '0.5rem 0',
-              width: '100%',
-            }}
-          >
-            <ChevronDown
-              size={20}
-              style={{
-                transform: showTakbeloppVinst ? 'rotate(0deg)' : 'rotate(-90deg)',
-                transition: 'transform 0.2s',
-              }}
-            />
-            Takbelopp för vinst som ska beskattas i tjänst
-          </button>
-          {showTakbeloppVinst && (
-            <div className="totals-grid" style={{ gridTemplateColumns: '1fr' }}>
-              <div className="total-card">
-                <div className="card-icon" style={{ backgroundColor: 'rgba(156, 39, 176, 0.15)' }}>
-                  <Calculator size={24} style={{ color: '#9C27B0' }} />
-                </div>
-                <div className="card-content">
-                  <div className="card-label">Inkomståret {selectedYear}</div>
-                  <div className="card-value">
-                    {K10_DATA.takbeloppVinst[selectedYear as keyof typeof K10_DATA.takbeloppVinst].toLocaleString('sv-SE')} kr
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* Lönekrav */}
-        <div className="results-section">
-          <button
-            onClick={() => setShowLonekrav(!showLonekrav)}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.5rem',
-              background: 'none',
-              border: 'none',
-              color: 'var(--text-primary)',
-              cursor: 'pointer',
-              fontSize: '1.1rem',
-              fontWeight: 600,
-              padding: '0.5rem 0',
-              width: '100%',
-            }}
-          >
-            <ChevronDown
-              size={20}
-              style={{
-                transform: showLonekrav ? 'rotate(0deg)' : 'rotate(-90deg)',
-                transition: 'transform 0.2s',
-              }}
-            />
-            Lönekrav
-          </button>
-          {showLonekrav && (
-            <div className="totals-grid">
-              <div className="total-card">
-                <div className="card-icon" style={{ backgroundColor: 'rgba(15, 146, 233, 0.15)' }}>
-                  <Calculator size={24} style={{ color: 'var(--accent-blue)' }} />
-                </div>
-                <div className="card-content">
-                  <div className="card-label">Fast lönekrav</div>
-                  <div className="card-value">
-                    {K10_DATA.lonekrav[selectedYear as keyof typeof K10_DATA.lonekrav].fast.toLocaleString('sv-SE')} kr
-                  </div>
-                </div>
-              </div>
-              <div className="total-card">
-                <div className="card-icon" style={{ backgroundColor: 'rgba(39, 180, 35, 0.15)' }}>
-                  <Calculator size={24} style={{ color: 'var(--accent-green)' }} />
-                </div>
-                <div className="card-content">
-                  <div className="card-label">Alternativt lönekrav</div>
-                  <div className="card-value">
-                    {K10_DATA.lonekrav[selectedYear as keyof typeof K10_DATA.lonekrav].alternativ.toLocaleString('sv-SE')} kr + 5%
-                  </div>
-                  <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.25rem' }}>
-                    + 5% av sammanlagd kontant ersättning
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
         </div>
       </main>
     </div>
