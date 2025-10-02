@@ -144,7 +144,7 @@ export function LonEfterSkatt() {
                   fontSize: '0.8rem',
                   lineHeight: 1.4,
                   color: 'var(--text-muted)',
-                  minWidth: '200px',
+                  minWidth: '100px',
                   boxSizing: 'border-box',
                 }}
               >
