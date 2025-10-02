@@ -238,6 +238,7 @@ export function K10Blankett() {
                       fontWeight: 500,
                       color: 'var(--text-secondary)',
                       borderRight: '1px solid var(--border-color)',
+                      textAlign: 'right',
                     }}
                   >
                     Takbelopp för vinst som ska beskattas i tjänst
@@ -263,6 +264,7 @@ export function K10Blankett() {
                       fontWeight: 500,
                       color: 'var(--text-secondary)',
                       borderRight: '1px solid var(--border-color)',
+                      textAlign: 'right',
                     }}
                   >
                     Lönekrav
