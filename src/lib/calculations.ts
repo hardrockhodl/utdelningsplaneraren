@@ -179,61 +179,37 @@ export function formatNumber(value: number, decimals = 0): string {
  * Export calculation results to CSV format
  * Exportera beräkningsresultat till CSV-format
  */
-export function exportToCSV(_settings: GlobalSettings, years: YearCalculation[]): string {
-  const headers = [
-    'År',
-    'Timpris (kr)',
-    'Timmar/mån',
-    'Bruttolön (mån)',
-    'Övr. kostn (mån)',
-    'Buffert %',
-    'Fakturerat (år)',
-    'Bruttolön (år)',
-    'Nettolön (år)',
-    'Arbetsgivaravgift (år)',
-    'Kostnader (år)',
-    'Buffert (år)',
-    'Överskott (år)',
-    'Årets resultat',
-    'Ing. fritt EK',
-    'Max utd. EK',
-    'Utdeln. %',
-    'Utd. brutto',
-    'Utd. netto',
-    'Totalt netto (mån)',
-    'Utg. fritt EK',
-    'Sparat utd. utrymme'
+export function exportToCSVTransposed(_settings: GlobalSettings, years: YearCalculation[]) {
+  const sep = ';';
+
+  const header = ['År', ...years.map((_, i) => String(i + 1))];
+
+  const rows = [
+    ['Timpris (kr)', ...years.map(y => y.timpris)],
+    ['Timmar/mån', ...years.map(y => y.timmarPerManad)],
+    ['Bruttolön (mån)', ...years.map(y => y.bruttolonManad)],
+    ['Övr. kostn (mån)', ...years.map(y => y.ovrigaKostnaderManad)],
+    ['Buffert %', ...years.map(y => y.buffertPct)],
+    ['Fakturerat (år)', ...years.map(y => y.faktureratAr)],
+    ['Bruttolön (år)', ...years.map(y => y.bruttolonAr)],            // om inte finns: y.bruttolonManad*12
+    ['Nettolön (år)', ...years.map(y => y.nettolonAr)],
+    ['Arbetsgivaravgift (år)', ...years.map(y => y.arbetsgivaravgiftAr)],
+    ['Kostnader (år)', ...years.map(y => y.kostnaderAr)],
+    ['Buffert (år)', ...years.map(y => y.buffertAr)],
+    ['Överskott (år)', ...years.map(y => y.overskottAr)],
+    ['Årets resultat', ...years.map(y => y.aretsResultat)],
+    ['Ing. fritt EK', ...years.map(y => y.ingaendeEK)],
+    ['Max utd. EK', ...years.map(y => y.maxUtdelningEK)],
+    ['Utdeln. %', ...years.map(y => y.utdelningPct)],
+    ['Utd. brutto', ...years.map(y => y.utdelningBrutto)],
+    ['Utd. netto', ...years.map(y => y.utdelningNetto)],
+    ['Totalt netto (mån)', ...years.map(y => y.totaltNettoManad)],
+    ['Utg. fritt EK', ...years.map(y => y.utgaendeEK)],
+    ['Sparat utd. utrymme', ...years.map(y => y.sparatUtdelningsutrymme)],
   ];
 
-  const rows = years.map((year, idx) => [
-    idx + 1,
-    year.hourlyRate,
-    year.hoursPerMonth,
-    year.grossSalaryMonthly,
-    year.otherCostsMonthly,
-    year.bufferPercent,
-    year.billedYearly,
-    year.grossSalaryYearly,
-    year.netSalaryYearly,
-    year.employerContributionYearly,
-    year.costsYearly,
-    year.bufferYearly,
-    year.surplusYearly,
-    year.netProfitYearly,
-    year.openingEquity,
-    year.maxDividendByEquity,
-    year.dividendPercent,
-    year.grossDividend,
-    year.netDividend,
-    year.totalNetMonthly,
-    year.closingEquity,
-    year.savedDividendAllowance
-  ]);
-
-  const csvContent = [
-    headers.join(','),
-    ...rows.map(row => row.join(','))
+  return [
+    header.join(sep),
+    ...rows.map(r => r.join(sep)),
   ].join('\n');
-
-  return csvContent;
 }
