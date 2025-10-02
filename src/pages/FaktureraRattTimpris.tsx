@@ -480,7 +480,7 @@ export function FaktureraRattTimpris() {
                         <td
                           style={{
                             padding: '0.5rem 0.75rem',
-                            textAlign: 'right',
+                            textAlign: 'left',
                             color: isCurrentScenario ? 'var(--text-primary)' : 'var(--text-secondary)',
                             borderRight: '1px solid var(--border-color)',
                           }}
@@ -490,7 +490,7 @@ export function FaktureraRattTimpris() {
                         <td
                           style={{
                             padding: '0.5rem 0.75rem',
-                            textAlign: 'right',
+                            textAlign: 'left',
                             color: isCurrentScenario ? 'var(--text-primary)' : 'var(--text-secondary)',
                             borderRight: '1px solid var(--border-color)',
                           }}
@@ -500,7 +500,7 @@ export function FaktureraRattTimpris() {
                         <td
                           style={{
                             padding: '0.5rem 0.75rem',
-                            textAlign: 'right',
+                            textAlign: 'left',
                             color: isCurrentScenario ? 'var(--text-primary)' : 'var(--text-secondary)',
                             borderRight: '1px solid var(--border-color)',
                           }}
@@ -510,7 +510,7 @@ export function FaktureraRattTimpris() {
                         <td
                           style={{
                             padding: '0.5rem 0.75rem',
-                            textAlign: 'right',
+                            textAlign: 'left',
                             color: isCurrentScenario ? 'var(--text-primary)' : 'var(--text-secondary)',
                           }}
                         >
