@@ -172,7 +172,7 @@ body {
 }
 
 .input-with-suffix.inline input {
-  padding: 0.375rem 0.5rem;
+  padding: 0.375rem 0.25rem;
   font-size: 0.8125rem;
 }
 
