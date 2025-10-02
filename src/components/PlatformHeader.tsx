@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { Moon, Sun, Home, Calculator, Wallet, ChevronDown, PiggyBank } from 'lucide-react';
+import { Home, Calculator, Wallet, ChevronDown, PiggyBank } from 'lucide-react';
+import { Moon, Sun } from 'lucide-solid';
 import { Link, useLocation } from 'react-router-dom';
 import logo from '../imgs/konsultverktyg.svg';
 
