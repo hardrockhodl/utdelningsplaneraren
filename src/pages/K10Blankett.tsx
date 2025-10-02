@@ -1,6 +1,16 @@
 import { FileText } from 'lucide-react';
 
-const K10_DATA = {
+type Year = 2020 | 2021 | 2022 | 2023 | 2024 | 2025;
+type K10Map<T> = Record<Year, T>;
+
+const K10_DATA: {
+  gransbelopp: K10Map<number>;
+  upprakningsprocent: K10Map<number>;
+  ranta: K10Map<number>;
+  takbeloppUtdelning: K10Map<number>;
+  takbeloppVinst: K10Map<number>;
+  lonekrav: K10Map<{ fast: number; alternativ: number }>;
+} = {
   gransbelopp: {
     2025: 209550,
     2024: 204325,
@@ -52,18 +62,76 @@ const K10_DATA = {
 };
 
 export function K10Blankett() {
-  const years = Object.keys(K10_DATA.gransbelopp).map(Number).sort((a, b) => b - a);
+  const years = Object.keys(K10_DATA.gransbelopp)
+    .map(Number)
+    .sort((a, b) => b - a) as Year[];
+
+  const now = new Date().getFullYear();
+
+  const cell = (value: number | string, year: number) => (
+    <td
+      key={year}
+      style={{
+        padding: '1rem',
+        textAlign: 'center',
+        color: 'var(--text-secondary)',
+        borderRight: '1px solid var(--border-color)',
+        backgroundColor:
+          year === now ? 'var(--row-highlight, rgba(15,146,233,0.05))' : 'transparent',
+      }}
+    >
+      {value}
+    </td>
+  );
+
+  const row = (
+    label: string,
+    values: (year: Year) => number | string,
+    format?: 'kr' | '%' | 'raw'
+  ) => (
+    <tr style={{ borderBottom: '1px solid var(--border-color)' }}>
+      <th
+        scope="row"
+        style={{
+          padding: '1rem',
+          fontWeight: 500,
+          color: 'var(--text-secondary)',
+          borderRight: '1px solid var(--border-color)',
+          textAlign: 'right',
+          position: 'sticky',
+          left: 0,
+          background: 'var(--card-bg)',
+          zIndex: 1,
+        }}
+      >
+        {label}
+      </th>
+      {years.map((year) => {
+        const v = values(year);
+        if (typeof v !== 'number') return cell(v, year);
+        if (format === '%')
+          return cell(
+            v.toLocaleString('sv-SE', {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            }) + '%',
+            year
+          );
+        if (format === 'kr') return cell(v.toLocaleString('sv-SE') + ' kr', year);
+        return cell(v, year);
+      })}
+    </tr>
+  );
 
   return (
     <div className="app">
       <header className="app-header">
         <div className="header-content">
-          <div className="header-text">
+          <div className="header-text" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <FileText size={20} />
             <h1>Belopp och procentsatser (blankett K10)</h1>
-            <p className="subtitle">
-              Skatteuppgifter för fåmansföretag enligt blankett K10
-            </p>
           </div>
+          <p className="subtitle">Skatteuppgifter för fåmansföretag enligt blankett K10</p>
         </div>
       </header>
 
@@ -99,9 +167,13 @@ export function K10Blankett() {
                       color: 'var(--text-primary)',
                       borderRight: '1px solid var(--border-color)',
                       minWidth: '280px',
+                      position: 'sticky',
+                      left: 0,
+                      background: 'var(--header-bg)',
+                      zIndex: 2,
                     }}
                   >
-                    ÅRTAL
+                    År
                   </th>
                   {years.map((year) => (
                     <th
@@ -113,6 +185,10 @@ export function K10Blankett() {
                         color: 'var(--text-primary)',
                         borderRight: '1px solid var(--border-color)',
                         minWidth: '120px',
+                        backgroundColor:
+                          year === now
+                            ? 'var(--row-highlight, rgba(15,146,233,0.08))'
+                            : 'var(--header-bg)',
                       }}
                     >
                       {year}
@@ -121,170 +197,53 @@ export function K10Blankett() {
                 </tr>
               </thead>
               <tbody>
+                {row('Gränsbelopp enligt förenklingsregeln', (y) => K10_DATA.gransbelopp[y], 'kr')}
+                {row(
+                  'Procentsats för uppräkning av sparat utdelningsutrymme',
+                  (y) => K10_DATA.upprakningsprocent[y],
+                  '%'
+                )}
+                {row(
+                  'Ränta vid beräkning av omkostnadsbeloppsdelen (huvudregeln)',
+                  (y) => K10_DATA.ranta[y],
+                  '%'
+                )}
+                {row(
+                  'Takbelopp för utdelning som ska beskattas i tjänst',
+                  (y) => K10_DATA.takbeloppUtdelning[y],
+                  'kr'
+                )}
+                {row(
+                  'Takbelopp för vinst som ska beskattas i tjänst',
+                  (y) => K10_DATA.takbeloppVinst[y],
+                  'kr'
+                )}
                 <tr style={{ borderBottom: '1px solid var(--border-color)' }}>
-                  <td
+                  <th
+                    scope="row"
                     style={{
                       padding: '1rem',
                       fontWeight: 500,
                       color: 'var(--text-secondary)',
                       borderRight: '1px solid var(--border-color)',
                       textAlign: 'right',
-                    }}
-                  >
-                    Gränsbelopp enligt förenklingsregeln
-                  </td>
-                  {years.map((year) => (
-                    <td
-                      key={year}
-                      style={{
-                        padding: '1rem',
-                        textAlign: 'center',
-                        color: 'var(--text-secondary)',
-                        borderRight: '1px solid var(--border-color)',
-                      }}
-                    >
-                      {K10_DATA.gransbelopp[year as keyof typeof K10_DATA.gransbelopp].toLocaleString('sv-SE')} kr
-                    </td>
-                  ))}
-                </tr>
-                <tr style={{ borderBottom: '1px solid var(--border-color)' }}>
-                  <td
-                    style={{
-                      padding: '1rem',
-                      fontWeight: 500,
-                      color: 'var(--text-secondary)',
-                      borderRight: '1px solid var(--border-color)',
-                      textAlign: 'right',
-                    }}
-                  >
-                    Procentsats för uppräkning av sparat utdelningsutrymme
-                  </td>
-                  {years.map((year) => (
-                    <td
-                      key={year}
-                      style={{
-                        padding: '1rem',
-                        textAlign: 'center',
-                        color: 'var(--text-secondary)',
-                        borderRight: '1px solid var(--border-color)',
-                      }}
-                    >
-                      {K10_DATA.upprakningsprocent[year as keyof typeof K10_DATA.upprakningsprocent].toLocaleString('sv-SE', {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2,
-                      })}%
-                    </td>
-                  ))}
-                </tr>
-                <tr style={{ borderBottom: '1px solid var(--border-color)' }}>
-                  <td
-                    style={{
-                      padding: '1rem',
-                      fontWeight: 500,
-                      color: 'var(--text-secondary)',
-                      borderRight: '1px solid var(--border-color)',
-                      textAlign: 'right',
-                    }}
-                  >
-                    Ränta vid beräkning av omkostnadsbeloppsdelen enligt huvudregeln
-                  </td>
-                  {years.map((year) => (
-                    <td
-                      key={year}
-                      style={{
-                        padding: '1rem',
-                        textAlign: 'center',
-                        color: 'var(--text-secondary)',
-                        borderRight: '1px solid var(--border-color)',
-                      }}
-                    >
-                      {K10_DATA.ranta[year as keyof typeof K10_DATA.ranta].toLocaleString('sv-SE', {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2,
-                      })}%
-                    </td>
-                  ))}
-                </tr>
-                <tr style={{ borderBottom: '1px solid var(--border-color)' }}>
-                  <td
-                    style={{
-                      padding: '1rem',
-                      fontWeight: 500,
-                      color: 'var(--text-secondary)',
-                      borderRight: '1px solid var(--border-color)',
-                      textAlign: 'right',
-                    }}
-                  >
-                    Takbelopp för utdelning som ska beskattas i tjänst
-                  </td>
-                  {years.map((year) => (
-                    <td
-                      key={year}
-                      style={{
-                        padding: '1rem',
-                        textAlign: 'center',
-                        color: 'var(--text-secondary)',
-                        borderRight: '1px solid var(--border-color)',
-                      }}
-                    >
-                      {K10_DATA.takbeloppUtdelning[year as keyof typeof K10_DATA.takbeloppUtdelning].toLocaleString('sv-SE')} kr
-                    </td>
-                  ))}
-                </tr>
-                <tr style={{ borderBottom: '1px solid var(--border-color)' }}>
-                  <td
-                    style={{
-                      padding: '1rem',
-                      fontWeight: 500,
-                      color: 'var(--text-secondary)',
-                      borderRight: '1px solid var(--border-color)',
-                      textAlign: 'right',
-                    }}
-                  >
-                    Takbelopp för vinst som ska beskattas i tjänst
-                  </td>
-                  {years.map((year) => (
-                    <td
-                      key={year}
-                      style={{
-                        padding: '1rem',
-                        textAlign: 'center',
-                        color: 'var(--text-secondary)',
-                        borderRight: '1px solid var(--border-color)',
-                      }}
-                    >
-                      {K10_DATA.takbeloppVinst[year as keyof typeof K10_DATA.takbeloppVinst].toLocaleString('sv-SE')} kr
-                    </td>
-                  ))}
-                </tr>
-                <tr>
-                  <td
-                    style={{
-                      padding: '1rem',
-                      fontWeight: 500,
-                      color: 'var(--text-secondary)',
-                      borderRight: '1px solid var(--border-color)',
-                      textAlign: 'right',
+                      position: 'sticky',
+                      left: 0,
+                      background: 'var(--card-bg)',
+                      zIndex: 1,
                     }}
                   >
                     Lönekrav
-                  </td>
-                  {years.map((year) => (
-                    <td
-                      key={year}
-                      style={{
-                        padding: '1rem',
-                        textAlign: 'center',
-                        color: 'var(--text-secondary)',
-                        borderRight: '1px solid var(--border-color)',
-                        fontSize: '0.85rem',
-                        lineHeight: '1.4',
-                      }}
-                    >
-                      {K10_DATA.lonekrav[year as keyof typeof K10_DATA.lonekrav].fast.toLocaleString('sv-SE')} kr eller{' '}
-                      {K10_DATA.lonekrav[year as keyof typeof K10_DATA.lonekrav].alternativ.toLocaleString('sv-SE')} kr + 5% av sammanlagd kontant ersättning
-                    </td>
-                  ))}
+                  </th>
+                  {years.map((year) => {
+                    const l = K10_DATA.lonekrav[year];
+                    return cell(
+                      `${l.fast.toLocaleString('sv-SE')} kr eller ${l.alternativ.toLocaleString(
+                        'sv-SE'
+                      )} kr + 5% av sammanlagd kontant ersättning`,
+                      year
+                    );
+                  })}
                 </tr>
               </tbody>
             </table>
