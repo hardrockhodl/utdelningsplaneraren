@@ -323,6 +323,10 @@ input:disabled {
   font-variant-numeric: tabular-nums;
 }
 
+.year-table .calculated-row .row-header {
+  background-color: rgba(229, 230, 234, 0.1)
+}
+
 .year-table .highlight-green td {
   background-color: rgba(39, 180, 35, 0.1);
 }
