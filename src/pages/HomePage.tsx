@@ -4,6 +4,14 @@ import { Link } from 'react-router-dom';
 export function HomePage() {
   const tools = [
     {
+      id: 'fakturerar-ratt-timpris',
+      name: 'fakturerar-ratt-timpris',
+      description: 'Räkna ut vad du behöver ta betalt – på sekunder.',
+      icon: Calculator,
+      route: '/fakturerar-ratt-timprisn',
+      color: '#528582',
+    },
+    {
       id: 'lon-efter-skatt',
       name: 'Lön efter skatt',
       description: 'Beräkna din nettolön baserat på bruttolön och kommun. Använder Skatteverkets officiella skattetabeller för exakta beräkningar.',
