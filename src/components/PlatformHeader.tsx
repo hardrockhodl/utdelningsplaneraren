@@ -35,7 +35,7 @@ const tools = [
   {
     name: 'Belopp och procentsatser',
     icon: Percent,
-    route: '/tjanstepension',
+    route: '/k10-blankett',
   },
 ];
 
