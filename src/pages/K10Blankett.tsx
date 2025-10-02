@@ -154,6 +154,7 @@ export function K10Blankett() {
                       fontWeight: 500,
                       color: 'var(--text-secondary)',
                       borderRight: '1px solid var(--border-color)',
+                      textAlign: 'right',
                     }}
                   >
                     Procentsats för uppräkning av sparat utdelningsutrymme
@@ -166,7 +167,6 @@ export function K10Blankett() {
                         textAlign: 'center',
                         color: 'var(--text-secondary)',
                         borderRight: '1px solid var(--border-color)',
-                        textAlign: 'right',
                       }}
                     >
                       {K10_DATA.upprakningsprocent[year as keyof typeof K10_DATA.upprakningsprocent].toLocaleString('sv-SE', {
