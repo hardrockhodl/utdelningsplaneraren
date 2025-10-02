@@ -26,7 +26,7 @@ export function YearTable({ years, onUpdateYear }: YearTableProps) {
     { key: 'costsYearly', label: 'Kostnader (år)', desc: 'Totala övriga kostnader för året' },
     { key: 'bufferYearly', label: 'Buffert (år)', desc: 'Belopp som sparas som buffert' },
     { key: 'surplusYearly', label: 'Överskott (år)', desc: labels.terms.operatingSurplus.desc.sv },
-    { key: 'netProfitYearly', label: 'Årets resultat', desc: labels.terms.netProfit.desc.sv },
+    { key: 'netProfitYearly', label: 'Årets resultat', desc: labels.terms.netProfit.desc.sv, highlight: 'green' },
     { key: 'openingEquity', label: 'Ing. fritt EK', desc: labels.terms.equityOpening.desc.sv, highlight: 'yellow' },
     { key: 'maxDividendByEquity', label: 'Max utd. EK', desc: labels.terms.maxDividendByEquity.desc.sv, highlight: 'green' },
     { key: 'dividendAllowancePct', label: 'Utdeln. utrymme (%)', desc: labels.terms.dividendAllowancePct.desc.sv },
