@@ -630,7 +630,7 @@ input:disabled {
 .tips-box {
   border-radius: 4px;
   padding: 0.1rem 0.25rem;
-  border: 2px solid var(--accent-green);
+  border: 2px solid var(--accent-blue);
   background-color: rgba(39, 180, 35, 0.15);
   max-width: 45%;
 }
