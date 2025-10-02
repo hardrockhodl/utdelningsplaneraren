@@ -377,6 +377,27 @@ input:disabled {
   text-align: right;
 }
 
+.year-table tbody tr:nth-child(even) {
+  background: var(--stripe-bg, rgba(0,0,0,0.02));
+}
+
+.year-table tbody tr:nth-child(odd) {
+  background: transparent;
+}
+
+.year-table tbody tr.is-current {
+  background: var(--row-highlight, rgba(15,146,233,0.08));
+}
+
+.year-table tbody tr.is-current td {
+  color: var(--text-primary);
+}
+
+.desc-cell {
+  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: blur(5px);
+}
+
 [data-theme='dark'] .year-table .highlight-green td {
   background-color: rgba(39, 180, 35, 0.15);
 }

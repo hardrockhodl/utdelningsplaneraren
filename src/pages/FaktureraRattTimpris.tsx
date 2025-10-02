@@ -31,17 +31,19 @@ export function FaktureraRattTimpris() {
   }, []);
 
   useEffect(() => {
-    if (selectedKommun) {
-      const municipalTax = parseFloat(selectedKommun.Kommnskatt);
-      const countyTax = parseFloat(selectedKommun.Landstingsskatt);
-      const churchTax = churchMember ? parseFloat(selectedKommun.Kyrkoskatt || '0') : 0;
-      const totalTax = municipalTax + countyTax + churchTax;
-      setInputs({ ...inputs, municipalTax: totalTax });
-    }
+    if (!selectedKommun) return;
+    const municipalTax = parseFloat(selectedKommun.Kommnskatt);
+    const countyTax = parseFloat(selectedKommun.Landstingsskatt);
+    const churchTax = churchMember ? parseFloat(selectedKommun.Kyrkoskatt || '0') : 0;
+    const totalTax = municipalTax + countyTax + churchTax;
+
+    setInputs(prev => (
+      prev.municipalTax === totalTax ? prev : { ...prev, municipalTax: totalTax }
+    ));
   }, [selectedKommun, churchMember]);
 
   useEffect(() => {
-    setInputs({ ...inputs, regionalSupport });
+    setInputs(prev => (prev.regionalSupport === regionalSupport ? prev : { ...prev, regionalSupport }));
   }, [regionalSupport]);
 
   const loadKommuner = async () => {
@@ -147,7 +149,7 @@ export function FaktureraRattTimpris() {
               </div>
               {selectedKommun && (
                 <span className="setting-hint">
-                  Skattesats: {inputs.municipalTax.toFixed(2)}%
+                  Skattesats: {Number(inputs.municipalTax).toFixed(2)}%
                 </span>
               )}
             </div>
@@ -250,15 +252,15 @@ export function FaktureraRattTimpris() {
 
             <div className="total-card">
               <div className="card-content">
-                <div className="card-label">Total månadskostnad</div>
-                <div className="card-value">{mainResults.totalMonthlyCost.toLocaleString('sv-SE', { maximumFractionDigits: 0 })} kr</div>
-                <div className="card-sublabel">inkl. buffert</div>
+                <div className="card-label">Företagskostnader per månad</div>
+                <div className="card-value">{(mainResults.grossSalary + mainResults.employerContributions + inputs.businessCosts).toLocaleString('sv-SE', { maximumFractionDigits: 0 })} kr</div>
+                <div className="card-sublabel">+ {inputs.bufferPercentage}% buffert{inputs.savingsGoal > 0 ? ` + ${inputs.savingsGoal.toLocaleString('sv-SE')} kr sparande` : ''}</div>
               </div>
             </div>
 
             <div className="total-card">
               <div className="card-content">
-                <div className="card-label">Månatlig omsättning</div>
+                <div className="card-label">Månadsomsättning</div>
                 <div className="card-value">{mainResults.monthlyRevenue.toLocaleString('sv-SE', { maximumFractionDigits: 0 })} kr</div>
                 <div className="card-sublabel">baserat på {inputs.billableHours} tim/mån</div>
               </div>
@@ -280,12 +282,12 @@ export function FaktureraRattTimpris() {
                   <tr style={{ borderBottom: '1px solid var(--border-color)' }}>
                     <th
                       scope="row"
+                      className="desc-cell"
                       style={{
                         padding: '0.5rem 0.75rem',
                         fontWeight: 500,
                         color: 'var(--text-secondary)',
                         textAlign: 'left',
-                        backgroundColor: 'var(--stripe-bg, rgba(0,0,0,0.02))',
                       }}
                     >
                       Önskad nettolön
@@ -295,7 +297,6 @@ export function FaktureraRattTimpris() {
                         padding: '0.5rem 0.75rem',
                         textAlign: 'right',
                         color: 'var(--text-secondary)',
-                        backgroundColor: 'var(--stripe-bg, rgba(0,0,0,0.02))',
                       }}
                     >
                       {inputs.desiredNetSalary.toLocaleString('sv-SE')} kr
@@ -304,6 +305,7 @@ export function FaktureraRattTimpris() {
                   <tr style={{ borderBottom: '1px solid var(--border-color)' }}>
                     <th
                       scope="row"
+                      className="desc-cell"
                       style={{
                         padding: '0.5rem 0.75rem',
                         fontWeight: 500,
@@ -326,12 +328,12 @@ export function FaktureraRattTimpris() {
                   <tr style={{ borderBottom: '1px solid var(--border-color)' }}>
                     <th
                       scope="row"
+                      className="desc-cell"
                       style={{
                         padding: '0.5rem 0.75rem',
                         fontWeight: 500,
                         color: 'var(--text-secondary)',
                         textAlign: 'left',
-                        backgroundColor: 'var(--stripe-bg, rgba(0,0,0,0.02))',
                       }}
                     >
                       Arbetsgivaravgift ({inputs.employerContribution}%)
@@ -341,7 +343,6 @@ export function FaktureraRattTimpris() {
                         padding: '0.5rem 0.75rem',
                         textAlign: 'right',
                         color: 'var(--text-secondary)',
-                        backgroundColor: 'var(--stripe-bg, rgba(0,0,0,0.02))',
                       }}
                     >
                       {mainResults.employerContributions.toLocaleString('sv-SE', { maximumFractionDigits: 0 })} kr
@@ -350,6 +351,7 @@ export function FaktureraRattTimpris() {
                   <tr style={{ borderBottom: '1px solid var(--border-color)' }}>
                     <th
                       scope="row"
+                      className="desc-cell"
                       style={{
                         padding: '0.5rem 0.75rem',
                         fontWeight: 500,
@@ -373,12 +375,12 @@ export function FaktureraRattTimpris() {
                     <tr style={{ borderBottom: '1px solid var(--border-color)' }}>
                       <th
                         scope="row"
+                        className="desc-cell"
                         style={{
                           padding: '0.5rem 0.75rem',
                           fontWeight: 500,
                           color: 'var(--text-secondary)',
                           textAlign: 'left',
-                          backgroundColor: 'var(--stripe-bg, rgba(0,0,0,0.02))',
                         }}
                       >
                         Sparmål/Vinstmarginal
@@ -388,7 +390,6 @@ export function FaktureraRattTimpris() {
                           padding: '0.5rem 0.75rem',
                           textAlign: 'right',
                           color: 'var(--text-secondary)',
-                          backgroundColor: 'var(--stripe-bg, rgba(0,0,0,0.02))',
                         }}
                       >
                         {inputs.savingsGoal.toLocaleString('sv-SE')} kr
@@ -398,12 +399,12 @@ export function FaktureraRattTimpris() {
                   <tr style={{ borderBottom: '1px solid var(--border-color)' }}>
                     <th
                       scope="row"
+                      className="desc-cell"
                       style={{
                         padding: '0.5rem 0.75rem',
                         fontWeight: 500,
                         color: 'var(--text-secondary)',
                         textAlign: 'left',
-                        backgroundColor: inputs.savingsGoal > 0 ? 'transparent' : 'var(--stripe-bg, rgba(0,0,0,0.02))',
                       }}
                     >
                       Buffert ({inputs.bufferPercentage}%)
@@ -413,7 +414,6 @@ export function FaktureraRattTimpris() {
                         padding: '0.5rem 0.75rem',
                         textAlign: 'right',
                         color: 'var(--text-secondary)',
-                        backgroundColor: inputs.savingsGoal > 0 ? 'transparent' : 'var(--stripe-bg, rgba(0,0,0,0.02))',
                       }}
                     >
                       {(mainResults.totalMonthlyCost - (mainResults.grossSalary + mainResults.employerContributions + inputs.businessCosts + inputs.savingsGoal)).toLocaleString('sv-SE', { maximumFractionDigits: 0 })} kr
@@ -422,12 +422,12 @@ export function FaktureraRattTimpris() {
                   <tr style={{ borderBottom: '2px solid var(--border-color)', fontWeight: 600 }}>
                     <th
                       scope="row"
+                      className="desc-cell"
                       style={{
                         padding: '0.5rem 0.75rem',
                         fontWeight: 600,
                         color: 'var(--text-primary)',
                         textAlign: 'left',
-                        backgroundColor: inputs.savingsGoal > 0 ? 'var(--stripe-bg, rgba(0,0,0,0.02))' : 'transparent',
                       }}
                     >
                       Total månadskostnad
@@ -438,7 +438,6 @@ export function FaktureraRattTimpris() {
                         textAlign: 'right',
                         color: 'var(--text-primary)',
                         fontWeight: 600,
-                        backgroundColor: inputs.savingsGoal > 0 ? 'var(--stripe-bg, rgba(0,0,0,0.02))' : 'transparent',
                       }}
                     >
                       {mainResults.totalMonthlyCost.toLocaleString('sv-SE', { maximumFractionDigits: 0 })} kr
@@ -461,25 +460,20 @@ export function FaktureraRattTimpris() {
                   </tr>
                 </thead>
                 <tbody>
-                  {scenarioResults.map(({ hours, results }, idx) => {
+                  {scenarioResults.map(({ hours, results }) => {
                     const isCurrentScenario = hours === inputs.billableHours;
                     return (
                       <tr
                         key={hours}
+                        className={isCurrentScenario ? 'is-current' : ''}
                         style={{
                           borderBottom: '1px solid var(--border-color)',
-                          backgroundColor: isCurrentScenario
-                            ? 'var(--row-highlight, rgba(15,146,233,0.08))'
-                            : idx % 2 === 0
-                            ? 'var(--stripe-bg, rgba(0,0,0,0.02))'
-                            : 'transparent',
                           fontWeight: isCurrentScenario ? 600 : 400,
                         }}
                       >
                         <td
                           style={{
                             padding: '0.5rem 0.75rem',
-                            color: isCurrentScenario ? 'var(--text-primary)' : 'var(--text-secondary)',
                             borderRight: '1px solid var(--border-color)',
                           }}
                         >
@@ -489,7 +483,6 @@ export function FaktureraRattTimpris() {
                           style={{
                             padding: '0.5rem 0.75rem',
                             textAlign: 'left',
-                            color: isCurrentScenario ? 'var(--text-primary)' : 'var(--text-secondary)',
                             borderRight: '1px solid var(--border-color)',
                           }}
                         >
@@ -499,7 +492,6 @@ export function FaktureraRattTimpris() {
                           style={{
                             padding: '0.5rem 0.75rem',
                             textAlign: 'left',
-                            color: isCurrentScenario ? 'var(--text-primary)' : 'var(--text-secondary)',
                             borderRight: '1px solid var(--border-color)',
                           }}
                         >
@@ -509,7 +501,6 @@ export function FaktureraRattTimpris() {
                           style={{
                             padding: '0.5rem 0.75rem',
                             textAlign: 'left',
-                            color: isCurrentScenario ? 'var(--text-primary)' : 'var(--text-secondary)',
                             borderRight: '1px solid var(--border-color)',
                           }}
                         >
@@ -519,7 +510,6 @@ export function FaktureraRattTimpris() {
                           style={{
                             padding: '0.5rem 0.75rem',
                             textAlign: 'left',
-                            color: isCurrentScenario ? 'var(--text-primary)' : 'var(--text-secondary)',
                           }}
                         >
                           {results.annualRevenue.toLocaleString('sv-SE', { maximumFractionDigits: 0 })} kr
