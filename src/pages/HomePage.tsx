@@ -1,4 +1,4 @@
-import { Calculator, Wallet, ArrowRight } from 'lucide-react';
+import { Calculator, Wallet, ArrowRight, PiggyBank } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export function HomePage() {
@@ -19,6 +19,14 @@ export function HomePage() {
       route: '/utdelningsplaneraren',
       color: '#0f92e9',
     },
+    {
+      id: 'tjanstepension',
+      name: 'Tjänstepension',
+      description: 'Räkna ut din tjänstepension enligt ITP-1 reglerna. Se hur pensionspremien beräknas baserat på lön och inkomstbasbelopp.',
+      icon: PiggyBank,
+      route: '/tjanstepension',
+      color: '#528582',
+    },
   ];
 
   return (
@@ -34,7 +42,7 @@ export function HomePage() {
           </p>
         </div>
         
-        <div className="grid md:grid-cols-2 gap-[14px] mb-2">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-[14px] mb-2">
           {tools.map((tool) => {
             const Icon = tool.icon;
             return (

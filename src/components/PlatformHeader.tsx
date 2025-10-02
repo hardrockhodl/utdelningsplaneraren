@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Moon, Sun, Home, Calculator, Wallet, ChevronDown } from 'lucide-react';
+import { Moon, Sun, Home, Calculator, Wallet, ChevronDown, PiggyBank } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import logo from '../imgs/konsultverktyg.svg';
 
@@ -18,6 +18,11 @@ const tools = [
     name: 'Utdelningsplaneraren',
     icon: Calculator,
     route: '/utdelningsplaneraren',
+  },
+  {
+    name: 'Tjänstepension',
+    icon: PiggyBank,
+    route: '/tjanstepension',
   },
 ];
 
