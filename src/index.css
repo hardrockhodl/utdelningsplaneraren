@@ -632,6 +632,7 @@ input:disabled {
   padding: 0.1rem 0.25rem;
   border: 2px solid var(--accent-green);
   background-color: rgba(39, 180, 35, 0.15);
+  max-width: 35%;
 }
 
 .tips-box h3 {
