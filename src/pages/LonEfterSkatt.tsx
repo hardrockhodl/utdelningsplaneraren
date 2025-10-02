@@ -126,7 +126,7 @@ export function LonEfterSkatt() {
               <select
                 value={selectedColumn}
                 onChange={(e) => setSelectedColumn(Number(e.target.value))}
-                style={{ minWidth: 200 }}
+                style={{ minWidth: 100 }}
               >
                 {Object.entries(TAX_COLUMNS).map(([key, value]) => (
                   <option key={key} value={key}>
