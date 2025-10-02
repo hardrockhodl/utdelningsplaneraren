@@ -35,7 +35,7 @@ export function Utdelningsplaneraren() {
     {
       hourlyRate: 800,
       hoursPerMonth: 133,
-      grossSalaryMonthly: 50000,
+      grossSalaryMonthly: 55700,
       otherCostsMonthly: 15000,
       bufferPercent: 10,
       dividendPercent: 10,
@@ -43,7 +43,7 @@ export function Utdelningsplaneraren() {
     {
       hourlyRate: 850,
       hoursPerMonth: 133,
-      grossSalaryMonthly: 50000,
+      grossSalaryMonthly: 57900,
       otherCostsMonthly: 15000,
       bufferPercent: 10,
       dividendPercent: 20,
