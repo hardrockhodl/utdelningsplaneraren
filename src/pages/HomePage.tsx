@@ -1,8 +1,16 @@
-import { Calculator, ArrowRight } from 'lucide-react';
+import { Calculator, Wallet, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export function HomePage() {
   const tools = [
+    {
+      id: 'lon-efter-skatt',
+      name: 'Lön efter skatt',
+      description: 'Beräkna din nettolön baserat på bruttolön och kommun. Använder Skatteverkets officiella skattetabeller för exakta beräkningar.',
+      icon: Wallet,
+      route: '/lon-efter-skatt',
+      color: 'from-green-500 to-emerald-500',
+    },
     {
       id: 'utdelningsplaneraren',
       name: 'Utdelningsplaneraren',

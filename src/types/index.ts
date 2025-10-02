@@ -52,3 +52,15 @@ export interface Scenario {
   created_at?: string;
   updated_at?: string;
 }
+
+export interface Kommune {
+  KommunId: string;
+  Kommun: string;
+  Kommnskatt: string;
+  Landstingsskatt: string;
+  Kyrkoskatt: string | null;
+  Begravningsavgift: string;
+  Arbetsgivaravgift: string;
+  Slutskatt: string;
+  År: string;
+}

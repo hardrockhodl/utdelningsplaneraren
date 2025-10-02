@@ -179,7 +179,7 @@ export function formatNumber(value: number, decimals = 0): string {
  * Export calculation results to CSV format
  * Exportera beräkningsresultat till CSV-format
  */
-export function exportToCSV(settings: GlobalSettings, years: YearCalculation[]): string {
+export function exportToCSV(_settings: GlobalSettings, years: YearCalculation[]): string {
   const headers = [
     'År',
     'Timpris (kr)',
