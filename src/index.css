@@ -666,5 +666,6 @@ input:disabled {
   }
   .tips-box {
     background-color: red;
+    color: blue;
   }
 }
