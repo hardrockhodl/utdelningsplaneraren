@@ -206,7 +206,7 @@ select {
   background-color: var(--bg-tertiary);
   border: 1px solid var(--border);
   border-radius: 4px;
-  padding: 0.5rem 0.75rem;
+  padding: 0.25rem;
   font-family: 'IBM Plex Mono', monospace;
   font-size: 0.75rem;
   color: var(--text-primary);
