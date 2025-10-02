@@ -101,10 +101,10 @@ export function FaktureraRattTimpris() {
           <h3>Tips när du sätter timpris</h3>
           <ul style={{ lineHeight: 1.6, color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
             <li><strong>SGI-tak:</strong> ca 49 000 kr/mån (maxar sjuk- & föräldrapenning)</li>
+            <li><strong>PGI-tak:</strong> ca 54 200 kr/mån (max pensionsgrundande inkomst)</li>
+            <li><strong>Statlig skatt:</strong> brytpunkt ca 53 600 kr/mån</li>
             <li><strong>Huvudregeln:</strong> minst 457 200 kr/år + 5 % av löner eller 731 520 kr/år (större utdelningsutrymme)</li>
             <li><strong>Förenklingsregeln:</strong> 209 550 kr kan delas ut till 20 % skatt</li>
-            <li><strong>Statlig skatt:</strong> brytpunkt ca 53 600 kr/mån</li>
-            <li><strong>PGI-tak:</strong> ca 54 200 kr/mån (max pensionsgrundande inkomst)</li>
           </ul>
         </div>
         <div className="settings-panel">
