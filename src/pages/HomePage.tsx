@@ -24,17 +24,6 @@ export function HomePage() {
   return (
     <div className="min-h-screen bg-[#f7f8fa] dark:bg-[#1c1c1c]">
       <div className="max-w-[1600px] mx-auto px-6 py-6">
-        <div className="text-center mb-6">
-          <h1 className="text-[22px] font-semibold tracking-[-0.02em] text-[#1c1c1c] dark:text-[#f7f8fa] mb-2">
-            Konsulthjälpen
-          </h1>
-          <div className="inline-flex items-center gap-2 rounded-md border border-[#e0e0e0] dark:border-[#3a3a3a]
-                bg-white dark:bg-[#3a3a3a] px-3 py-2 text-[13px] text-[#70757a] dark:text-[#9ca3af]">
-            <span className="h-2 w-2 rounded-md bg-[#27b423]"></span>
-            Gratis • Ingen inloggning
-          </div>
-        </div>
-
         <div className="grid md:grid-cols-2 gap-[14px] mb-6">
           {tools.map((tool) => {
             const Icon = tool.icon;
