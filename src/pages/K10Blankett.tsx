@@ -101,7 +101,7 @@ export function K10Blankett() {
                       minWidth: '280px',
                     }}
                   >
-                    BELOPP OCH PROCENTSATSER
+                    ÅRTAL
                   </th>
                   {years.map((year) => (
                     <th
