@@ -13,10 +13,24 @@ export function SettingsPanel({ settings, onChange }: SettingsPanelProps) {
   const [kommuner, setKommuner] = useState<KommunOption[]>([]);
   const [loading, setLoading] = useState(true);
 
+
   useEffect(() => {
     fetchKommunTaxData().then((data) => {
       setKommuner(data);
       setLoading(false);
+  
+      // sätt default om ingen kommun är vald
+      if (!settings.kommun) {
+        const stockholm = data.find((k) => k.name === 'Stockholm');
+        if (stockholm) {
+          onChange({
+            ...settings,
+            kommun: stockholm.name,
+            municipalTax: settings.churchMember ? stockholm.totalWithChurch : stockholm.totalWithoutChurch,
+            churchTax: stockholm.churchTax,
+          });
+        }
+      }
     });
   }, []);
 
