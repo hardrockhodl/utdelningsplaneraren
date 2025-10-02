@@ -1,74 +1,32 @@
 import { useState } from 'react';
 import { Calculator } from 'lucide-react';
+import { calculateHourlyRateFromNetSalary, HourlyRateInput } from '../lib/calculations';
 
-interface HourlyRateInputs {
-  desiredNetSalary: number;
-  municipalTax: number;
-  employerContribution: number;
-  businessCosts: number;
-  billableHours: number;
-  bufferPercentage: number;
-  savingsGoal: number;
-}
-
-interface HourlyRateResults {
-  grossSalary: number;
-  employerContributions: number;
-  totalMonthlyCost: number;
-  hourlyRate: number;
-  hourlyRateWithVAT: number;
-  annualGrossSalary: number;
-  annualCost: number;
-  annualRevenue: number;
-}
-
-const VAT_RATE = 1.25;
-const SCENARIO_HOURS = [120, 140, 160, 180] as const;
+const DEFAULT_SCENARIO_HOURS = [117, 133, 150] as const;
 
 export function FaktureraRattTimpris() {
-  const [inputs, setInputs] = useState<HourlyRateInputs>({
+  const [inputs, setInputs] = useState<HourlyRateInput>({
     desiredNetSalary: 30000,
     municipalTax: 32,
     employerContribution: 31.42,
     businessCosts: 5000,
-    billableHours: 140,
+    billableHours: 133,
     bufferPercentage: 20,
     savingsGoal: 0,
   });
 
-  const updateInput = (field: keyof HourlyRateInputs, value: number) => {
+  const [scenarioHours] = useState<number[]>([...DEFAULT_SCENARIO_HOURS]);
+
+  const updateInput = (field: keyof HourlyRateInput, value: number) => {
     setInputs({ ...inputs, [field]: value });
   };
 
-  const calculateResults = (billableHours: number): HourlyRateResults => {
-    const grossSalary = inputs.desiredNetSalary / (1 - inputs.municipalTax / 100);
+  const mainResults = calculateHourlyRateFromNetSalary(inputs);
 
-    const employerContributions = grossSalary * (inputs.employerContribution / 100);
-
-    const baseCost = grossSalary + employerContributions + inputs.businessCosts + inputs.savingsGoal;
-
-    const totalMonthlyCost = baseCost * (1 + inputs.bufferPercentage / 100);
-
-    const hourlyRate = totalMonthlyCost / billableHours;
-    const hourlyRateWithVAT = hourlyRate * VAT_RATE;
-
-    return {
-      grossSalary,
-      employerContributions,
-      totalMonthlyCost,
-      hourlyRate,
-      hourlyRateWithVAT,
-      annualGrossSalary: grossSalary * 12,
-      annualCost: totalMonthlyCost * 12,
-      annualRevenue: hourlyRate * billableHours * 12,
-    };
-  };
-
-  const mainResults = calculateResults(inputs.billableHours);
-  const hourlyRateScenario120 = calculateResults(120);
-  const hourlyRateScenario140 = calculateResults(140);
-  const hourlyRateScenario160 = calculateResults(160);
-  const hourlyRateScenario180 = calculateResults(180);
+  const scenarioResults = scenarioHours.map(hours => ({
+    hours,
+    results: calculateHourlyRateFromNetSalary({ ...inputs, billableHours: hours })
+  }));
 
   return (
     <div className="app">
@@ -406,12 +364,7 @@ export function FaktureraRattTimpris() {
                   </tr>
                 </thead>
                 <tbody>
-                  {[
-                    { hours: 120, results: hourlyRateScenario120 },
-                    { hours: 140, results: hourlyRateScenario140 },
-                    { hours: 160, results: hourlyRateScenario160 },
-                    { hours: 180, results: hourlyRateScenario180 },
-                  ].map(({ hours, results }, idx) => {
+                  {scenarioResults.map(({ hours, results }, idx) => {
                     const isCurrentScenario = hours === inputs.billableHours;
                     return (
                       <tr

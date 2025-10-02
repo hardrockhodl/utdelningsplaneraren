@@ -165,6 +165,55 @@ export function calculateAllYears(
 }
 
 /**
+ * Calculate hourly rate based on desired net salary and business parameters
+ * Beräkna timpris baserat på önskad nettolön och affärsparametrar
+ */
+export interface HourlyRateInput {
+  desiredNetSalary: number;
+  municipalTax: number;
+  employerContribution: number;
+  businessCosts: number;
+  billableHours: number;
+  bufferPercentage: number;
+  savingsGoal: number;
+}
+
+export interface HourlyRateResult {
+  grossSalary: number;
+  employerContributions: number;
+  totalMonthlyCost: number;
+  hourlyRate: number;
+  hourlyRateWithVAT: number;
+  annualGrossSalary: number;
+  annualCost: number;
+  annualRevenue: number;
+}
+
+export function calculateHourlyRateFromNetSalary(input: HourlyRateInput): HourlyRateResult {
+  const grossSalary = input.desiredNetSalary / (1 - input.municipalTax / 100);
+
+  const employerContributions = grossSalary * (input.employerContribution / 100);
+
+  const baseCost = grossSalary + employerContributions + input.businessCosts + input.savingsGoal;
+
+  const totalMonthlyCost = baseCost * (1 + input.bufferPercentage / 100);
+
+  const hourlyRate = totalMonthlyCost / input.billableHours;
+  const hourlyRateWithVAT = hourlyRate * 1.25;
+
+  return {
+    grossSalary,
+    employerContributions,
+    totalMonthlyCost,
+    hourlyRate,
+    hourlyRateWithVAT,
+    annualGrossSalary: grossSalary * 12,
+    annualCost: totalMonthlyCost * 12,
+    annualRevenue: hourlyRate * input.billableHours * 12,
+  };
+}
+
+/**
  * Format number according to Swedish locale
  * Formatera tal enligt svensk standard
  */
