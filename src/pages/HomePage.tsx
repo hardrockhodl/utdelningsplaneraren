@@ -35,7 +35,7 @@ dark:before:bg-[radial-gradient(60rem_40rem_at_80%_-10%,_rgba(59,130,246,0.12),_
             <span className="h-2 w-2 rounded-full bg-emerald-500"></span>
             Gratis • Ingen inloggning
           </div>
-          <p className="text-xl text-slate-600 dark:text-slate-300/90 text-pretty max-w-2xl mx-auto">
+          <p className="text-xl text-slate-100 dark:text-slate-300/90 text-pretty max-w-2xl mx-auto">
             Verktyg och kalkylatorer för att underlätta din vardag som konsult
           </p>
         </div>
