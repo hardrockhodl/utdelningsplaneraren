@@ -118,19 +118,21 @@ export function LonEfterSkatt() {
                 <label className="setting-label" title="Välj typ av inkomst för korrekt skattetabell">
                   Inkomsttyp
                 </label>
-                <select
-                  value={selectedColumn}
-                  onChange={(e) => setSelectedColumn(Number(e.target.value))}
-                >
-                  {Object.entries(TAX_COLUMNS).map(([key, value]) => (
-                    <option key={key} value={key}>
-                      {value.name}
-                    </option>
-                  ))}
-                </select>
-                  <p style={{ color: 'var(--text-muted)', lineHeight: '1.1', fontSize: '0.75rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                  <select
+                    value={selectedColumn}
+                    onChange={(e) => setSelectedColumn(Number(e.target.value))}
+                  >
+                    {Object.entries(TAX_COLUMNS).map(([key, value]) => (
+                      <option key={key} value={key}>
+                        {value.name}
+                      </option>
+                    ))}
+                  </select>
+                  <p style={{ color: 'var(--text-muted)', fontSize: '0.75rem', lineHeight: '1.2' }}>
                     {TAX_COLUMNS[selectedColumn as keyof typeof TAX_COLUMNS].description}
                   </p>
+                </div>
               </div>
             
             </div>
