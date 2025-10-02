@@ -97,7 +97,7 @@ export function FaktureraRattTimpris() {
       </header>
 
       <main className="app-main">
-        <div className="tips-box" style={{ maxWidth: '25%', marginTop: '2rem' }}>
+        <div className="tips-box" style={{ maxWidth: '35%', marginTop: '2rem' }}>
           <h3>Tips när du sätter timpris</h3>
           <ul style={{ lineHeight: 1.6, color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
             <li><strong>SGI-tak:</strong> ca 49 000 kr/mån (maxar sjuk- & föräldrapenning)</li>
