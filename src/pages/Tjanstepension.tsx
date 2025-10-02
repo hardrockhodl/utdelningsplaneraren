@@ -23,7 +23,7 @@ export function Tjanstepension() {
   };
 
   const calculatePension = () => {
-    const ibbThreshold = ibb * 7.5;
+    const ibbThreshold = ibb * 7.5 / 12;
     const salaryUpToThreshold = Math.min(monthlySalary, ibbThreshold);
     const salaryAboveThreshold = Math.max(0, monthlySalary - ibbThreshold);
 
@@ -40,7 +40,7 @@ export function Tjanstepension() {
       higherPart,
       totalMonthly,
       totalYearly,
-      percentageOfSalary: (totalMonthly / monthlySalary) * 100,
+      percentageOfSalary: monthlySalary > 0 ? (totalMonthly / monthlySalary) * 100 : 0,
     };
   };
 
@@ -118,7 +118,7 @@ export function Tjanstepension() {
 
             <div className="setting-item">
               <label className="setting-label" title="Premie på lön upp till 7,5 IBB">
-                Premie på lön upp till 7,5 IBB ({(ibb * 7.5).toLocaleString('sv-SE')} kr)
+                Premie på lön upp till 7,5 IBB ({((ibb * 7.5) / 12).toLocaleString('sv-SE')} kr/mån)
               </label>
               <div className="input-with-suffix">
                 <input
@@ -135,7 +135,7 @@ export function Tjanstepension() {
 
             <div className="setting-item">
               <label className="setting-label" title="Premie på lön över 7,5 IBB">
-                Premie på lön över 7,5 IBB ({(ibb * 7.5).toLocaleString('sv-SE')} kr)
+                Premie på lön över 7,5 IBB ({((ibb * 7.5) / 12).toLocaleString('sv-SE')} kr/mån)
               </label>
               <div className="input-with-suffix">
                 <input
