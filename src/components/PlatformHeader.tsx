@@ -6,7 +6,7 @@ import { Home,
         PiggyBank,
         Moon,
         Sun,
-        Percent
+        FileText
        } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import logo from '../imgs/konsultverktyg.svg';
@@ -34,7 +34,7 @@ const tools = [
   },
   {
     name: 'Belopp och procentsatser',
-    icon: Percent,
+    icon: FileText,
     route: '/k10-blankett',
   },
 ];
