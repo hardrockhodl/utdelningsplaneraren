@@ -71,7 +71,8 @@ dark:before:bg-[radial-gradient(60rem_40rem_at_80%_-10%,_rgba(59,130,246,0.12),_
           })}
         </div>
 
-        <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 border border-slate-200 dark:border-slate-700">
+        <div className="bg-white/90 dark:bg-slate-800/80 backdrop-blur-sm rounded-2xl shadow-lg p-8
+                        ring-1 ring-slate-200/60 dark:ring-slate-700/60">
           <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">
             Om Konsulthjälpen
           </h2>
