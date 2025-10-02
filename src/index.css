@@ -512,7 +512,7 @@ input:disabled {
 .breakdown-separator {
   height: 1px;
   background-color: var(--border);
-  margin: 0.25rem 0;
+  margin: 0.1rem 0;
 }
 
 .breakdown-item.total {
