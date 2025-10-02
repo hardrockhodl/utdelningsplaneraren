@@ -22,7 +22,7 @@ export function HomePage() {
   ];
 
   return (
-    <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-[#f7f8fa] to-slate-100 dark:from-[#1c1c1c] dark:to-[#252525]
+    <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-[#f7f8fa] to-[#e3e4e6] dark:from-[#1c1c1c] dark:to-[#252525]
 before:content-[''] before:absolute before:inset-0 before:bg-[radial-gradient(60rem_40rem_at_80%_-10%,_rgba(59,130,246,0.08),_transparent_60%)]
 dark:before:bg-[radial-gradient(60rem_40rem_at_80%_-10%,_rgba(59,130,246,0.12),_transparent_60%)]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
