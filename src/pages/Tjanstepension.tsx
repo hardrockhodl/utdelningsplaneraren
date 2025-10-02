@@ -272,7 +272,7 @@ export function Tjanstepension() {
                   .map(([year, value]) => (
                     <li key={year} style={{ marginBottom: '0.5rem' }}>
                       {year}: {value.toLocaleString('sv-SE')} kr 
-                      (tröskel: {((value * 7.5) / 12).toLocaleString('sv-SE')} kr/mån)
+                      (tröskel: {((value * 7.5) / 12).toLocaleString('sv-SE')} kr/mån, {(value * 7.5).toLocaleString('sv-SE')} kr/år)
                     </li>
                   ))}
               </ul>
