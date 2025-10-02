@@ -114,11 +114,11 @@ export function LonEfterSkatt() {
                 />
                 <span className="suffix">kr</span>
               </div>
-              <div className="setting-item">
+              <div className="setting-item inkomsttyp">
                 <label className="setting-label" title="Välj typ av inkomst för korrekt skattetabell">
                   Inkomsttyp
                 </label>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' min-w-24 }}>
                   <select
                     value={selectedColumn}
                     onChange={(e) => setSelectedColumn(Number(e.target.value))}
@@ -129,7 +129,9 @@ export function LonEfterSkatt() {
                       </option>
                     ))}
                   </select>
-                  <p style={{ color: 'var(--text-muted)', fontSize: '0.75rem', lineHeight: '1.2' }}>
+                  <p style={{ color: 'var(--text-muted)', 
+                              fontSize: '0.75rem', 
+                              lineHeight: '1.2' }}>
                     {TAX_COLUMNS[selectedColumn as keyof typeof TAX_COLUMNS].description}
                   </p>
                 </div>
