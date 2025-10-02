@@ -567,6 +567,6 @@ input:disabled {
   .breakdown-item {
     flex-direction: column;
     align-items: flex-start;
-    gap: 0.25rem;
+    gap: 0.15rem;
   }
 }
