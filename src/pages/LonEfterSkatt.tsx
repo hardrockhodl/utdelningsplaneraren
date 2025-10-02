@@ -118,7 +118,7 @@ export function LonEfterSkatt() {
                 <label className="setting-label" title="Välj typ av inkomst för korrekt skattetabell">
                   Inkomsttyp
                 </label>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' min-w-24 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', min-width: '80px' }}>
                   <select
                     value={selectedColumn}
                     onChange={(e) => setSelectedColumn(Number(e.target.value))}
