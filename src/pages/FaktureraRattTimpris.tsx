@@ -91,7 +91,7 @@ export function FaktureraRattTimpris() {
           </div>
 
           <div className="settings-grid">
-            <div className="input-group">
+            <div className="settings-item">
               <label htmlFor="netSalary">Önskad nettolön per månad (kr)</label>
               <input
                 id="netSalary"
