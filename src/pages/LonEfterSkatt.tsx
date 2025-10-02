@@ -150,8 +150,8 @@ export function LonEfterSkatt() {
                 Medlem i svenska kyrkan
               </label>
             </div>
-
-            <div className="setting-item">
+          </div>
+          <div className="setting-item">
               <label className="setting-label" title="Välj typ av inkomst för korrekt skattetabell">
                 Inkomsttyp
               </label>
@@ -166,7 +166,6 @@ export function LonEfterSkatt() {
                 ))}
               </select>
             </div>
-          </div>
         </div>
 
         {result && (
