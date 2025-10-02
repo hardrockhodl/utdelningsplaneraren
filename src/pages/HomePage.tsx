@@ -22,13 +22,15 @@ export function HomePage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
+    <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-950 dark:to-slate-900
+before:content-[''] before:absolute before:inset-0 before:bg-[radial-gradient(60rem_40rem_at_80%_-10%,_rgba(59,130,246,0.08),_transparent_60%)]
+dark:before:bg-[radial-gradient(60rem_40rem_at_80%_-10%,_rgba(59,130,246,0.12),_transparent_60%)]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="text-center mb-16">
-          <h1 className="text-5xl font-bold text-slate-900 dark:text-white mb-4">
+          <h1 className="text-5xl font-bold tracking-tight text-balance text-slate-900 dark:text-white mb-3">
             Konsulthjälpen
           </h1>
-          <p className="text-xl text-slate-600 dark:text-slate-300 max-w-2xl mx-auto">
+          <p className="text-xl text-slate-600 dark:text-slate-300/90 text-pretty max-w-2xl mx-auto">
             Verktyg och kalkylatorer för att underlätta din vardag som konsult
           </p>
         </div>
