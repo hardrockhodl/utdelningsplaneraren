@@ -1,16 +1,8 @@
-import { Calculator, Wallet, ArrowRight, PiggyBank, FileText } from 'lucide-react';
+import { Calculator, Wallet, ArrowRight, PiggyBank, FileText, DollarSign } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export function HomePage() {
   const tools = [
-    {
-      id: 'fakturerar-ratt-timpris',
-      name: 'fakturerar-ratt-timpris',
-      description: 'Räkna ut vad du behöver ta betalt – på sekunder.',
-      icon: Calculator,
-      route: '/fakturerar-ratt-timprisn',
-      color: '#528582',
-    },
     {
       id: 'lon-efter-skatt',
       name: 'Lön efter skatt',
@@ -34,6 +26,14 @@ export function HomePage() {
       icon: PiggyBank,
       route: '/tjanstepension',
       color: '#528582',
+    },
+    {
+      id: 'fakturera-ratt-timpris',
+      name: 'Fakturera rätt timpris',
+      description: 'Med vårt verktyg kan du enkelt räkna fram vilket timpris du behöver ta för dina tjänster. Ange din önskade lön, dina kostnader och hur många timmar du fakturerar per månad – så får du ett tydligt underlag för att sätta ett timpris som täcker lön, skatt och utgifter.',
+      icon: DollarSign,
+      route: '/fakturera-ratt-timpris',
+      color: '#f59e0b',
     },
     {
       id: 'k10-blankett',
