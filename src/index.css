@@ -147,9 +147,9 @@ body {
 }
 
 .input-with-suffix {
-  display: flex;
+  display: flex;s
   align-items: center;
-  background-color: #f7f8fa;
+  background-color: var(--bg-tertiary);
   border: 1px solid var(--border);
   border-radius: 4px;
   overflow: hidden;
