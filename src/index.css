@@ -516,7 +516,7 @@ input:disabled {
 }
 
 .breakdown-item.total {
-  padding-top: 0.75rem;
+  padding-top: 0.5rem;
   margin-top: 0.25rem;
   border-top: 2px solid var(--border);
 }
