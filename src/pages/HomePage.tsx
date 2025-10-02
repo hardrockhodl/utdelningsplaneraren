@@ -42,12 +42,12 @@ dark:before:bg-[radial-gradient(60rem_40rem_at_80%_-10%,_rgba(59,130,246,0.12),_
               <Link
                 key={tool.id}
                 to={tool.route}
-                className="group relative bg-white dark:bg-slate-800 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border border-slate-200 dark:border-slate-700"
-              >
-                <div className={`absolute inset-0 bg-gradient-to-br ${tool.color} opacity-0 group-hover:opacity-5 transition-opacity duration-300`} />
+                aria-label={`Öppna ${tool.name}`}
+                className="group relative bg-white/90 dark:bg-slate-800/80 backdrop-blur-sm rounded-2xl shadow-lg hover:shadow-xl ring-1 ring-slate-200/60 dark:ring-slate-700/60 transition-all duration-300 overflow-hidden focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/60 motion-safe:hover:-translate-y-0.5">
+                <div className={`absolute inset-0 bg-gradient-to-br ${tool.color} opacity-0 group-hover:opacity-10 transition-opacity duration-300`} />
 
                 <div className="p-8">
-                  <div className={`inline-flex p-3 rounded-xl bg-gradient-to-br ${tool.color} mb-4`}>
+                  <div className={`inline-flex p-3 rounded-xl bg-gradient-to-br ${tool.color} ring-1 ring-white/20 backdrop-blur mb-4`}>
                     <Icon className="w-8 h-8 text-white" />
                   </div>
 
@@ -59,7 +59,9 @@ dark:before:bg-[radial-gradient(60rem_40rem_at_80%_-10%,_rgba(59,130,246,0.12),_
                     {tool.description}
                   </p>
 
-                  <div className="flex items-center text-blue-600 dark:text-blue-400 font-semibold group-hover:translate-x-2 transition-transform duration-300">
+                  <div className="inline-flex items-center px-3 py-2 rounded-lg text-blue-700 dark:text-blue-300
+                                  bg-blue-50 dark:bg-blue-950/30 border border-blue-200/60 dark:border-blue-800/50
+                                  font-medium group-hover:translate-x-1 transition-transform duration-300">
                     Öppna verktyget
                     <ArrowRight className="ml-2 w-5 h-5" />
                   </div>
