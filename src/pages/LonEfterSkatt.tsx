@@ -257,10 +257,10 @@ export function LonEfterSkatt() {
             <div className="results-section">
               <h2 className="section-title">Information</h2>
               <div className="settings-panel">
-                <p style={{ color: 'var(--text-secondary)', lineHeight: '1.6', marginBottom: '1rem' }}>
+                <p style={{ color: 'var(--text-secondary)', lineHeight: '1.1', marginBottom: '0.75rem' }}>
                   <strong>Vald inkomsttyp:</strong> {TAX_COLUMNS[selectedColumn as keyof typeof TAX_COLUMNS].name}
                 </p>
-                <p style={{ color: 'var(--text-muted)', lineHeight: '1.6', fontSize: '0.875rem' }}>
+                <p style={{ color: 'var(--text-muted)', lineHeight: '1.1', fontSize: '0.75rem' }}>
                   {TAX_COLUMNS[selectedColumn as keyof typeof TAX_COLUMNS].description}
                 </p>
               </div>
