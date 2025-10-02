@@ -34,7 +34,7 @@ export function PlatformHeader({ theme, onToggleTheme }: PlatformHeaderProps) {
             to="/"
             className="text-[16px] font-semibold tracking-[-0.01em] text-[#1c1c1c] dark:text-[#f7f8fa] hover:text-[#0f92e9] dark:hover:text-[#0f92e9] transition-colors duration-200"
           >
-            <img src={logo} className="h-6" alt="Verktyg för konsulter" />
+            <img src={logo} className="h-8" alt="Verktyg för konsulter" />
           </Link>
           <div className="inline-flex items-center gap-2 rounded-md border border-[#e0e0e0] dark:border-[#3a3a3a]
                 bg-white dark:bg-[#3a3a3a] px-3 py-2 text-[13px] text-[#70757a] dark:text-[#9ca3af]">
