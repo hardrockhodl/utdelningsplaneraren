@@ -274,7 +274,7 @@ input:disabled {
 
 .kommun-selector {
   grid-column: 1 / -1;
-  max-width: 17rem;
+  max-width: 16rem;
 }
 
 .results-section {
