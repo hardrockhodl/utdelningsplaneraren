@@ -128,6 +128,9 @@ export function LonEfterSkatt() {
                   </option>
                 ))}
               </select>
+                <p style={{ color: 'var(--text-muted)', lineHeight: '1.1', fontSize: '0.75rem' }}>
+                  {TAX_COLUMNS[selectedColumn as keyof typeof TAX_COLUMNS].description}
+                </p>
             </div>
             
             </div>
