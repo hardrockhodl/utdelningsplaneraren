@@ -256,10 +256,10 @@ export function Tjanstepension() {
                 <strong>Standardregler:</strong>
               </p>
               <ul style={{ paddingLeft: '1.2rem', marginBottom: '0.75rem' }}>
-                <li style={{ marginBottom: '0.5rem' }}>
+                <li style={{ marginBottom: '0.45rem' }}>
                   <strong>4,5%</strong> på lön upp till 7,5 inkomstbasbelopp (IBB)
                 </li>
-                <li style={{ marginBottom: '0.5rem' }}>
+                <li style={{ marginBottom: '0.45rem' }}>
                   <strong>30%</strong> på lön över 7,5 IBB
                 </li>
               </ul>
