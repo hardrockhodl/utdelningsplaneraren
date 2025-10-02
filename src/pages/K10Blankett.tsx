@@ -55,8 +55,8 @@ export function K10Blankett() {
   const years = Object.keys(K10_DATA.gransbelopp).map(Number).sort((a, b) => b - a);
 
   return (
-    <div className="page-container">
-      <header className="page-header">
+    <div className="app">
+      <header className="app-header">
         <div className="header-content">
           <div className="header-text">
             <h1>Belopp och procentsatser (blankett K10)</h1>
