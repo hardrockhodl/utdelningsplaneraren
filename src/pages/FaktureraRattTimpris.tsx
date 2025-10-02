@@ -521,7 +521,6 @@ export function FaktureraRattTimpris() {
                   })}
                 </tbody>
               </table>
-            </div>
           </div>
         </div>
       </main>
