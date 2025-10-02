@@ -247,7 +247,7 @@ export function Tjanstepension() {
         <div className="results-section">
           <h2 className="section-title">Information om ITP-1</h2>
           <div className="settings-panel">
-            <p style={{ color: 'var(--text-secondary)', lineHeight: '1.1', marginBottom: '0.75rem' }}>
+            <p style={{ color: 'var(--text-secondary)', lineHeight: '1.1', marginBottom: '0.5rem' }}>
               <strong>ITP-1</strong> är tjänstepensionsplanen för privatanställda tjänstemän födda 1979 eller senare.
               Premien betalas av arbetsgivaren och är en procentsats av din bruttolön.
             </p>
