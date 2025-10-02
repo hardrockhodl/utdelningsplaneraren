@@ -18,7 +18,7 @@ export function YearTable({ years, onUpdateYear }: YearTableProps) {
   ];
 
   const calculatedFields: Array<{ key: keyof YearCalculation; label: string; desc?: string; divideBy12?: boolean; highlight?: 'green' | 'yellow' }> = [
-    { key: 'billedYearly', label: 'Fakturerat (år)', desc: 'Total fakturering för året' },
+    { key: 'billedYearly', label: 'Fakturerat (år)', desc: 'Total fakturering för året', highlight: 'green' },
     { key: 'grossSalaryYearly', label: 'Bruttolön (år)', desc: labels.terms.grossSalary.desc.sv },
     { key: 'netSalaryYearly', label: 'Nettolön (år)', desc: labels.terms.netSalary.desc.sv },
     { key: 'netSalaryYearly', label: 'Nettolön (mån)', desc: 'Nettolön per månad', divideBy12: true, highlight: 'green' },
