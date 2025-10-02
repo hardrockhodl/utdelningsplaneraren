@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Moon, Sun, Home, Calculator, Wallet, ChevronDown } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
-import logo from 'imgs/konsultverktyg.svg';
+import logo from '../imgs/konsultverktyg.svg';
 
 interface PlatformHeaderProps {
   theme: 'light' | 'dark';
