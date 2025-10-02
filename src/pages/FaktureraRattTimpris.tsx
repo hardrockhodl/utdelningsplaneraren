@@ -258,6 +258,14 @@ export function FaktureraRattTimpris() {
 
             <div className="total-card">
               <div className="card-content">
+                <div className="card-label">Månatlig omsättning</div>
+                <div className="card-value">{mainResults.monthlyRevenue.toLocaleString('sv-SE', { maximumFractionDigits: 0 })} kr</div>
+                <div className="card-sublabel">baserat på {inputs.billableHours} tim/mån</div>
+              </div>
+            </div>
+
+            <div className="total-card">
+              <div className="card-content">
                 <div className="card-label">Årlig omsättning</div>
                 <div className="card-value">{mainResults.annualRevenue.toLocaleString('sv-SE', { maximumFractionDigits: 0 })} kr</div>
                 <div className="card-sublabel">baserat på {inputs.billableHours} tim/mån</div>
