@@ -208,7 +208,7 @@ select {
   border-radius: 4px;
   padding: 0.25rem;
   font-family: 'IBM Plex Mono', monospace;
-  font-size: 0.65rem;
+  font-size: 0.7rem;
   color: var(--text-primary);
   cursor: pointer;
   outline: none;
@@ -217,7 +217,7 @@ select {
 
 select:focus {
   border-color: var(--accent-blue);
-  font-size: 0.75rem;
+  font-size: 0.7rem;
 }
 
 input:disabled {
@@ -229,7 +229,7 @@ input:disabled {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.5rem 0.75rem;
+  padding: 0.25rem;
   font-size: 0.75rem;
   color: var(--text-muted);
 }
