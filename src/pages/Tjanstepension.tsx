@@ -16,6 +16,7 @@ export function Tjanstepension() {
   const [ibb, setIbb] = useState<number>(IBB_VALUES[currentYear] || 81700);
   const [lowerRate, setLowerRate] = useState<number>(4.5);
   const [higherRate, setHigherRate] = useState<number>(30);
+  const [showInfo, setShowInfo] = useState<boolean>(false);
 
   const handleYearChange = (year: number) => {
     setSelectedYear(year);
@@ -247,39 +248,59 @@ export function Tjanstepension() {
         </div>
 
         <div className="results-section">
-          <h2 className="section-title">Information om ITP-1</h2>
-          <div className="settings-panel">
-            <p style={{ color: 'var(--text-secondary)', lineHeight: '1.1', marginBottom: '0.5rem' }}>
-              <strong>ITP-1</strong> är tjänstepensionsplanen för privatanställda tjänstemän födda 1979 eller senare.
-              Premien betalas av arbetsgivaren och är en procentsats av din bruttolön.
-            </p>
-            <div style={{ color: 'var(--text-muted)', lineHeight: '1.1', fontSize: '0.75rem' }}>
-              <p style={{ marginBottom: '0.5rem' }}>
-                <strong>Standardregler:</strong>
+          <button
+            onClick={() => setShowInfo(!showInfo)}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+              background: 'none',
+              border: 'none',
+              color: 'var(--accent-blue)',
+              cursor: 'pointer',
+              fontSize: '0.9rem',
+              fontWeight: 500,
+              padding: '0.5rem 0',
+              marginBottom: '0.5rem',
+            }}
+          >
+            <span>{showInfo ? '▼' : '▶'}</span>
+            mer information
+          </button>
+          {showInfo && (
+            <div className="settings-panel">
+              <p style={{ color: 'var(--text-secondary)', lineHeight: '1.1', marginBottom: '0.5rem' }}>
+                <strong>ITP-1</strong> är tjänstepensionsplanen för privatanställda tjänstemän födda 1979 eller senare.
+                Premien betalas av arbetsgivaren och är en procentsats av din bruttolön.
               </p>
-              <ul style={{ paddingLeft: '1.2rem', marginBottom: '0.75rem' }}>
-                <li style={{ marginBottom: '0.45rem' }}>
-                  <strong>4,5%</strong> på lön upp till 7,5 inkomstbasbelopp (IBB)
-                </li>
-                <li style={{ marginBottom: '0.45rem' }}>
-                  <strong>30%</strong> på lön över 7,5 IBB
-                </li>
-              </ul>
-              <p style={{ marginBottom: '0.75rem' }}>
-                <strong>Inkomstbasbelopp (IBB):</strong>
-              </p>
-              <ul style={{ paddingLeft: '1.5rem' }}>
-                {Object.entries(IBB_VALUES)
-                  .sort(([a], [b]) => Number(b) - Number(a))
-                  .map(([year, value]) => (
-                    <li key={year} style={{ marginBottom: '0.45rem' }}>
-                      {year}: {value.toLocaleString('sv-SE')} kr 
-                      (tröskel: {((value * 7.5) / 12).toLocaleString('sv-SE')} kr/mån, {(value * 7.5).toLocaleString('sv-SE')} kr/år)
-                    </li>
-                  ))}
-              </ul>
+              <div style={{ color: 'var(--text-muted)', lineHeight: '1.1', fontSize: '0.75rem' }}>
+                <p style={{ marginBottom: '0.5rem' }}>
+                  <strong>Standardregler:</strong>
+                </p>
+                <ul style={{ paddingLeft: '1.2rem', marginBottom: '0.75rem' }}>
+                  <li style={{ marginBottom: '0.45rem' }}>
+                    <strong>4,5%</strong> på lön upp till 7,5 inkomstbasbelopp (IBB)
+                  </li>
+                  <li style={{ marginBottom: '0.45rem' }}>
+                    <strong>30%</strong> på lön över 7,5 IBB
+                  </li>
+                </ul>
+                <p style={{ marginBottom: '0.75rem' }}>
+                  <strong>Inkomstbasbelopp (IBB):</strong>
+                </p>
+                <ul style={{ paddingLeft: '1.5rem' }}>
+                  {Object.entries(IBB_VALUES)
+                    .sort(([a], [b]) => Number(b) - Number(a))
+                    .map(([year, value]) => (
+                      <li key={year} style={{ marginBottom: '0.45rem' }}>
+                        {year}: {value.toLocaleString('sv-SE')} kr
+                        (tröskel: {((value * 7.5) / 12).toLocaleString('sv-SE')} kr/mån, {(value * 7.5).toLocaleString('sv-SE')} kr/år)
+                      </li>
+                    ))}
+                </ul>
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </main>
     </div>
