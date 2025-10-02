@@ -77,8 +77,7 @@ export function FaktureraRattTimpris() {
           </div>
           <p className="subtitle">
             Med vårt verktyg kan du enkelt räkna fram vilket timpris du behöver ta för dina tjänster.
-            Ange din önskade lön, dina kostnader och hur många timmar du fakturerar per månad – så får du
-            ett tydligt underlag för att sätta ett timpris som täcker lön, skatt och utgifter.
+            Ange din önskade lön, dina kostnader och hur många timmar du fakturerar per månad.
           </p>
         </div>
       </header>
