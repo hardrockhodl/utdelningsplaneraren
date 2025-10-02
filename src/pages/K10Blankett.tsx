@@ -166,6 +166,7 @@ export function K10Blankett() {
                         textAlign: 'center',
                         color: 'var(--text-secondary)',
                         borderRight: '1px solid var(--border-color)',
+                        textAlign: 'right',
                       }}
                     >
                       {K10_DATA.upprakningsprocent[year as keyof typeof K10_DATA.upprakningsprocent].toLocaleString('sv-SE', {
