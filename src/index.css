@@ -322,7 +322,7 @@ input:disabled {
 }
 
 .year-table .highlight-green td {
-  background-color: rgba(39, 180, 35, 0.1);
+  background-color: rgba(39, 180, 35, 1);
 }
 
 .year-table .highlight-green .row-header {
