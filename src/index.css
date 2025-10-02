@@ -649,7 +649,7 @@ input:disabled {
 }
 
 .tips-box li {
-  margin-bottom: 0.14rem;
+  margin-bottom: 0.19rem;
   color: var(--text-secondary);
   font-size: 0.69rem;
 }
