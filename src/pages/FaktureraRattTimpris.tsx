@@ -84,7 +84,7 @@ export function FaktureraRattTimpris() {
       </header>
 
       <main className="app-main">
-        <div className="controls-section">
+        <div className="settings-panel">
           <h2>Inställningar</h2>
 
           <div className="input-grid">
