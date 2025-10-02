@@ -35,6 +35,9 @@ export function PlatformHeader({ theme, onToggleTheme }: PlatformHeaderProps) {
           >
             <span>Konsulthjälpen</span>
           </Link>
+          <p className="text-xl text-slate-100 dark:text-slate-300/90 text-pretty max-w-2xl mx-auto">
+            Verktyg och kalkylatorer för att underlätta din vardag som konsult
+          </p>
 
           <div className="flex items-center space-x-4">
             <div className="relative">
