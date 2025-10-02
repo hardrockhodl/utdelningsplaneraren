@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { ChevronDown, ChevronUp, Download } from 'lucide-react';
 import { GlobalSettings, YearCalculation } from '../types';
-import { exportToCSV } from '../lib/calculations';
+import { exportToCSVTransposed } from '../lib/calculations';
 
 interface DebugViewProps {
   settings: GlobalSettings;
