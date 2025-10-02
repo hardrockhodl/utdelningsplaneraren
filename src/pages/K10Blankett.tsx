@@ -93,7 +93,7 @@ export function K10Blankett() {
       <th
         scope="row"
         style={{
-          padding: '1rem',
+          padding: '0.21rem',
           fontWeight: 500,
           color: 'var(--text-secondary)',
           borderRight: '1px solid var(--border-color)',
