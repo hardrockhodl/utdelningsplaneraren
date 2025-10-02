@@ -164,7 +164,7 @@ body {
   flex: 1;
   background: transparent;
   border: none;
-  padding: 0.25rem;
+  padding: 0.5rem;
   font-family: 'IBM Plex Mono', monospace;
   font-size: 0.7875rem;
   color: var(--text-primary);
