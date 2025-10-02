@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Moon, Sun, Home, Calculator, Wallet, ChevronDown } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
+import logo from '@/imgs/konsultverktyg.svg';
 
 interface PlatformHeaderProps {
   theme: 'light' | 'dark';
@@ -26,14 +27,14 @@ export function PlatformHeader({ theme, onToggleTheme }: PlatformHeaderProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 bg-white/95 dark:bg-[#1c1c1c]/95 backdrop-blur-sm border-b border-[#e0e0e0] dark:border-[#3a3a3a]">
+    <header className="sticky top-0 z-50 bg-white/80 dark:bg-[#1c1c1c]/80 supports-[backdrop-filter]:bg-white/60 dark:supports-[backdrop-filter]:bg-[#1c1c1c]/60">
       <div className="max-w-[1600px] mx-auto px-6">
         <div className="flex items-center justify-between h-14">
           <Link
             to="/"
             className="text-[16px] font-semibold tracking-[-0.01em] text-[#1c1c1c] dark:text-[#f7f8fa] hover:text-[#0f92e9] dark:hover:text-[#0f92e9] transition-colors duration-200"
           >
-            <img src="src/imgs/konsultverktyg.svg" max-h-6></img>
+            <img src={logo} className="h-6" alt="Verktyg för konsulter" />
           </Link>
           <div className="inline-flex items-center gap-2 rounded-md border border-[#e0e0e0] dark:border-[#3a3a3a]
                 bg-white dark:bg-[#3a3a3a] px-3 py-2 text-[13px] text-[#70757a] dark:text-[#9ca3af]">
