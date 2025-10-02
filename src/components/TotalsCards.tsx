@@ -29,7 +29,7 @@ export function TotalsCards({ years }: TotalsCardsProps) {
       icon: Banknote,
       label: 'Totalt netto till ägare',
       value: totalNetToOwner,
-      color: '#b89364',
+      color: '#f89364',
     },
     {
       icon: PiggyBank,
