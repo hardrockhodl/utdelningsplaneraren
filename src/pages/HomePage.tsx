@@ -4,6 +4,14 @@ import { Link } from 'react-router-dom';
 export function HomePage() {
   const tools = [
     {
+      id: 'fakturera-ratt-timpris',
+      name: 'Fakturera rätt timpris',
+      description: 'Med vårt verktyg kan du enkelt räkna fram vilket timpris du behöver ta för dina tjänster. Ange din önskade lön, dina kostnader och hur många timmar du fakturerar per månad – så får du ett tydligt underlag för att sätta ett timpris som täcker lön, skatt och utgifter.',
+      icon: DollarSign,
+      route: '/fakturera-ratt-timpris',
+      color: '#f59e0b',
+    },
+    {
       id: 'lon-efter-skatt',
       name: 'Lön efter skatt',
       description: 'Beräkna din nettolön baserat på bruttolön och kommun. Använder Skatteverkets officiella skattetabeller för exakta beräkningar.',
@@ -26,14 +34,6 @@ export function HomePage() {
       icon: PiggyBank,
       route: '/tjanstepension',
       color: '#528582',
-    },
-    {
-      id: 'fakturera-ratt-timpris',
-      name: 'Fakturera rätt timpris',
-      description: 'Med vårt verktyg kan du enkelt räkna fram vilket timpris du behöver ta för dina tjänster. Ange din önskade lön, dina kostnader och hur många timmar du fakturerar per månad – så får du ett tydligt underlag för att sätta ett timpris som täcker lön, skatt och utgifter.',
-      icon: DollarSign,
-      route: '/fakturera-ratt-timpris',
-      color: '#f59e0b',
     },
     {
       id: 'k10-blankett',
