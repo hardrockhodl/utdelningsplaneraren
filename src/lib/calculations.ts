@@ -181,36 +181,46 @@ export function formatNumber(value: number, decimals = 0): string {
  */
 export function exportToCSVTransposed(_settings: GlobalSettings, years: YearCalculation[]) {
   const sep = ';';
-  const fmt = (v: number) => Number.isFinite(v) ? Math.round(v * 100) / 100 : v;
+  const pick = (y: any, ...keys: string[]) => {
+    for (const k of keys) {
+      const v = y?.[k];
+      if (v !== undefined && v !== null) return v;
+    }
+    return '';
+  };
+  const mul = (v: any, n: number) => (typeof v === 'number' ? v * n : '');
 
   const header = ['År', ...years.map((_, i) => String(i + 1))];
 
   const rows = [
-    ['Timpris (kr)', ...years.map(y => y.timpris)],
-    ['Timmar/mån', ...years.map(y => y.timmarPerManad)],
-    ['Bruttolön (mån)', ...years.map(y => y.bruttolonManad)],
-    ['Övr. kostn (mån)', ...years.map(y => y.ovrigaKostnaderManad)],
-    ['Buffert %', ...years.map(y => y.buffertPct)],
-    ['Fakturerat (år)', ...years.map(y => fmt(y.faktureratAr))],
-    ['Bruttolön (år)', ...years.map(y => fmt(y.bruttolonAr ?? y.bruttolonManad * 12))],
-    ['Nettolön (år)', ...years.map(y => fmt(y.nettolonAr))],
-    ['Arbetsgivaravgift (år)', ...years.map(y => fmt(y.arbetsgivaravgiftAr))],
-    ['Kostnader (år)', ...years.map(y => fmt(y.kostnaderAr))],
-    ['Buffert (år)', ...years.map(y => fmt(y.buffertAr))],
-    ['Överskott (år)', ...years.map(y => fmt(y.overskottAr))],
-    ['Årets resultat', ...years.map(y => fmt(y.aretsResultat))],
-    ['Ing. fritt EK', ...years.map(y => fmt(y.ingaendeEK))],
-    ['Max utd. EK', ...years.map(y => fmt(y.maxUtdelningEK))],
-    ['Utdeln. %', ...years.map(y => y.utdelningPct)],
-    ['Utd. brutto', ...years.map(y => fmt(y.utdelningBrutto))],
-    ['Utd. netto', ...years.map(y => fmt(y.utdelningNetto))],
-    ['Totalt netto (mån)', ...years.map(y => fmt(y.totaltNettoManad))],
-    ['Utg. fritt EK', ...years.map(y => fmt(y.utgaendeEK))],
-    ['Sparat utd. utrymme', ...years.map(y => fmt(y.sparatUtdelningsutrymme))],
+    ['Timpris (kr)', ...years.map(y => pick(y, 'timpris', 'hourlyRate'))],
+    ['Timmar/mån', ...years.map(y => pick(y, 'timmarPerManad', 'hoursPerMonth'))],
+    ['Bruttolön (mån)', ...years.map(y => pick(y, 'bruttolonManad', 'grossSalaryMonth'))],
+    ['Övr. kostn (mån)', ...years.map(y => pick(y, 'ovrigaKostnaderManad', 'otherCostsMonth'))],
+    ['Buffert %', ...years.map(y => pick(y, 'buffertPct', 'bufferPct'))],
+
+    ['Fakturerat (år)', ...years.map(y => pick(y, 'faktureratAr', 'invoicedYear'))],
+    // årsbrutto: använd direkt fält om finns, annars 12 × månadsbrutto
+    ['Bruttolön (år)', ...years.map(y => {
+      const ar = pick(y, 'bruttolonAr', 'grossSalaryYear');
+      return ar !== '' ? ar : mul(pick(y, 'bruttolonManad', 'grossSalaryMonth'), 12);
+    })],
+    ['Nettolön (år)', ...years.map(y => pick(y, 'nettolonAr', 'netSalaryYear'))],
+    ['Arbetsgivaravgift (år)', ...years.map(y => pick(y, 'arbetsgivaravgiftAr', 'employerContributionYear'))],
+    ['Kostnader (år)', ...years.map(y => pick(y, 'kostnaderAr', 'costsYear'))],
+    ['Buffert (år)', ...years.map(y => pick(y, 'buffertAr', 'bufferYear'))],
+    ['Överskott (år)', ...years.map(y => pick(y, 'overskottAr', 'surplusYear'))],
+
+    ['Årets resultat', ...years.map(y => pick(y, 'aretsResultat', 'resultYear'))],
+    ['Ing. fritt EK', ...years.map(y => pick(y, 'ingaendeEK', 'equityIn'))],
+    ['Max utd. EK', ...years.map(y => pick(y, 'maxUtdelningEK', 'maxDividendEquity'))],
+    ['Utdeln. %', ...years.map(y => pick(y, 'utdelningPct', 'dividendPct'))],
+    ['Utd. brutto', ...years.map(y => pick(y, 'utdelningBrutto', 'dividendGross'))],
+    ['Utd. netto', ...years.map(y => pick(y, 'utdelningNetto', 'dividendNet'))],
+    ['Totalt netto (mån)', ...years.map(y => pick(y, 'totaltNettoManad', 'totalNetPerMonth'))],
+    ['Utg. fritt EK', ...years.map(y => pick(y, 'utgaendeEK', 'equityOut'))],
+    ['Sparat utd. utrymme', ...years.map(y => pick(y, 'sparatUtdelningsutrymme', 'savedAllowance'))],
   ];
 
-  return [
-    header.join(sep),
-    ...rows.map(r => r.join(sep)),
-  ].join('\n');
+  return [header.join(sep), ...rows.map(r => r.join(sep))].join('\n');
 }
