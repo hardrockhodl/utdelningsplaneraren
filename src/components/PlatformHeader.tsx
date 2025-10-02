@@ -41,7 +41,7 @@ export function PlatformHeader({ theme, onToggleTheme }: PlatformHeaderProps) {
           >
             <img src={logo} className="h-8" alt="Verktyg för konsulter" />
           </Link>
-          <div className="inline-flex items-center gap-2 rounded-md border border-[#e0e0e0] dark:border-[#3a3a3a] bg-white dark:bg-[#3a3a3a] px-3 py-2 text-[13px] text-[#70757a] dark:text-[#9ca3af]">
+          <div className="hidden md:inline-flex items-center gap-2 rounded-md border border-[#e0e0e0] dark:border-[#3a3a3a] bg-white dark:bg-[#3a3a3a] px-3 py-2 text-[13px] text-[#70757a] dark:text-[#9ca3af]">
             <span className="h-2 w-2 rounded-md bg-[#27b423]"></span>
             Gratis • Ingen inloggning behövs
           </div>
