@@ -139,7 +139,7 @@ export function LonEfterSkatt() {
                   marginTop: '6px',
                   background: '#FFF9C4',
                   border: '2px solid #FFEB3B',
-                  borderRadius: 8,
+                  borderRadius: 4,
                   padding: '8px 10px',
                   fontSize: '0.8rem',
                   lineHeight: 1.4,
