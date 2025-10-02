@@ -6,7 +6,8 @@ import { Home,
         PiggyBank,
         Moon,
         Sun,
-        FileText
+        FileText,
+        DollarSign
        } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import logo from '../imgs/konsultverktyg.svg';
@@ -31,6 +32,11 @@ const tools = [
     name: 'Tjänstepension',
     icon: PiggyBank,
     route: '/tjanstepension',
+  },
+  {
+    name: 'Fakturera rätt timpris',
+    icon: DollarSign,
+    route: '/fakturera-ratt-timpris',
   },
   {
     name: 'Belopp och procentsatser',
