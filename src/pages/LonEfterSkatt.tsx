@@ -140,6 +140,16 @@ export function LonEfterSkatt() {
                 </select>
               )}
             </div>
+            <div className="setting-item">
+              <label className="checkbox-label">
+                <input
+                  type="checkbox"
+                  checked={churchMember}
+                  onChange={(e) => setChurchMember(e.target.checked)}
+                />
+                Medlem i svenska kyrkan
+              </label>
+            </div>
 
             <div className="setting-item">
               <label className="setting-label" title="Välj typ av inkomst för korrekt skattetabell">
@@ -155,17 +165,6 @@ export function LonEfterSkatt() {
                   </option>
                 ))}
               </select>
-            </div>
-
-            <div className="setting-item">
-              <label className="checkbox-label">
-                <input
-                  type="checkbox"
-                  checked={churchMember}
-                  onChange={(e) => setChurchMember(e.target.checked)}
-                />
-                Medlem i svenska kyrkan
-              </label>
             </div>
           </div>
         </div>
