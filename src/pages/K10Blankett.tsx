@@ -102,6 +102,9 @@ export function K10Blankett() {
           left: 0,
           background: 'var(--card-bg)',
           zIndex: 1,
+          backdropFilter: 'blur(5px)',
+          WebkitBackdropFilter: 'blur(5px)',
+
         }}
       >
         {label}
