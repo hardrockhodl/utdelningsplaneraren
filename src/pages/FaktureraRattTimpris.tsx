@@ -1,14 +1,23 @@
-import { useState } from 'react';
-import { Calculator } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Calculator, Loader } from 'lucide-react';
 import { calculateHourlyRateFromNetSalary, HourlyRateInput } from '../lib/calculations';
+import { Kommune } from '../types';
+import { fetchKommuner, findKommun } from '../lib/skatteverket';
 
 const DEFAULT_SCENARIO_HOURS = [117, 133, 150] as const;
 
 export function FaktureraRattTimpris() {
+  const [selectedKommun, setSelectedKommun] = useState<Kommune | null>(null);
+  const [kommuner, setKommuner] = useState<Kommune[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [churchMember, setChurchMember] = useState(false);
+  const [regionalSupport, setRegionalSupport] = useState(false);
+
   const [inputs, setInputs] = useState<HourlyRateInput>({
     desiredNetSalary: 30000,
     municipalTax: 32,
     employerContribution: 31.42,
+    regionalSupport: false,
     businessCosts: 5000,
     billableHours: 133,
     bufferPercentage: 20,
@@ -16,6 +25,49 @@ export function FaktureraRattTimpris() {
   });
 
   const [scenarioHours] = useState<number[]>([...DEFAULT_SCENARIO_HOURS]);
+
+  useEffect(() => {
+    loadKommuner();
+  }, []);
+
+  useEffect(() => {
+    if (selectedKommun) {
+      const municipalTax = parseFloat(selectedKommun.Kommnskatt);
+      const countyTax = parseFloat(selectedKommun.Landstingsskatt);
+      const churchTax = churchMember ? parseFloat(selectedKommun.Kyrkoskatt || '0') : 0;
+      const totalTax = municipalTax + countyTax + churchTax;
+      setInputs({ ...inputs, municipalTax: totalTax });
+    }
+  }, [selectedKommun, churchMember]);
+
+  useEffect(() => {
+    setInputs({ ...inputs, regionalSupport });
+  }, [regionalSupport]);
+
+  const loadKommuner = async () => {
+    setLoading(true);
+    try {
+      const data = await fetchKommuner();
+      setKommuner(data);
+
+      const stockholm = findKommun(data, 'Stockholm');
+      if (stockholm) {
+        setSelectedKommun(stockholm);
+      }
+    } catch (error) {
+      console.error('Failed to load kommuner:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleKommunChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const kommunId = e.target.value;
+    const kommun = kommuner.find((k) => k.KommunId === kommunId);
+    if (kommun) {
+      setSelectedKommun(kommun);
+    }
+  };
 
   const updateInput = (field: keyof HourlyRateInput, value: number) => {
     setInputs({ ...inputs, [field]: value });
@@ -62,16 +114,42 @@ export function FaktureraRattTimpris() {
             </div>
 
             <div className="setting-item">
-              <label htmlFor="municipalTax">Kommunalskatt (%)</label>
-              <input
-                id="municipalTax"
-                type="number"
-                value={inputs.municipalTax}
-                onChange={(e) => updateInput('municipalTax', Number(e.target.value))}
-                step="0.1"
-                min="0"
-                max="100"
-              />
+              <label htmlFor="kommun">Kommun</label>
+              {loading ? (
+                <div className="loading-container" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem' }}>
+                  <Loader size={16} className="spinner" />
+                  <span>Laddar kommuner...</span>
+                </div>
+              ) : (
+                <select
+                  id="kommun"
+                  value={selectedKommun?.KommunId || ''}
+                  onChange={handleKommunChange}
+                  disabled={kommuner.length === 0}
+                >
+                  <option value="">Välj kommun</option>
+                  {kommuner.map((kommun) => (
+                    <option key={kommun.KommunId} value={kommun.KommunId}>
+                      {kommun.Kommun}
+                    </option>
+                  ))}
+                </select>
+              )}
+              <div style={{ marginTop: '0.5rem' }}>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.9rem', cursor: 'pointer' }}>
+                  <input
+                    type="checkbox"
+                    checked={churchMember}
+                    onChange={(e) => setChurchMember(e.target.checked)}
+                  />
+                  Medlem i svenska kyrkan
+                </label>
+              </div>
+              {selectedKommun && (
+                <span className="setting-hint">
+                  Skattesats: {inputs.municipalTax.toFixed(2)}%
+                </span>
+              )}
             </div>
 
             <div className="setting-item">
@@ -85,6 +163,16 @@ export function FaktureraRattTimpris() {
                 min="0"
                 max="100"
               />
+              <div style={{ marginTop: '0.5rem' }}>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.9rem', cursor: 'pointer' }}>
+                  <input
+                    type="checkbox"
+                    checked={regionalSupport}
+                    onChange={(e) => setRegionalSupport(e.target.checked)}
+                  />
+                  Regionalt stöd
+                </label>
+              </div>
             </div>
 
             <div className="setting-item">
@@ -360,6 +448,7 @@ export function FaktureraRattTimpris() {
                     <th>Fakturerbara timmar/mån</th>
                     <th>Timpris (exkl. moms)</th>
                     <th>Timpris (inkl. moms)</th>
+                    <th>Månadsomsättning</th>
                     <th>Årsomsättning</th>
                   </tr>
                 </thead>
@@ -407,6 +496,16 @@ export function FaktureraRattTimpris() {
                           }}
                         >
                           {results.hourlyRateWithVAT.toLocaleString('sv-SE', { maximumFractionDigits: 0 })} kr
+                        </td>
+                        <td
+                          style={{
+                            padding: '0.5rem 0.75rem',
+                            textAlign: 'right',
+                            color: isCurrentScenario ? 'var(--text-primary)' : 'var(--text-secondary)',
+                            borderRight: '1px solid var(--border-color)',
+                          }}
+                        >
+                          {results.monthlyRevenue.toLocaleString('sv-SE', { maximumFractionDigits: 0 })} kr
                         </td>
                         <td
                           style={{

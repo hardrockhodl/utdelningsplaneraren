@@ -172,6 +172,7 @@ export interface HourlyRateInput {
   desiredNetSalary: number;
   municipalTax: number;
   employerContribution: number;
+  regionalSupport?: boolean;
   businessCosts: number;
   billableHours: number;
   bufferPercentage: number;
@@ -184,6 +185,7 @@ export interface HourlyRateResult {
   totalMonthlyCost: number;
   hourlyRate: number;
   hourlyRateWithVAT: number;
+  monthlyRevenue: number;
   annualGrossSalary: number;
   annualCost: number;
   annualRevenue: number;
@@ -192,7 +194,16 @@ export interface HourlyRateResult {
 export function calculateHourlyRateFromNetSalary(input: HourlyRateInput): HourlyRateResult {
   const grossSalary = input.desiredNetSalary / (1 - input.municipalTax / 100);
 
-  const employerContributions = grossSalary * (input.employerContribution / 100);
+  const effectiveEmployerContribution = input.regionalSupport
+    ? input.employerContribution - 10
+    : input.employerContribution;
+
+  let employerContributions = grossSalary * (effectiveEmployerContribution / 100);
+
+  if (input.regionalSupport) {
+    const monthlyDeduction = Math.min(grossSalary * 0.10, 7100);
+    employerContributions = Math.max(0, employerContributions - monthlyDeduction);
+  }
 
   const baseCost = grossSalary + employerContributions + input.businessCosts + input.savingsGoal;
 
@@ -200,6 +211,7 @@ export function calculateHourlyRateFromNetSalary(input: HourlyRateInput): Hourly
 
   const hourlyRate = totalMonthlyCost / input.billableHours;
   const hourlyRateWithVAT = hourlyRate * 1.25;
+  const monthlyRevenue = hourlyRate * input.billableHours;
 
   return {
     grossSalary,
@@ -207,6 +219,7 @@ export function calculateHourlyRateFromNetSalary(input: HourlyRateInput): Hourly
     totalMonthlyCost,
     hourlyRate,
     hourlyRateWithVAT,
+    monthlyRevenue,
     annualGrossSalary: grossSalary * 12,
     annualCost: totalMonthlyCost * 12,
     annualRevenue: hourlyRate * input.billableHours * 12,
