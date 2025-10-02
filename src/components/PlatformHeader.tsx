@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Moon, Sun, Home, Calculator, Wallet, ChevronDown } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
-import logo from '@/imgs/konsultverktyg.svg';
+import logo from '/imgs/konsultverktyg.svg';
 
 interface PlatformHeaderProps {
   theme: 'light' | 'dark';
@@ -27,7 +27,7 @@ export function PlatformHeader({ theme, onToggleTheme }: PlatformHeaderProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 bg-white/80 dark:bg-[#1c1c1c]/80 supports-[backdrop-filter]:bg-white/60 dark:supports-[backdrop-filter]:bg-[#1c1c1c]/60">
+    <header className="sticky top-0 z-50 bg-white/95 dark:bg-[#1c1c1c]/95 backdrop-blur-sm border-b border-[#e0e0e0] dark:border-[#3a3a3a]">
       <div className="max-w-[1600px] mx-auto px-6">
         <div className="flex items-center justify-between h-14">
           <Link
