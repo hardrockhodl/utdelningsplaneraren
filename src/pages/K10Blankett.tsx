@@ -94,7 +94,6 @@ export function K10Blankett() {
         scope="row"
         style={{
           padding: '1rem',
-          stripedRow: true,
           fontWeight: 500,
           color: 'var(--text-secondary)',
           borderRight: '1px solid var(--border-color)',
