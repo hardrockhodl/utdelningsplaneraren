@@ -522,52 +522,6 @@ export function FaktureraRattTimpris() {
                 </tbody>
               </table>
             </div>
-
-          <h3 className="section-subtitle">Årlig översikt</h3>
-          <div className="totals-grid">
-            <div className="total-card">
-              <div className="card-icon" style={{ color: '#27b423' }}>
-                <Wallet size={24} />
-              </div>
-              <div className="card-content">
-                <div className="card-label">Årlig bruttolön</div>
-                <div className="card-value">{mainResults.annualGrossSalary.toLocaleString('sv-SE', { maximumFractionDigits: 0 })} kr</div>
-                <div className="card-sublabel">före skatt</div>
-              </div>
-            </div>
-
-            <div className="total-card">
-              <div className="card-icon" style={{ color: '#27b423' }}>
-                <Calculator size={24} />
-              </div>
-              <div className="card-content">
-                <div className="card-label">Årlig total kostnad</div>
-                <div className="card-value">{mainResults.annualCost.toLocaleString('sv-SE', { maximumFractionDigits: 0 })} kr</div>
-                <div className="card-sublabel">inkl. buffert</div>
-              </div>
-            </div>
-
-            <div className="total-card highlight">
-              <div className="card-icon" style={{ color: '#27b423' }}>
-                <TrendingUp size={24} />
-              </div>
-              <div className="card-content">
-                <div className="card-label">Årlig omsättning</div>
-                <div className="card-value">{mainResults.annualRevenue.toLocaleString('sv-SE', { maximumFractionDigits: 0 })} kr</div>
-                <div className="card-sublabel">exkl. moms</div>
-              </div>
-            </div>
-
-            <div className="total-card">
-              <div className="card-icon" style={{ color: '#27b423' }}>
-                <Clock size={24} />
-              </div>
-              <div className="card-content">
-                <div className="card-label">Total fakturerbara timmar per år</div>
-                <div className="card-value">{(inputs.billableHours * 12).toLocaleString('sv-SE')} h</div>
-                <div className="card-sublabel">baserat på {inputs.billableHours} tim/mån</div>
-              </div>
-            </div>
           </div>
         </div>
       </main>
