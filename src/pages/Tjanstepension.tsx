@@ -118,7 +118,7 @@ export function Tjanstepension() {
 
             <div className="setting-item">
               <label className="setting-label" title="Premie på lön upp till 7,5 IBB">
-                Premie på lön upp till 7,5 IBB
+                Premie på lön upp till 7,5 IBB ({(ibb * 7.5).toLocaleString('sv-SE')} kr)
               </label>
               <div className="input-with-suffix">
                 <input
@@ -135,7 +135,7 @@ export function Tjanstepension() {
 
             <div className="setting-item">
               <label className="setting-label" title="Premie på lön över 7,5 IBB">
-                Premie på lön över 7,5 IBB
+                Premie på lön över 7,5 IBB ({(ibb * 7.5).toLocaleString('sv-SE')} kr)
               </label>
               <div className="input-with-suffix">
                 <input
