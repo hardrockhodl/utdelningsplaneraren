@@ -664,4 +664,7 @@ input:disabled {
     align-items: flex-start;
     gap: 0.125rem;
   }
+  .tips-box {
+    background-color: red;
+  }
 }
