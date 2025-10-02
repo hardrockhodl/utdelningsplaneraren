@@ -100,7 +100,7 @@ export function PlatformHeader({ theme, onToggleTheme }: PlatformHeaderProps) {
               className="p-[10px] rounded-md text-[#1c1c1c] dark:text-[#f9dc5c] hover:bg-white dark:hover:bg-[#3a3a3a] border border-[#e0e0e0] dark:border-[#3a3a3a] transition-colors duration-200"
               aria-label="Växla tema"
             >
-              {theme === 'dark' ? <Sun color="yellow" size={18} /> : <Moon size={18} />}
+              {theme === 'dark' ? <Sun color="yellow" size={18} /> : <Moon color="lightblue" size={18} />}
             </button>
           </div>
         </div>
