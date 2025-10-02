@@ -30,6 +30,11 @@ dark:before:bg-[radial-gradient(60rem_40rem_at_80%_-10%,_rgba(59,130,246,0.12),_
           <h1 className="text-5xl font-bold tracking-tight text-balance text-slate-900 dark:text-white mb-3">
             Konsulthjälpen
           </h1>
+          <div className="mt-4 inline-flex items-center gap-2 rounded-full border border-slate-200 dark:border-slate-700
+                bg-white/70 dark:bg-slate-900/40 backdrop-blur px-3 py-1 text-sm text-slate-600 dark:text-slate-300">
+            <span className="h-2 w-2 rounded-full bg-emerald-500"></span>
+            Gratis • Ingen inloggning
+          </div>
           <p className="text-xl text-slate-600 dark:text-slate-300/90 text-pretty max-w-2xl mx-auto">
             Verktyg och kalkylatorer för att underlätta din vardag som konsult
           </p>
@@ -76,11 +81,6 @@ dark:before:bg-[radial-gradient(60rem_40rem_at_80%_-10%,_rgba(59,130,246,0.12),_
           <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">
             Om Konsulthjälpen
           </h2>
-          <div className="mt-4 inline-flex items-center gap-2 rounded-full border border-slate-200 dark:border-slate-700
-                bg-white/70 dark:bg-slate-900/40 backdrop-blur px-3 py-1 text-sm text-slate-600 dark:text-slate-300">
-            <span className="h-2 w-2 rounded-full bg-emerald-500"></span>
-            Gratis • Ingen inloggning • Lokal lagring
-          </div>
           <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
             Konsulthjälpen är en samling verktyg designade för att göra livet enklare för dig som driver eget konsultbolag.
             Alla verktyg är gratis att använda och kräver ingen registrering. Din data sparas lokalt i din webbläsare.
