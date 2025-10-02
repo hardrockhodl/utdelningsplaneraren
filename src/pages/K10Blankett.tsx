@@ -128,7 +128,7 @@ export function K10Blankett() {
                       fontWeight: 500,
                       color: 'var(--text-secondary)',
                       borderRight: '1px solid var(--border-color)',
-                      textAlign: 'right';
+                      textAlign: 'right',
                     }}
                   >
                     Gränsbelopp enligt förenklingsregeln
