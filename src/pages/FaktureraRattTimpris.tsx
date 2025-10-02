@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Calculator } from 'lucide-react';
 
-interface Inputs {
+interface HourlyRateInputs {
   desiredNetSalary: number;
   municipalTax: number;
   employerContribution: number;
@@ -11,7 +11,7 @@ interface Inputs {
   savingsGoal: number;
 }
 
-interface Results {
+interface HourlyRateResults {
   grossSalary: number;
   employerContributions: number;
   totalMonthlyCost: number;
@@ -22,8 +22,11 @@ interface Results {
   annualRevenue: number;
 }
 
+const VAT_RATE = 1.25;
+const SCENARIO_HOURS = [120, 140, 160, 180] as const;
+
 export function FaktureraRattTimpris() {
-  const [inputs, setInputs] = useState<Inputs>({
+  const [inputs, setInputs] = useState<HourlyRateInputs>({
     desiredNetSalary: 50000,
     municipalTax: 32,
     employerContribution: 31.42,
@@ -33,11 +36,11 @@ export function FaktureraRattTimpris() {
     savingsGoal: 0,
   });
 
-  const updateInput = (field: keyof Inputs, value: number) => {
+  const updateInput = (field: keyof HourlyRateInputs, value: number) => {
     setInputs({ ...inputs, [field]: value });
   };
 
-  const calculateResults = (billableHours: number): Results => {
+  const calculateResults = (billableHours: number): HourlyRateResults => {
     const grossSalary = inputs.desiredNetSalary / (1 - inputs.municipalTax / 100);
 
     const employerContributions = grossSalary * (inputs.employerContribution / 100);
@@ -47,7 +50,7 @@ export function FaktureraRattTimpris() {
     const totalMonthlyCost = baseCost * (1 + inputs.bufferPercentage / 100);
 
     const hourlyRate = totalMonthlyCost / billableHours;
-    const hourlyRateWithVAT = hourlyRate * 1.25;
+    const hourlyRateWithVAT = hourlyRate * VAT_RATE;
 
     return {
       grossSalary,
@@ -62,24 +65,22 @@ export function FaktureraRattTimpris() {
   };
 
   const mainResults = calculateResults(inputs.billableHours);
-  const scenario120 = calculateResults(120);
-  const scenario140 = calculateResults(140);
-  const scenario160 = calculateResults(160);
-  const scenario180 = calculateResults(180);
+  const hourlyRateScenario120 = calculateResults(120);
+  const hourlyRateScenario140 = calculateResults(140);
+  const hourlyRateScenario160 = calculateResults(160);
+  const hourlyRateScenario180 = calculateResults(180);
 
   return (
     <div className="app">
       <header className="app-header">
         <div className="header-content">
-          <div className="header-text" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <Calculator size={20} />
+          <div>
             <h1>Fakturera rätt timpris</h1>
             <p className="subtitle">
-            Med vårt verktyg kan du enkelt räkna fram vilket timpris du behöver ta för dina tjänster.
-            Ange din önskade lön, dina kostnader och hur många timmar du fakturerar per månad.
-          </p>
+              Med vårt verktyg kan du enkelt räkna fram vilket timpris du behöver ta för dina tjänster.
+              Ange din önskade lön, dina kostnader och hur många timmar du fakturerar per månad.
+            </p>
           </div>
-          
         </div>
       </header>
 
@@ -91,7 +92,7 @@ export function FaktureraRattTimpris() {
           </div>
 
           <div className="settings-grid">
-            <div className="settings-item">
+            <div className="setting-item">
               <label htmlFor="netSalary">Önskad nettolön per månad (kr)</label>
               <input
                 id="netSalary"
@@ -102,7 +103,7 @@ export function FaktureraRattTimpris() {
               />
             </div>
 
-            <div className="input-group">
+            <div className="setting-item">
               <label htmlFor="municipalTax">Kommunalskatt (%)</label>
               <input
                 id="municipalTax"
@@ -115,7 +116,7 @@ export function FaktureraRattTimpris() {
               />
             </div>
 
-            <div className="input-group">
+            <div className="setting-item">
               <label htmlFor="employerContribution">Arbetsgivaravgift (%)</label>
               <input
                 id="employerContribution"
@@ -128,7 +129,7 @@ export function FaktureraRattTimpris() {
               />
             </div>
 
-            <div className="input-group">
+            <div className="setting-item">
               <label htmlFor="businessCosts">Månadskostnader företag (kr)</label>
               <input
                 id="businessCosts"
@@ -137,10 +138,10 @@ export function FaktureraRattTimpris() {
                 onChange={(e) => updateInput('businessCosts', Number(e.target.value))}
                 step="500"
               />
-              <span className="input-hint">Programvara, kontor, försäkringar, etc.</span>
+              <span className="setting-hint">Programvara, kontor, försäkringar, etc.</span>
             </div>
 
-            <div className="input-group">
+            <div className="setting-item">
               <label htmlFor="billableHours">Fakturerbara timmar per månad</label>
               <input
                 id="billableHours"
@@ -152,7 +153,7 @@ export function FaktureraRattTimpris() {
               />
             </div>
 
-            <div className="input-group">
+            <div className="setting-item">
               <label htmlFor="buffer">Buffert/Marginal (%)</label>
               <input
                 id="buffer"
@@ -163,10 +164,10 @@ export function FaktureraRattTimpris() {
                 min="0"
                 max="100"
               />
-              <span className="input-hint">För risker, stillestånd, semester</span>
+              <span className="setting-hint">För risker, stillestånd, semester</span>
             </div>
 
-            <div className="input-group">
+            <div className="setting-item">
               <label htmlFor="savings">Sparmål/Vinstmarginal per månad (kr)</label>
               <input
                 id="savings"
@@ -176,7 +177,7 @@ export function FaktureraRattTimpris() {
                 step="1000"
                 min="0"
               />
-              <span className="input-hint">Valfritt: extra sparande eller vinst</span>
+              <span className="setting-hint">Valfritt: extra sparande eller vinst</span>
             </div>
           </div>
         </div>
@@ -184,49 +185,43 @@ export function FaktureraRattTimpris() {
         <div className="results-section">
           <h2>Resultat</h2>
 
-          <div className="results-cards">
-            <div className="result-card highlight">
-              <div className="result-label">Rekommenderat timpris</div>
-              <div className="result-value">{mainResults.hourlyRate.toLocaleString('sv-SE', { maximumFractionDigits: 0 })} kr</div>
-              <div className="result-sublabel">exkl. moms</div>
+          <div className="totals-grid">
+            <div className="total-card highlight">
+              <div className="card-content">
+                <div className="card-label">Rekommenderat timpris</div>
+                <div className="card-value">{mainResults.hourlyRate.toLocaleString('sv-SE', { maximumFractionDigits: 0 })} kr</div>
+                <div className="card-sublabel">exkl. moms</div>
+              </div>
             </div>
 
-            <div className="result-card">
-              <div className="result-label">Timpris inkl. moms</div>
-              <div className="result-value">{mainResults.hourlyRateWithVAT.toLocaleString('sv-SE', { maximumFractionDigits: 0 })} kr</div>
-              <div className="result-sublabel">25% moms</div>
+            <div className="total-card">
+              <div className="card-content">
+                <div className="card-label">Timpris inkl. moms</div>
+                <div className="card-value">{mainResults.hourlyRateWithVAT.toLocaleString('sv-SE', { maximumFractionDigits: 0 })} kr</div>
+                <div className="card-sublabel">25% moms</div>
+              </div>
             </div>
 
-            <div className="result-card">
-              <div className="result-label">Total månadskostnad</div>
-              <div className="result-value">{mainResults.totalMonthlyCost.toLocaleString('sv-SE', { maximumFractionDigits: 0 })} kr</div>
-              <div className="result-sublabel">inkl. buffert</div>
+            <div className="total-card">
+              <div className="card-content">
+                <div className="card-label">Total månadskostnad</div>
+                <div className="card-value">{mainResults.totalMonthlyCost.toLocaleString('sv-SE', { maximumFractionDigits: 0 })} kr</div>
+                <div className="card-sublabel">inkl. buffert</div>
+              </div>
             </div>
 
-            <div className="result-card">
-              <div className="result-label">Årlig omsättning</div>
-              <div className="result-value">{mainResults.annualRevenue.toLocaleString('sv-SE', { maximumFractionDigits: 0 })} kr</div>
-              <div className="result-sublabel">baserat på {inputs.billableHours} tim/mån</div>
+            <div className="total-card">
+              <div className="card-content">
+                <div className="card-label">Årlig omsättning</div>
+                <div className="card-value">{mainResults.annualRevenue.toLocaleString('sv-SE', { maximumFractionDigits: 0 })} kr</div>
+                <div className="card-sublabel">baserat på {inputs.billableHours} tim/mån</div>
+              </div>
             </div>
           </div>
 
-          <div style={{ marginTop: '2rem' }}>
-            <h3 style={{ marginBottom: '1rem', fontSize: '1.1rem', fontWeight: 600 }}>Detaljerad uppdelning per månad</h3>
-            <div
-              style={{
-                overflowX: 'auto',
-                backgroundColor: 'var(--card-bg)',
-                borderRadius: '8px',
-                border: '1px solid var(--border-color)',
-              }}
-            >
-              <table
-                style={{
-                  width: '100%',
-                  borderCollapse: 'collapse',
-                  fontSize: '0.875rem',
-                }}
-              >
+          <h3 className="section-subtitle">Detaljerad uppdelning per månad</h3>
+          <div className="table-container">
+            <table className="year-table">
                 <tbody>
                   <tr style={{ borderBottom: '1px solid var(--border-color)' }}>
                     <th
@@ -398,85 +393,24 @@ export function FaktureraRattTimpris() {
                 </tbody>
               </table>
             </div>
-          </div>
 
-          <div style={{ marginTop: '2rem' }}>
-            <h3 style={{ marginBottom: '1rem', fontSize: '1.1rem', fontWeight: 600 }}>
-              Jämförelse: Timpris vid olika fakturerbara timmar
-            </h3>
-            <div
-              style={{
-                overflowX: 'auto',
-                backgroundColor: 'var(--card-bg)',
-                borderRadius: '8px',
-                border: '1px solid var(--border-color)',
-              }}
-            >
-              <table
-                style={{
-                  width: '100%',
-                  borderCollapse: 'collapse',
-                  fontSize: '0.875rem',
-                }}
-              >
+          <h3 className="section-subtitle">Jämförelse: Timpris vid olika fakturerbara timmar</h3>
+          <div className="table-container">
+            <table className="year-table">
                 <thead>
-                  <tr
-                    style={{
-                      backgroundColor: 'var(--header-bg)',
-                      borderBottom: '2px solid var(--border-color)',
-                    }}
-                  >
-                    <th
-                      style={{
-                        padding: '0.5rem 0.75rem',
-                        textAlign: 'left',
-                        fontWeight: 600,
-                        color: 'var(--text-primary)',
-                        borderRight: '1px solid var(--border-color)',
-                      }}
-                    >
-                      Fakturerbara timmar/mån
-                    </th>
-                    <th
-                      style={{
-                        padding: '0.5rem 0.75rem',
-                        textAlign: 'right',
-                        fontWeight: 600,
-                        color: 'var(--text-primary)',
-                        borderRight: '1px solid var(--border-color)',
-                      }}
-                    >
-                      Timpris (exkl. moms)
-                    </th>
-                    <th
-                      style={{
-                        padding: '0.5rem 0.75rem',
-                        textAlign: 'right',
-                        fontWeight: 600,
-                        color: 'var(--text-primary)',
-                        borderRight: '1px solid var(--border-color)',
-                      }}
-                    >
-                      Timpris (inkl. moms)
-                    </th>
-                    <th
-                      style={{
-                        padding: '0.5rem 0.75rem',
-                        textAlign: 'right',
-                        fontWeight: 600,
-                        color: 'var(--text-primary)',
-                      }}
-                    >
-                      Årsomsättning
-                    </th>
+                  <tr>
+                    <th>Fakturerbara timmar/mån</th>
+                    <th>Timpris (exkl. moms)</th>
+                    <th>Timpris (inkl. moms)</th>
+                    <th>Årsomsättning</th>
                   </tr>
                 </thead>
                 <tbody>
                   {[
-                    { hours: 120, results: scenario120 },
-                    { hours: 140, results: scenario140 },
-                    { hours: 160, results: scenario160 },
-                    { hours: 180, results: scenario180 },
+                    { hours: 120, results: hourlyRateScenario120 },
+                    { hours: 140, results: hourlyRateScenario140 },
+                    { hours: 160, results: hourlyRateScenario160 },
+                    { hours: 180, results: hourlyRateScenario180 },
                   ].map(({ hours, results }, idx) => {
                     const isCurrentScenario = hours === inputs.billableHours;
                     return (
@@ -536,25 +470,10 @@ export function FaktureraRattTimpris() {
                 </tbody>
               </table>
             </div>
-          </div>
 
-          <div style={{ marginTop: '2rem' }}>
-            <h3 style={{ marginBottom: '1rem', fontSize: '1.1rem', fontWeight: 600 }}>Årlig översikt</h3>
-            <div
-              style={{
-                overflowX: 'auto',
-                backgroundColor: 'var(--card-bg)',
-                borderRadius: '8px',
-                border: '1px solid var(--border-color)',
-              }}
-            >
-              <table
-                style={{
-                  width: '100%',
-                  borderCollapse: 'collapse',
-                  fontSize: '0.875rem',
-                }}
-              >
+          <h3 className="section-subtitle">Årlig översikt</h3>
+          <div className="table-container">
+            <table className="year-table">
                 <tbody>
                   <tr style={{ borderBottom: '1px solid var(--border-color)' }}>
                     <th
@@ -651,7 +570,6 @@ export function FaktureraRattTimpris() {
                 </tbody>
               </table>
             </div>
-          </div>
         </div>
       </main>
     </div>
