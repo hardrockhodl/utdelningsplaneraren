@@ -249,7 +249,7 @@ input:disabled {
 
 .kommun-selector {
   grid-column: 1 / -1;
-  max-width: 12rem;
+  max-width: 15rem;
 }
 
 .results-section {
