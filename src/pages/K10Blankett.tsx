@@ -68,16 +68,20 @@ export function K10Blankett() {
 
   const now = new Date().getFullYear();
 
-  const cell = (value: number | string, year: number) => (
+  const cell = (value: number | string, year: number, rowIndex: number) => (
     <td
       key={year}
       style={{
-        padding: '1rem',
+        padding: '0.5rem 0.75rem',
         textAlign: 'center',
         color: 'var(--text-secondary)',
         borderRight: '1px solid var(--border-color)',
         backgroundColor:
-          year === now ? 'var(--row-highlight, rgba(15,146,233,0.05))' : 'transparent',
+          year === now
+            ? 'var(--row-highlight, rgba(15,146,233,0.08))'
+            : rowIndex % 2 === 0
+            ? 'var(--stripe-bg, rgba(0,0,0,0.02))'
+            : 'transparent',
       }}
     >
       {value}
@@ -87,41 +91,42 @@ export function K10Blankett() {
   const row = (
     label: string,
     values: (year: Year) => number | string,
-    format?: 'kr' | '%' | 'raw'
+    format?: 'kr' | '%' | 'raw',
+    rowIndex: number = 0
   ) => (
     <tr style={{ borderBottom: '1px solid var(--border-color)' }}>
       <th
         scope="row"
         style={{
-          padding: '0.21rem',
+          padding: '0.5rem 0.75rem',
           fontWeight: 500,
           color: 'var(--text-secondary)',
           borderRight: '1px solid var(--border-color)',
           textAlign: 'right',
           position: 'sticky',
           left: 0,
-          background: 'var(--card-bg)',
+          background: rowIndex % 2 === 0 ? 'var(--stripe-bg, rgba(0,0,0,0.02))' : 'var(--card-bg)',
           zIndex: 1,
           backdropFilter: 'blur(5px)',
           WebkitBackdropFilter: 'blur(5px)',
-
         }}
       >
         {label}
       </th>
       {years.map((year) => {
         const v = values(year);
-        if (typeof v !== 'number') return cell(v, year);
+        if (typeof v !== 'number') return cell(v, year, rowIndex);
         if (format === '%')
           return cell(
             v.toLocaleString('sv-SE', {
               minimumFractionDigits: 2,
               maximumFractionDigits: 2,
             }) + '%',
-            year
+            year,
+            rowIndex
           );
-        if (format === 'kr') return cell(v.toLocaleString('sv-SE') + ' kr', year);
-        return cell(v, year);
+        if (format === 'kr') return cell(v.toLocaleString('sv-SE') + ' kr', year, rowIndex);
+        return cell(v, year, rowIndex);
       })}
     </tr>
   );
@@ -152,7 +157,7 @@ export function K10Blankett() {
               style={{
                 width: '100%',
                 borderCollapse: 'collapse',
-                fontSize: '0.9rem',
+                fontSize: '0.875rem',
               }}
             >
               <thead>
@@ -164,12 +169,12 @@ export function K10Blankett() {
                 >
                   <th
                     style={{
-                      padding: '1rem',
+                      padding: '0.5rem 0.75rem',
                       textAlign: 'left',
                       fontWeight: 600,
                       color: 'var(--text-primary)',
                       borderRight: '1px solid var(--border-color)',
-                      minWidth: '280px',
+                      minWidth: '240px',
                       position: 'sticky',
                       left: 0,
                       background: 'var(--header-bg)',
@@ -182,12 +187,12 @@ export function K10Blankett() {
                     <th
                       key={year}
                       style={{
-                        padding: '1rem',
+                        padding: '0.5rem 0.75rem',
                         textAlign: 'center',
                         fontWeight: 600,
                         color: 'var(--text-primary)',
                         borderRight: '1px solid var(--border-color)',
-                        minWidth: '120px',
+                        minWidth: '110px',
                         backgroundColor:
                           year === now
                             ? 'var(--row-highlight, rgba(15,146,233,0.08))'
@@ -200,40 +205,46 @@ export function K10Blankett() {
                 </tr>
               </thead>
               <tbody>
-                {row('Gränsbelopp enligt förenklingsregeln', (y) => K10_DATA.gransbelopp[y], 'kr')}
+                {row('Gränsbelopp enligt förenklingsregeln', (y) => K10_DATA.gransbelopp[y], 'kr', 0)}
                 {row(
                   'Procentsats för uppräkning av sparat utdelningsutrymme',
                   (y) => K10_DATA.upprakningsprocent[y],
-                  '%'
+                  '%',
+                  1
                 )}
                 {row(
                   'Ränta vid beräkning av omkostnadsbeloppsdelen (huvudregeln)',
                   (y) => K10_DATA.ranta[y],
-                  '%'
+                  '%',
+                  2
                 )}
                 {row(
                   'Takbelopp för utdelning som ska beskattas i tjänst',
                   (y) => K10_DATA.takbeloppUtdelning[y],
-                  'kr'
+                  'kr',
+                  3
                 )}
                 {row(
                   'Takbelopp för vinst som ska beskattas i tjänst',
                   (y) => K10_DATA.takbeloppVinst[y],
-                  'kr'
+                  'kr',
+                  4
                 )}
                 <tr style={{ borderBottom: '1px solid var(--border-color)' }}>
                   <th
                     scope="row"
                     style={{
-                      padding: '1rem',
+                      padding: '0.5rem 0.75rem',
                       fontWeight: 500,
                       color: 'var(--text-secondary)',
                       borderRight: '1px solid var(--border-color)',
                       textAlign: 'right',
                       position: 'sticky',
                       left: 0,
-                      background: 'var(--card-bg)',
+                      background: 'var(--stripe-bg, rgba(0,0,0,0.02))',
                       zIndex: 1,
+                      backdropFilter: 'blur(5px)',
+                      WebkitBackdropFilter: 'blur(5px)',
                     }}
                   >
                     Lönekrav
@@ -244,7 +255,8 @@ export function K10Blankett() {
                       `${l.fast.toLocaleString('sv-SE')} kr eller ${l.alternativ.toLocaleString(
                         'sv-SE'
                       )} kr + 5% av sammanlagd kontant ersättning`,
-                      year
+                      year,
+                      5
                     );
                   })}
                 </tr>
