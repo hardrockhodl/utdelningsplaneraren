@@ -24,6 +24,15 @@ export function HomePage() {
   return (
     <div className="min-h-screen bg-[#f7f8fa] dark:bg-[#1c1c1c]">
       <div className="max-w-[1600px] mx-auto px-6 py-6">
+        <div className="bg-white dark:bg-[#3a3a3a] rounded-md border border-[#e0e0e0] dark:border-[#3a3a3a] p-[18px]">
+          <h2 className="text-[16px] font-semibold tracking-[-0.01em] text-[#1c1c1c] dark:text-[#f7f8fa] mb-3">
+            Om Konsulthjälpen
+          </h2>
+          <p className="text-[13px] text-[#70757a] dark:text-[#9ca3af] leading-[1.5]">
+            Konsulthjälpen är en samling verktyg designade för att göra livet enklare för dig som driver eget konsultbolag.
+            Alla verktyg är gratis att använda och kräver ingen registrering. Din data sparas lokalt i din webbläsare.
+          </p>
+        </div>
         <div className="grid md:grid-cols-2 gap-[14px] mb-6">
           {tools.map((tool) => {
             const Icon = tool.icon;
@@ -59,16 +68,6 @@ export function HomePage() {
               </Link>
             );
           })}
-        </div>
-
-        <div className="bg-white dark:bg-[#3a3a3a] rounded-md border border-[#e0e0e0] dark:border-[#3a3a3a] p-[18px]">
-          <h2 className="text-[16px] font-semibold tracking-[-0.01em] text-[#1c1c1c] dark:text-[#f7f8fa] mb-3">
-            Om Konsulthjälpen
-          </h2>
-          <p className="text-[13px] text-[#70757a] dark:text-[#9ca3af] leading-[1.5]">
-            Konsulthjälpen är en samling verktyg designade för att göra livet enklare för dig som driver eget konsultbolag.
-            Alla verktyg är gratis att använda och kräver ingen registrering. Din data sparas lokalt i din webbläsare.
-          </p>
         </div>
       </div>
     </div>
