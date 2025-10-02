@@ -43,7 +43,7 @@ export function YearTable({ years, onUpdateYear }: YearTableProps) {
       <table className="year-table">
         <thead>
           <tr>
-            <th className="row-header"></th>
+            <th className="row-header">Kategori</th>
             {years.map((_, idx) => (
               <th key={idx}>År {idx + 1}</th>
             ))}
