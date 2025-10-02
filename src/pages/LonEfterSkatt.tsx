@@ -114,10 +114,11 @@ export function LonEfterSkatt() {
                 />
                 <span className="suffix">kr</span>
               </div>
-              <div className="setting-item inkomsttyp">
-                <label className="setting-label" title="Välj typ av inkomst för korrekt skattetabell">
-                  Inkomsttyp
-                </label>
+              <div className="setting-item">
+                <div className="setting-item inkomsttyp">
+                  <label className="setting-label" title="Välj typ av inkomst för korrekt skattetabell">
+                    Inkomsttyp
+                  </label>
                 <div className="setting-item">
                   <label className="setting-label" title="Välj typ av inkomst för korrekt skattetabell">
                     Inkomsttyp
@@ -132,7 +133,6 @@ export function LonEfterSkatt() {
                       </option>
                     ))}
                   </select>
-                
                   <div
                     style={{
                       marginTop: '0.5rem',
@@ -151,30 +151,31 @@ export function LonEfterSkatt() {
               </div>
             
             </div>
-
-            <div className="setting-item kommun-selector">
-              <label className="setting-label" title="Välj din kommun för att få rätt skattesatser">
-                Kommun
-              </label>
-              {loading ? (
-                <div className="loading-container">
-                  <Loader size={16} className="spinner" />
-                  <span>Laddar kommuner...</span>
-                </div>
-              ) : (
-                <select
-                  value={selectedKommun?.KommunId || ''}
-                  onChange={handleKommunChange}
-                  disabled={kommuner.length === 0}
-                >
-                  <option value="">Välj kommun</option>
-                  {kommuner.map((kommun) => (
-                    <option key={kommun.KommunId} value={kommun.KommunId}>
-                      {kommun.Kommun}
-                    </option>
-                  ))}
-                </select>
-              )}
+            <div className="setting-item">
+              <div className="setting-item kommun-selector">
+                <label className="setting-label" title="Välj din kommun för att få rätt skattesatser">
+                  Kommun
+                </label>
+                {loading ? (
+                  <div className="loading-container">
+                    <Loader size={16} className="spinner" />
+                    <span>Laddar kommuner...</span>
+                  </div>
+                ) : (
+                  <select
+                    value={selectedKommun?.KommunId || ''}
+                    onChange={handleKommunChange}
+                    disabled={kommuner.length === 0}
+                  >
+                    <option value="">Välj kommun</option>
+                    {kommuner.map((kommun) => (
+                      <option key={kommun.KommunId} value={kommun.KommunId}>
+                        {kommun.Kommun}
+                      </option>
+                    ))}
+                  </select>
+                )}
+              </div>
             </div>
             <div className="setting-item">
               <label className="checkbox-label">
