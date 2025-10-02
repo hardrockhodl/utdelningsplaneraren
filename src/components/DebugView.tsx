@@ -12,7 +12,7 @@ export function DebugView({ settings, years }: DebugViewProps) {
   const [isExpanded, setIsExpanded] = useState(false);
 
   const handleExportCSV = () => {
-    const csv = exportToCSV(settings, years);
+    const csv = exportToCSVTransposed(settings, years);
     const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
   
