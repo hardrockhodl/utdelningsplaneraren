@@ -17,7 +17,7 @@ export function TotalsCards({ years }: TotalsCardsProps) {
       icon: Wallet,
       label: 'Total nettolön',
       value: totalNetSalary,
-      color: '#0f92e9',
+      color: '#27b423',
     },
     {
       icon: TrendingUp,
