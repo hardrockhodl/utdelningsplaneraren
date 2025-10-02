@@ -152,7 +152,6 @@ export function LonEfterSkatt() {
             </div>
           </div>
           <div className="setting-item">
-            <br></br>
               <label className="setting-label" title="Välj typ av inkomst för korrekt skattetabell">
                 Inkomsttyp
               </label>
