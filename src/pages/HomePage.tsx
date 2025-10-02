@@ -23,7 +23,7 @@ export function HomePage() {
 
   return (
     <div className="min-h-screen bg-[#f7f8fa] dark:bg-[#1c1c1c]">
-      <div className="max-w-[1600px] mx-auto px-2 py-6">
+      <div className="max-w-[1600px] mx-auto px-2 py-2">
         <div className="bg-white dark:bg-[#3a3a3a] rounded-md border border-[#e0e0e0] dark:border-[#3a3a3a] p-[18px] mb-2">
           <h2 className="text-[16px] font-semibold tracking-[-0.01em] text-[#1c1c1c] dark:text-[#f7f8fa] mb-3">
             Om Konsulthjälpen
