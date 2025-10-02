@@ -100,7 +100,7 @@ body {
 .app-main {
   max-width: 1600px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 1.2rem;
   width: 100%;
   flex: 1;
 }
