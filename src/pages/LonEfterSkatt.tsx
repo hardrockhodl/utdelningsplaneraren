@@ -12,6 +12,7 @@ export function LonEfterSkatt() {
   const [taxTable, setTaxTable] = useState<TaxTableEntry[]>([]);
   const [selectedColumn, setSelectedColumn] = useState<number>(1);
   const [churchMember, setChurchMember] = useState(false);
+  const [showInkomstInfo, setShowInkomstInfo] = useState<boolean>(false);
 
   useEffect(() => {
     loadKommuner();
@@ -135,21 +136,42 @@ export function LonEfterSkatt() {
                     </option>
                   ))}
                 </select>
-                <div
+                <button
+                  onClick={() => setShowInkomstInfo(!showInkomstInfo)}
                   style={{
-                    marginTop: '6px',
-                    background: '#FFF9C4',
-                    border: '2px solid #FFEB3B',
-                    borderRadius: 4,
-                    padding: '8px 10px',
-                    fontSize: '0.8rem',
-                    lineHeight: 1.4,
-                    color: 'var(--text-muted)',
-                    boxSizing: 'border-box',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.5rem',
+                    background: 'none',
+                    border: 'none',
+                    color: 'var(--accent-blue)',
+                    cursor: 'pointer',
+                    fontSize: '0.85rem',
+                    fontWeight: 500,
+                    padding: '0.5rem 0',
+                    marginTop: '0.25rem',
                   }}
                 >
-                  {TAX_COLUMNS[selectedColumn as keyof typeof TAX_COLUMNS].description}
-                </div>
+                  <span>{showInkomstInfo ? '▼' : '▶'}</span>
+                  mer information
+                </button>
+                {showInkomstInfo && (
+                  <div
+                    style={{
+                      marginTop: '6px',
+                      background: '#FFF9C4',
+                      border: '2px solid #FFEB3B',
+                      borderRadius: 4,
+                      padding: '8px 10px',
+                      fontSize: '0.8rem',
+                      lineHeight: 1.4,
+                      color: 'var(--text-muted)',
+                      boxSizing: 'border-box',
+                    }}
+                  >
+                    {TAX_COLUMNS[selectedColumn as keyof typeof TAX_COLUMNS].description}
+                  </div>
+                )}
               </div>
 
               {/* Kommun */}
