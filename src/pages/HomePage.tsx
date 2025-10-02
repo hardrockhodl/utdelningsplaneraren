@@ -29,7 +29,7 @@ export function HomePage() {
             Konsulthjälpen
           </h1>
           <div className="inline-flex items-center gap-2 rounded-md border border-[#e0e0e0] dark:border-[#3a3a3a]
-                bg-white dark:bg-[#3a3a3a] px-3 py-2 text-[13px] text-[#70757a]">
+                bg-white dark:bg-[#3a3a3a] px-3 py-2 text-[13px] text-[#70757a] dark:text-[#9ca3af]">
             <span className="h-2 w-2 rounded-md bg-[#27b423]"></span>
             Gratis • Ingen inloggning
           </div>
@@ -57,7 +57,7 @@ export function HomePage() {
                     {tool.name}
                   </h3>
 
-                  <p className="text-[13px] text-[#70757a] mb-4 leading-[1.5]">
+                  <p className="text-[13px] text-[#70757a] dark:text-[#9ca3af] mb-4 leading-[1.5]">
                     {tool.description}
                   </p>
 
@@ -76,7 +76,7 @@ export function HomePage() {
           <h2 className="text-[16px] font-semibold tracking-[-0.01em] text-[#1c1c1c] dark:text-[#f7f8fa] mb-3">
             Om Konsulthjälpen
           </h2>
-          <p className="text-[13px] text-[#70757a] leading-[1.5]">
+          <p className="text-[13px] text-[#70757a] dark:text-[#9ca3af] leading-[1.5]">
             Konsulthjälpen är en samling verktyg designade för att göra livet enklare för dig som driver eget konsultbolag.
             Alla verktyg är gratis att använda och kräver ingen registrering. Din data sparas lokalt i din webbläsare.
           </p>
