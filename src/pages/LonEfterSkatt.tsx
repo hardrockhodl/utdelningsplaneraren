@@ -144,6 +144,8 @@ export function LonEfterSkatt() {
                   fontSize: '0.8rem',
                   lineHeight: 1.4,
                   color: 'var(--text-muted)',
+                  width: '100%',
+                  boxSizing: 'border-box',
                 }}
               >
                 {TAX_COLUMNS[selectedColumn as keyof typeof TAX_COLUMNS].description}
