@@ -85,7 +85,10 @@ export function FaktureraRattTimpris() {
 
       <main className="app-main">
         <div className="settings-panel">
-          <h2>Inställningar</h2>
+          <div className="panel-header">
+            <Calculator size={20} />
+            <h2>Inställningar</h2>
+          </div>
 
           <div className="input-grid">
             <div className="input-group">
