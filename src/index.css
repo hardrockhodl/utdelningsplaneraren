@@ -636,7 +636,7 @@ input:disabled {
 
 .tips-box h3 {
   margin-top: 0;
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.5rem;
   font-size: 1rem;
   font-weight: 600;
   color: var(--text-primary);
