@@ -325,8 +325,8 @@ input:disabled {
 
 .year-table .calculated-row .row-header {
   background-color: rgba(112, 117, 122, 0.1);
-  -webkit-backdrop-filter: blur(15px);
-  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
 }
 
 .year-table .highlight-green td {
