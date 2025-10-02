@@ -631,7 +631,7 @@ input:disabled {
   border-radius: 4px;
   padding: 0.1rem 0.25rem;
   border: 2px solid var(--accent-yellow);
-  background-color: rgba(39, 180, 35, 0.15);
+  background-color: rgba(249, 220, 92, 0.15);
   max-width: 45%;
 }
 
