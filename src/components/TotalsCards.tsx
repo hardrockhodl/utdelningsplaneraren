@@ -29,13 +29,13 @@ export function TotalsCards({ years }: TotalsCardsProps) {
       icon: Banknote,
       label: 'Totalt netto till ägare',
       value: totalNetToOwner,
-      color: '#f7931a',
+      color: '#27b423',
     },
     {
       icon: PiggyBank,
       label: 'Utgående fritt eget kapital',
       value: finalEquity,
-      color: '#f7931a',
+      color: '#27b423',
     },
   ];
 
