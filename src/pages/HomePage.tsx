@@ -1,4 +1,4 @@
-import { Calculator, Wallet, ArrowRight, PiggyBank } from 'lucide-react';
+import { Calculator, Wallet, ArrowRight, PiggyBank, FileText } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export function HomePage() {
@@ -26,6 +26,14 @@ export function HomePage() {
       icon: PiggyBank,
       route: '/tjanstepension',
       color: '#528582',
+    },
+    {
+      id: 'k10-blankett',
+      name: 'K10-blankett',
+      description: 'Skatteuppgifter för fåmansföretag. Hitta gränsbelopp, procentsatser, takbelopp och lönekrav för olika inkomstår.',
+      icon: FileText,
+      route: '/k10-blankett',
+      color: '#d72638',
     },
   ];
 

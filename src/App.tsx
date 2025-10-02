@@ -4,6 +4,7 @@ import { HomePage } from './pages/HomePage';
 import { Utdelningsplaneraren } from './pages/Utdelningsplaneraren';
 import { LonEfterSkatt } from './pages/LonEfterSkatt';
 import { Tjanstepension } from './pages/Tjanstepension';
+import { K10Blankett } from './pages/K10Blankett';
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
           <Route path="/lon-efter-skatt" element={<LonEfterSkatt />} />
           <Route path="/utdelningsplaneraren" element={<Utdelningsplaneraren />} />
           <Route path="/tjanstepension" element={<Tjanstepension />} />
+          <Route path="/k10-blankett" element={<K10Blankett />} />
         </Routes>
       </PlatformLayout>
     </BrowserRouter>
