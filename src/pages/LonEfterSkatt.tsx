@@ -93,194 +93,195 @@ export function LonEfterSkatt() {
       </header>
 
       <main className="app-main">
-        <div className="settings-panel">
-          <div className="panel-header">
-            <Calculator size={20} />
-            <h2>Inställningar</h2>
-          </div>
-
-          {/* --- SETTINGS GRID SOM RAD --- */}
-          <div className="settings-grid" style={{ display: 'flex', gap: '2rem', alignItems: 'flex-start' }}>
-            {/* Bruttolön */}
-            <div className="setting-item">
-              <label className="setting-label" title="Din månadslön före skatt">
-                Bruttolön per månad
-              </label>
-              <div className="input-with-suffix">
-                <input
-                  type="number"
-                  value={grossSalary}
-                  onChange={(e) => setGrossSalary(Number(e.target.value))}
-                  min="0"
-                  step="1000"
-                />
-                <span className="suffix">kr</span>
-              </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 400px), 1fr))', gap: '1.5rem', alignItems: 'start' }}>
+          <div className="settings-panel">
+            <div className="panel-header">
+              <Calculator size={20} />
+              <h2>Inställningar</h2>
             </div>
 
-            {/* Inkomsttyp */}
-            <div className="setting-item">
-              <label className="setting-label" title="Välj typ av inkomst för korrekt skattetabell">
-                Inkomsttyp
-              </label>
-              <select
-                value={selectedColumn}
-                onChange={(e) => setSelectedColumn(Number(e.target.value))}
-                style={{ minWidth: 100 }}
-              >
-                {Object.entries(TAX_COLUMNS).map(([key, value]) => (
-                  <option key={key} value={key}>
-                    {value.name}
-                  </option>
-                ))}
-              </select>
-              <div
-                style={{
-                  marginTop: '6px',
-                  background: '#FFF9C4',
-                  border: '2px solid #FFEB3B',
-                  borderRadius: 4,
-                  padding: '8px 10px',
-                  fontSize: '0.8rem',
-                  lineHeight: 1.4,
-                  color: 'var(--text-muted)',
-                  maxWidth: '17rem',
-                  boxSizing: 'border-box',
-                }}
-              >
-                {TAX_COLUMNS[selectedColumn as keyof typeof TAX_COLUMNS].description}
-              </div>
-            </div>
-
-            {/* Kommun */}
-            <div className="setting-item">
-              <label className="setting-label" title="Välj din kommun för att få rätt skattesatser">
-                Kommun
-              </label>
-              {loading ? (
-                <div className="loading-container">
-                  <Loader size={16} className="spinner" />
-                  <span>Laddar kommuner...</span>
+            {/* --- SETTINGS GRID SOM RAD --- */}
+            <div className="settings-grid" style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              {/* Bruttolön */}
+              <div className="setting-item">
+                <label className="setting-label" title="Din månadslön före skatt">
+                  Bruttolön per månad
+                </label>
+                <div className="input-with-suffix">
+                  <input
+                    type="number"
+                    value={grossSalary}
+                    onChange={(e) => setGrossSalary(Number(e.target.value))}
+                    min="0"
+                    step="1000"
+                  />
+                  <span className="suffix">kr</span>
                 </div>
-              ) : (
+              </div>
+
+              {/* Inkomsttyp */}
+              <div className="setting-item">
+                <label className="setting-label" title="Välj typ av inkomst för korrekt skattetabell">
+                  Inkomsttyp
+                </label>
                 <select
-                  value={selectedKommun?.KommunId || ''}
-                  onChange={handleKommunChange}
-                  disabled={kommuner.length === 0}
+                  value={selectedColumn}
+                  onChange={(e) => setSelectedColumn(Number(e.target.value))}
+                  style={{ minWidth: 100 }}
                 >
-                  <option value="">Välj kommun</option>
-                  {kommuner.map((kommun) => (
-                    <option key={kommun.KommunId} value={kommun.KommunId}>
-                      {kommun.Kommun}
+                  {Object.entries(TAX_COLUMNS).map(([key, value]) => (
+                    <option key={key} value={key}>
+                      {value.name}
                     </option>
                   ))}
                 </select>
-              )}
-              {/* Kyrkoskatt */}
+                <div
+                  style={{
+                    marginTop: '6px',
+                    background: '#FFF9C4',
+                    border: '2px solid #FFEB3B',
+                    borderRadius: 4,
+                    padding: '8px 10px',
+                    fontSize: '0.8rem',
+                    lineHeight: 1.4,
+                    color: 'var(--text-muted)',
+                    boxSizing: 'border-box',
+                  }}
+                >
+                  {TAX_COLUMNS[selectedColumn as keyof typeof TAX_COLUMNS].description}
+                </div>
+              </div>
+
+              {/* Kommun */}
               <div className="setting-item">
-                <label className="checkbox-label">
-                  <input
-                    type="checkbox"
-                    checked={churchMember}
-                    onChange={(e) => setChurchMember(e.target.checked)}
-                  />
-                  Medlem i svenska kyrkan
+                <label className="setting-label" title="Välj din kommun för att få rätt skattesatser">
+                  Kommun
                 </label>
+                {loading ? (
+                  <div className="loading-container">
+                    <Loader size={16} className="spinner" />
+                    <span>Laddar kommuner...</span>
+                  </div>
+                ) : (
+                  <select
+                    value={selectedKommun?.KommunId || ''}
+                    onChange={handleKommunChange}
+                    disabled={kommuner.length === 0}
+                  >
+                    <option value="">Välj kommun</option>
+                    {kommuner.map((kommun) => (
+                      <option key={kommun.KommunId} value={kommun.KommunId}>
+                        {kommun.Kommun}
+                      </option>
+                    ))}
+                  </select>
+                )}
+                {/* Kyrkoskatt */}
+                <div className="setting-item">
+                  <label className="checkbox-label">
+                    <input
+                      type="checkbox"
+                      checked={churchMember}
+                      onChange={(e) => setChurchMember(e.target.checked)}
+                    />
+                    Medlem i svenska kyrkan
+                  </label>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 
-        {/* --- RESULTAT --- */}
-        {result && (
-          <>
-            <div className="results-section">
-              <h2 className="section-title">Resultat</h2>
-              <div className="totals-grid">
-                {/* Brutto */}
-                <div className="total-card">
-                  <div className="card-icon" style={{ backgroundColor: 'rgba(15, 146, 233, 0.15)' }}>
-                    <Calculator size={24} style={{ color: 'var(--accent-blue)' }} />
+          {/* --- RESULTAT --- */}
+          {result && (
+            <div>
+              <div className="results-section">
+                <h2 className="section-title">Resultat</h2>
+                <div className="totals-grid">
+                  {/* Brutto */}
+                  <div className="total-card">
+                    <div className="card-icon" style={{ backgroundColor: 'rgba(15, 146, 233, 0.15)' }}>
+                      <Calculator size={24} style={{ color: 'var(--accent-blue)' }} />
+                    </div>
+                    <div className="card-content">
+                      <div className="card-label">Bruttolön</div>
+                      <div className="card-value">{result.grossSalary.toLocaleString('sv-SE')} kr</div>
+                    </div>
                   </div>
-                  <div className="card-content">
-                    <div className="card-label">Bruttolön</div>
-                    <div className="card-value">{result.grossSalary.toLocaleString('sv-SE')} kr</div>
-                  </div>
-                </div>
 
-                {/* Skatt */}
-                <div className="total-card">
-                  <div className="card-icon" style={{ backgroundColor: 'rgba(215, 38, 56, 0.15)' }}>
-                    <Calculator size={24} style={{ color: 'var(--accent-red)' }} />
+                  {/* Skatt */}
+                  <div className="total-card">
+                    <div className="card-icon" style={{ backgroundColor: 'rgba(215, 38, 56, 0.15)' }}>
+                      <Calculator size={24} style={{ color: 'var(--accent-red)' }} />
+                    </div>
+                    <div className="card-content">
+                      <div className="card-label">Skatteavdrag</div>
+                      <div className="card-value">{result.taxDeduction.toLocaleString('sv-SE')} kr</div>
+                    </div>
                   </div>
-                  <div className="card-content">
-                    <div className="card-label">Skatteavdrag</div>
-                    <div className="card-value">{result.taxDeduction.toLocaleString('sv-SE')} kr</div>
-                  </div>
-                </div>
 
-                {/* Netto */}
-                <div className="total-card">
-                  <div className="card-icon" style={{ backgroundColor: 'rgba(39, 180, 35, 0.15)' }}>
-                    <Calculator size={24} style={{ color: 'var(--accent-green)' }} />
+                  {/* Netto */}
+                  <div className="total-card">
+                    <div className="card-icon" style={{ backgroundColor: 'rgba(39, 180, 35, 0.15)' }}>
+                      <Calculator size={24} style={{ color: 'var(--accent-green)' }} />
+                    </div>
+                    <div className="card-content">
+                      <div className="card-label">Nettolön</div>
+                      <div className="card-value">{result.netSalary.toLocaleString('sv-SE')} kr</div>
+                    </div>
                   </div>
-                  <div className="card-content">
-                    <div className="card-label">Nettolön</div>
-                    <div className="card-value">{result.netSalary.toLocaleString('sv-SE')} kr</div>
-                  </div>
-                </div>
 
-                {/* Effektiv */}
-                <div className="total-card">
-                  <div className="card-icon" style={{ backgroundColor: 'rgba(249, 220, 92, 0.15)' }}>
-                    <Calculator size={24} style={{ color: 'var(--accent-orange)' }} />
-                  </div>
-                  <div className="card-content">
-                    <div className="card-label">Effektiv skattesats</div>
-                    <div className="card-value">{result.taxRate.toFixed(2)}%</div>
+                  {/* Effektiv */}
+                  <div className="total-card">
+                    <div className="card-icon" style={{ backgroundColor: 'rgba(249, 220, 92, 0.15)' }}>
+                      <Calculator size={24} style={{ color: 'var(--accent-orange)' }} />
+                    </div>
+                    <div className="card-content">
+                      <div className="card-label">Effektiv skattesats</div>
+                      <div className="card-value">{result.taxRate.toFixed(2)}%</div>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
+          )}
+        </div>
 
-            {/* Skatteuppdelning */}
-            {selectedKommun && (
-              <div className="results-section">
-                <h2 className="section-title">Skatteuppdelning i {selectedKommun.Kommun}</h2>
-                <div className="totals-grid">
-                  <div className="total-card">
-                    <div className="card-content">
-                      <div className="card-label">Kommunalskatt</div>
-                      <div className="card-value">{result.municipalTax.toFixed(2)}%</div>
-                    </div>
-                  </div>
-
-                  <div className="total-card">
-                    <div className="card-content">
-                      <div className="card-label">Landstingsskatt</div>
-                      <div className="card-value">{result.countyTax.toFixed(2)}%</div>
-                    </div>
-                  </div>
-
-                  {churchMember && (
-                    <div className="total-card">
-                      <div className="card-content">
-                        <div className="card-label">Kyrkoskatt</div>
-                        <div className="card-value">{result.churchTax.toFixed(2)}%</div>
-                      </div>
-                    </div>
-                  )}
-
-                  <div className="total-card">
-                    <div className="card-content">
-                      <div className="card-label">Total skattesats (kommun)</div>
-                      <div className="card-value">{result.totalTaxRate.toFixed(2)}%</div>
-                    </div>
-                  </div>
+        {/* Skatteuppdelning */}
+        {result && selectedKommun && (
+          <div className="results-section">
+            <h2 className="section-title">Skatteuppdelning i {selectedKommun.Kommun}</h2>
+            <div className="totals-grid">
+              <div className="total-card">
+                <div className="card-content">
+                  <div className="card-label">Kommunalskatt</div>
+                  <div className="card-value">{result.municipalTax.toFixed(2)}%</div>
                 </div>
               </div>
-            )}
-          </>
+
+              <div className="total-card">
+                <div className="card-content">
+                  <div className="card-label">Landstingsskatt</div>
+                  <div className="card-value">{result.countyTax.toFixed(2)}%</div>
+                </div>
+              </div>
+
+              {churchMember && (
+                <div className="total-card">
+                  <div className="card-content">
+                    <div className="card-label">Kyrkoskatt</div>
+                    <div className="card-value">{result.churchTax.toFixed(2)}%</div>
+                  </div>
+                </div>
+              )}
+
+              <div className="total-card">
+                <div className="card-content">
+                  <div className="card-label">Total skattesats (kommun)</div>
+                  <div className="card-value">{result.totalTaxRate.toFixed(2)}%</div>
+                </div>
+              </div>
+            </div>
+          </div>
         )}
       </main>
     </div>
