@@ -74,11 +74,12 @@ export function FaktureraRattTimpris() {
           <div className="header-text" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <Calculator size={20} />
             <h1>Fakturera rätt timpris</h1>
-          </div>
-          <p className="subtitle">
+            <p className="subtitle">
             Med vårt verktyg kan du enkelt räkna fram vilket timpris du behöver ta för dina tjänster.
             Ange din önskade lön, dina kostnader och hur många timmar du fakturerar per månad.
           </p>
+          </div>
+          
         </div>
       </header>
 
