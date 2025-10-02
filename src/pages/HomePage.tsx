@@ -37,7 +37,7 @@ export function HomePage() {
     },
     {
       id: 'k10-blankett',
-      name: 'K10-blankett',
+      name: 'Belopp och procentsatser',
       description: 'Skatteuppgifter för fåmansföretag. Hitta gränsbelopp, procentsatser, takbelopp och lönekrav för olika inkomstår.',
       icon: FileText,
       route: '/k10-blankett',
