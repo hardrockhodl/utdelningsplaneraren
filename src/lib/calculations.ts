@@ -181,6 +181,7 @@ export function formatNumber(value: number, decimals = 0): string {
  */
 export function exportToCSVTransposed(_settings: GlobalSettings, years: YearCalculation[]) {
   const sep = ';';
+  const fmt = (v: number) => Number.isFinite(v) ? Math.round(v * 100) / 100 : v;
 
   const header = ['År', ...years.map((_, i) => String(i + 1))];
 
@@ -190,22 +191,22 @@ export function exportToCSVTransposed(_settings: GlobalSettings, years: YearCalc
     ['Bruttolön (mån)', ...years.map(y => y.bruttolonManad)],
     ['Övr. kostn (mån)', ...years.map(y => y.ovrigaKostnaderManad)],
     ['Buffert %', ...years.map(y => y.buffertPct)],
-    ['Fakturerat (år)', ...years.map(y => y.faktureratAr)],
-    ['Bruttolön (år)', ...years.map(y => y.bruttolonAr)],            // om inte finns: y.bruttolonManad*12
-    ['Nettolön (år)', ...years.map(y => y.nettolonAr)],
-    ['Arbetsgivaravgift (år)', ...years.map(y => y.arbetsgivaravgiftAr)],
-    ['Kostnader (år)', ...years.map(y => y.kostnaderAr)],
-    ['Buffert (år)', ...years.map(y => y.buffertAr)],
-    ['Överskott (år)', ...years.map(y => y.overskottAr)],
-    ['Årets resultat', ...years.map(y => y.aretsResultat)],
-    ['Ing. fritt EK', ...years.map(y => y.ingaendeEK)],
-    ['Max utd. EK', ...years.map(y => y.maxUtdelningEK)],
+    ['Fakturerat (år)', ...years.map(y => fmt(y.faktureratAr))],
+    ['Bruttolön (år)', ...years.map(y => fmt(y.bruttolonAr ?? y.bruttolonManad * 12))],
+    ['Nettolön (år)', ...years.map(y => fmt(y.nettolonAr))],
+    ['Arbetsgivaravgift (år)', ...years.map(y => fmt(y.arbetsgivaravgiftAr))],
+    ['Kostnader (år)', ...years.map(y => fmt(y.kostnaderAr))],
+    ['Buffert (år)', ...years.map(y => fmt(y.buffertAr))],
+    ['Överskott (år)', ...years.map(y => fmt(y.overskottAr))],
+    ['Årets resultat', ...years.map(y => fmt(y.aretsResultat))],
+    ['Ing. fritt EK', ...years.map(y => fmt(y.ingaendeEK))],
+    ['Max utd. EK', ...years.map(y => fmt(y.maxUtdelningEK))],
     ['Utdeln. %', ...years.map(y => y.utdelningPct)],
-    ['Utd. brutto', ...years.map(y => y.utdelningBrutto)],
-    ['Utd. netto', ...years.map(y => y.utdelningNetto)],
-    ['Totalt netto (mån)', ...years.map(y => y.totaltNettoManad)],
-    ['Utg. fritt EK', ...years.map(y => y.utgaendeEK)],
-    ['Sparat utd. utrymme', ...years.map(y => y.sparatUtdelningsutrymme)],
+    ['Utd. brutto', ...years.map(y => fmt(y.utdelningBrutto))],
+    ['Utd. netto', ...years.map(y => fmt(y.utdelningNetto))],
+    ['Totalt netto (mån)', ...years.map(y => fmt(y.totaltNettoManad))],
+    ['Utg. fritt EK', ...years.map(y => fmt(y.utgaendeEK))],
+    ['Sparat utd. utrymme', ...years.map(y => fmt(y.sparatUtdelningsutrymme))],
   ];
 
   return [
