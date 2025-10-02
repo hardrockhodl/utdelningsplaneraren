@@ -9,7 +9,7 @@ export function HomePage() {
       description: 'Beräkna din nettolön baserat på bruttolön och kommun. Använder Skatteverkets officiella skattetabeller för exakta beräkningar.',
       icon: Wallet,
       route: '/lon-efter-skatt',
-      color: 'from-green-500 to-emerald-500',
+      color: '#27b423',
     },
     {
       id: 'utdelningsplaneraren',
@@ -17,27 +17,25 @@ export function HomePage() {
       description: 'Planera din lön, skatt och utdelning som konsult. Optimera din ekonomi över flera år med hänsyn till 3:12-reglerna.',
       icon: Calculator,
       route: '/utdelningsplaneraren',
-      color: 'from-blue-500 to-cyan-500',
+      color: '#0f92e9',
     },
   ];
 
   return (
-    <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-[#f7f8fa] to-[#e3e4e6] dark:from-[#1c1c1c] dark:to-[#252525]
-before:content-[''] before:absolute before:inset-0 before:bg-[radial-gradient(60rem_40rem_at_80%_-10%,_rgba(59,130,246,0.08),_transparent_60%)]
-dark:before:bg-[radial-gradient(60rem_40rem_at_80%_-10%,_rgba(59,130,246,0.12),_transparent_60%)]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="text-center mb-16">
-          <h1 className="text-5xl font-bold tracking-tight text-balance text-slate-900 dark:text-white mb-3">
+    <div className="min-h-screen bg-[#f7f8fa] dark:bg-[#1c1c1c]">
+      <div className="max-w-[1600px] mx-auto px-6 py-6">
+        <div className="text-center mb-6">
+          <h1 className="text-[22px] font-semibold tracking-[-0.02em] text-[#1c1c1c] dark:text-[#f7f8fa] mb-2">
             Konsulthjälpen
           </h1>
-          <div className="mt-4 inline-flex items-center gap-2 rounded-full border border-slate-200 dark:border-slate-700
-                bg-white/70 dark:bg-slate-900/40 backdrop-blur px-3 py-1 text-sm text-slate-600 dark:text-slate-300">
-            <span className="h-2 w-2 rounded-full bg-emerald-500"></span>
+          <div className="inline-flex items-center gap-2 rounded-md border border-[#e0e0e0] dark:border-[#3a3a3a]
+                bg-white dark:bg-[#3a3a3a] px-3 py-2 text-[13px] text-[#70757a]">
+            <span className="h-2 w-2 rounded-md bg-[#27b423]"></span>
             Gratis • Ingen inloggning
           </div>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+        <div className="grid md:grid-cols-2 gap-[14px] mb-6">
           {tools.map((tool) => {
             const Icon = tool.icon;
             return (
@@ -45,27 +43,28 @@ dark:before:bg-[radial-gradient(60rem_40rem_at_80%_-10%,_rgba(59,130,246,0.12),_
                 key={tool.id}
                 to={tool.route}
                 aria-label={`Öppna ${tool.name}`}
-                className="group relative bg-white/90 dark:bg-slate-800/80 backdrop-blur-sm rounded-2xl shadow-lg hover:shadow-xl ring-1 ring-slate-200/60 dark:ring-slate-700/60 transition-all duration-300 overflow-hidden focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/60 motion-safe:hover:-translate-y-0.5">
-                <div className={`absolute inset-0 bg-gradient-to-br ${tool.color} opacity-0 group-hover:opacity-10 transition-opacity duration-300`} />
-
-                <div className="p-8">
-                  <div className={`inline-flex p-3 rounded-xl bg-gradient-to-br ${tool.color} ring-1 ring-white/20 backdrop-blur mb-4`}>
-                    <Icon className="w-8 h-8 text-white" />
+                className="group bg-white dark:bg-[#3a3a3a] rounded-md border border-[#e0e0e0] dark:border-[#3a3a3a]
+                          hover:border-[#0f92e9] dark:hover:border-[#0f92e9] transition-all duration-200
+                          hover:-translate-y-0.5 hover:shadow-[0_8px_20px_rgba(0,0,0,0.08)] dark:hover:shadow-[0_8px_20px_rgba(0,0,0,0.4)]
+                          focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0f92e9]">
+                <div className="p-[18px]">
+                  <div className="flex items-center justify-center w-12 h-12 rounded-md mb-4"
+                       style={{ backgroundColor: `${tool.color}33` }}>
+                    <Icon className="w-5 h-5" style={{ color: tool.color }} />
                   </div>
 
-                  <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-3">
+                  <h3 className="text-[16px] font-semibold tracking-[-0.01em] text-[#1c1c1c] dark:text-[#f7f8fa] mb-2">
                     {tool.name}
                   </h3>
 
-                  <p className="text-slate-600 dark:text-slate-300 mb-6 leading-relaxed">
+                  <p className="text-[13px] text-[#70757a] mb-4 leading-[1.5]">
                     {tool.description}
                   </p>
 
-                  <div className="inline-flex items-center px-3 py-2 rounded-lg text-blue-700 dark:text-blue-300
-                                  bg-blue-50 dark:bg-blue-950/30 border border-blue-200/60 dark:border-blue-800/50
-                                  font-medium group-hover:translate-x-1 transition-transform duration-300">
+                  <div className="inline-flex items-center gap-2 text-[13px] font-medium text-[#0f92e9]
+                                  group-hover:translate-x-1 transition-transform duration-200">
                     Öppna verktyget
-                    <ArrowRight className="ml-2 w-5 h-5" />
+                    <ArrowRight className="w-4 h-4" />
                   </div>
                 </div>
               </Link>
@@ -73,12 +72,11 @@ dark:before:bg-[radial-gradient(60rem_40rem_at_80%_-10%,_rgba(59,130,246,0.12),_
           })}
         </div>
 
-        <div className="bg-white/90 dark:bg-slate-800/80 backdrop-blur-sm rounded-2xl shadow-lg p-8
-                        ring-1 ring-slate-200/60 dark:ring-slate-700/60">
-          <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">
+        <div className="bg-white dark:bg-[#3a3a3a] rounded-md border border-[#e0e0e0] dark:border-[#3a3a3a] p-[18px]">
+          <h2 className="text-[16px] font-semibold tracking-[-0.01em] text-[#1c1c1c] dark:text-[#f7f8fa] mb-3">
             Om Konsulthjälpen
           </h2>
-          <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
+          <p className="text-[13px] text-[#70757a] leading-[1.5]">
             Konsulthjälpen är en samling verktyg designade för att göra livet enklare för dig som driver eget konsultbolag.
             Alla verktyg är gratis att använda och kräver ingen registrering. Din data sparas lokalt i din webbläsare.
           </p>

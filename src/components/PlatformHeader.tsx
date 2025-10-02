@@ -26,28 +26,25 @@ export function PlatformHeader({ theme, onToggleTheme }: PlatformHeaderProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-lg border-b border-slate-200 dark:border-slate-800">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
+    <header className="sticky top-0 z-50 bg-white/95 dark:bg-[#1c1c1c]/95 backdrop-blur-sm border-b border-[#e0e0e0] dark:border-[#3a3a3a]">
+      <div className="max-w-[1600px] mx-auto px-6">
+        <div className="flex items-center justify-between h-14">
           <Link
             to="/"
-            className="flex items-center space-x-2 text-xl font-bold text-slate-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+            className="text-[16px] font-semibold tracking-[-0.01em] text-[#1c1c1c] dark:text-[#f7f8fa] hover:text-[#0f92e9] dark:hover:text-[#0f92e9] transition-colors duration-200"
           >
-            <span>Konsulthjälpen</span>
+            Konsulthjälpen
           </Link>
-          <p className="text-xl text-slate-100 dark:text-slate-300/90 text-pretty max-w-2xl mx-auto">
-            Verktyg och kalkylatorer för att underlätta din vardag som konsult
-          </p>
 
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center gap-[10px]">
             <div className="relative">
               <button
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="flex items-center space-x-2 px-4 py-2 rounded-lg text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                className="flex items-center gap-2 px-5 py-[10px] rounded-md text-[13px] font-medium text-[#1c1c1c] dark:text-[#f7f8fa] hover:bg-white dark:hover:bg-[#3a3a3a] border border-[#e0e0e0] dark:border-[#3a3a3a] transition-colors duration-200"
                 aria-label="Verktyg"
               >
                 <span>Verktyg</span>
-                <ChevronDown size={16} className={`transition-transform ${isMenuOpen ? 'rotate-180' : ''}`} />
+                <ChevronDown size={14} className={`transition-transform duration-200 ${isMenuOpen ? 'rotate-180' : ''}`} />
               </button>
 
               {isMenuOpen && (
@@ -56,7 +53,7 @@ export function PlatformHeader({ theme, onToggleTheme }: PlatformHeaderProps) {
                     className="fixed inset-0 z-10"
                     onClick={() => setIsMenuOpen(false)}
                   />
-                  <div className="absolute right-0 mt-2 w-64 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg shadow-lg overflow-hidden z-20">
+                  <div className="absolute right-0 mt-2 w-64 bg-white dark:bg-[#3a3a3a] border border-[#e0e0e0] dark:border-[#3a3a3a] rounded-md shadow-[0_8px_20px_rgba(0,0,0,0.08)] dark:shadow-[0_8px_20px_rgba(0,0,0,0.4)] overflow-hidden z-20">
                     {tools.map((tool) => {
                       const Icon = tool.icon;
                       return (
@@ -64,9 +61,9 @@ export function PlatformHeader({ theme, onToggleTheme }: PlatformHeaderProps) {
                           key={tool.route}
                           to={tool.route}
                           onClick={() => setIsMenuOpen(false)}
-                          className="flex items-center space-x-3 px-4 py-3 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
+                          className="flex items-center gap-3 px-4 py-3 text-[13px] text-[#1c1c1c] dark:text-[#f7f8fa] hover:bg-[#f7f8fa] dark:hover:bg-[#1c1c1c] border-b border-[#e0e0e0] dark:border-[#3a3a3a] last:border-b-0 transition-colors duration-200"
                         >
-                          <Icon size={18} />
+                          <Icon size={16} />
                           <span>{tool.name}</span>
                         </Link>
                       );
@@ -79,19 +76,19 @@ export function PlatformHeader({ theme, onToggleTheme }: PlatformHeaderProps) {
             {!isHome && (
               <Link
                 to="/"
-                className="flex items-center space-x-2 px-4 py-2 rounded-lg text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                className="flex items-center gap-2 px-5 py-[10px] rounded-md text-[13px] font-medium text-[#1c1c1c] dark:text-[#f7f8fa] hover:bg-white dark:hover:bg-[#3a3a3a] border border-[#e0e0e0] dark:border-[#3a3a3a] transition-colors duration-200"
               >
-                <Home size={18} />
+                <Home size={16} />
                 <span className="hidden sm:inline">Hem</span>
               </Link>
             )}
 
             <button
               onClick={onToggleTheme}
-              className="p-2 rounded-lg text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+              className="p-[10px] rounded-md text-[#1c1c1c] dark:text-[#f7f8fa] hover:bg-white dark:hover:bg-[#3a3a3a] border border-[#e0e0e0] dark:border-[#3a3a3a] transition-colors duration-200"
               aria-label="Växla tema"
             >
-              {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
+              {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
             </button>
           </div>
         </div>
