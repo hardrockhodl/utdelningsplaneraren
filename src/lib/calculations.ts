@@ -11,77 +11,91 @@ export function calculateYear(
   yearNumber: number
 ): YearCalculation {
   // Gross salary for the year / Bruttolön för året
-  const grossSalaryYearly = input.grossSalaryMonthly * 12;
+  const grossSalaryYearly = Math.max(0, (input.grossSalaryMonthly ?? 0) * 12);
 
   // Effective employer contribution rate (reduced by 10% if regional support applies)
-  // Effektiv arbetsgivaravgift (reducerad med 10% vid regionalt stöd)
+  // Effektiv arbetsgivaravgift (reducerad med 10 procentenheter vid regionalt stöd)
+  const baseEmployerContribution = Number(settings.employerContribution ?? 0);
   const effectiveEmployerContribution = settings.regionalSupport
-    ? settings.employerContribution - 10
-    : settings.employerContribution;
+    ? Math.max(0, baseEmployerContribution - 10)
+    : baseEmployerContribution;
 
   // Calculate employer contributions / Beräkna arbetsgivaravgifter
   let employerContributionYearly = grossSalaryYearly * (effectiveEmployerContribution / 100);
 
   // Apply regional support deduction if applicable
-  // Tillämpa regionalt stödavdrag om tillämpligt
+  // Tillämpa regionalt stödavdrag (10% av månadslön, max 7 100 kr/mån) om tillämpligt
   if (settings.regionalSupport) {
-    const monthlyDeduction = Math.min((grossSalaryYearly / 12) * 0.10, 7100);
+    const monthlyGross = Math.max(0, input.grossSalaryMonthly ?? 0);
+    const monthlyDeduction = Math.min(monthlyGross * 0.10, 7100);
     employerContributionYearly = Math.max(0, employerContributionYearly - monthlyDeduction * 12);
   }
 
-  // Calculate income tax and net salary / Beräkna inkomstskatt och nettolön
-  const taxAmount = grossSalaryYearly * (settings.municipalTax / 100);
-  const netSalaryYearly = grossSalaryYearly - taxAmount;
+  // ----- Tax & net salary / Skatt & nettolön -----
+  // Allow passing a total tax % directly; else sum municipal + region + optional church
+  const municipalTax = Number(settings.municipalTax ?? 0);
+  const countyTax = Number((settings as any).countyTax ?? 0);
+  const churchTax = Number((settings as any).churchTax ?? 0);
+  const totalTaxRateFromParts = municipalTax + countyTax + (settings?.churchMember ? churchTax : 0);
+
+  const effectiveTaxRatePct = Number(
+    (settings as any).totalTaxRate ?? totalTaxRateFromParts
+  );
+
+  const taxAmount = grossSalaryYearly * (Math.max(0, effectiveTaxRatePct) / 100);
+  const netSalaryYearly = Math.max(0, grossSalaryYearly - taxAmount);
 
   // Annual costs / Årliga kostnader
-  const costsYearly = input.otherCostsMonthly * 12;
+  const costsYearly = Math.max(0, (input.otherCostsMonthly ?? 0) * 12);
 
   // Annual billing / Årlig fakturering
-  const billedYearly = input.hourlyRate * input.hoursPerMonth * 12;
+  const billedYearly = Math.max(0, (input.hourlyRate ?? 0) * (input.hoursPerMonth ?? 0) * 12);
 
   // Calculate surplus before and after buffer / Beräkna överskott före och efter buffert
   const surplusBeforeBuffer = billedYearly - grossSalaryYearly - employerContributionYearly - costsYearly;
-  const bufferYearly = surplusBeforeBuffer * (input.bufferPercent / 100);
+  const bufferYearly = Math.max(0, surplusBeforeBuffer * (Math.max(0, input.bufferPercent ?? 0) / 100));
   const surplusYearly = surplusBeforeBuffer - bufferYearly;
 
   // Corporate tax and net profit / Bolagsskatt och årets resultat
-  const corporateTaxAmount = surplusYearly * (settings.corporateTax / 100);
+  const corporateTaxRate = Math.max(0, Number(settings.corporateTax ?? 0));
+  const corporateTaxAmount = Math.max(0, surplusYearly * (corporateTaxRate / 100));
   const netProfitYearly = surplusYearly - corporateTaxAmount;
 
   // Opening equity (from previous year or initial value)
   // Ingående fritt eget kapital (från föregående år eller initialt värde)
   const openingEquity = yearNumber === 1
-    ? settings.openingFreeEquity
-    : (previousYear?.closingEquity || 0);
+    ? Math.max(0, Number(settings.openingFreeEquity ?? 0))
+    : Math.max(0, Number(previousYear?.closingEquity ?? 0));
 
   // Maximum dividend based on equity / Maximal utdelning baserat på eget kapital
-  const maxDividendByEquity = openingEquity + netProfitYearly;
+  const maxDividendByEquity = Math.max(0, openingEquity + netProfitYearly);
 
   // Main rule should be based on cash salaries (excluding employer contributions)
   // Huvudregeln ska utgå från kontanta löner (ej inkl. AG-avgifter)
-  const totalCashSalariesYearly = settings.totalCashSalariesYearly ?? grossSalaryYearly;
+  const totalCashSalariesYearly = Math.max(
+    0,
+    Number(settings.totalCashSalariesYearly ?? grossSalaryYearly)
+  );
 
   // Salary requirement for main rule / Löneuttagskravet för huvudregeln
-  const wageFloor = Math.max(
-    6 * settings.ibb + 0.05 * totalCashSalariesYearly,
-    9.6 * settings.ibb
-  );
+  const ibb = Math.max(0, Number(settings.ibb ?? 0));
+  const wageFloor = Math.max(6 * ibb + 0.05 * totalCashSalariesYearly, 9.6 * ibb);
   const eligibleForMainRule = grossSalaryYearly >= wageFloor;
 
   // Simplified rule allowance (2.75 × IBB) / Förenklingsregelns utrymme (2,75 × IBB)
-  const simplifiedRuleAllowance = 2.75 * settings.ibb;
+  const simplifiedRuleAllowance = 2.75 * ibb;
 
-  // Main rule allowance (50% of salaries + 9% of share acquisition value)
-  // Huvudregelns utrymme (50% av löner + 9% av aktieförvärvet)
+  // Main rule allowance (50% of salaries + 10.96% of share acquisition value, 2025)
+  // Huvudregelns utrymme (50% av löner + 10,96% av aktieförvärvet, 2025)
   const mainRuleAllowance = eligibleForMainRule
-    ? (totalCashSalariesYearly * 0.5) + (settings.shareAcquisitionValue * 0.1096)
+    ? (totalCashSalariesYearly * 0.5) + (Math.max(0, Number(settings.shareAcquisitionValue ?? 0)) * 0.1096)
     : 0;
 
   // Use the higher of simplified or main rule / Använd det högsta av förenklings- eller huvudregeln
   const currentYearAllowance = Math.max(simplifiedRuleAllowance, mainRuleAllowance);
 
   // Carried forward allowance from previous years / Överfört utrymme från tidigare år
-  const carriedForwardAllowance = (previousYear?.savedDividendAllowance || 0) * 1.0496;
+  const carriedForwardAllowance = Math.max(0, Number(previousYear?.savedDividendAllowance ?? 0)) * 1.0496;
 
   // Total dividend allowance (current year + carried forward)
   // Totalt utdelningsutrymme (innevarande år + överfört)
@@ -94,7 +108,7 @@ export function calculateYear(
     : 0;
 
   // Gross dividend (user-selected percentage) / Bruttoutdelning (användarens procentval)
-  const grossDividend = maxDividendByEquity * (input.dividendPercent / 100);
+  const grossDividend = Math.max(0, maxDividendByEquity * (Math.max(0, input.dividendPercent ?? 0) / 100));
 
   // Split dividend into low-tax and high-tax portions
   // Dela upp utdelning i låg- och högbeskattad del
@@ -103,24 +117,26 @@ export function calculateYear(
 
   // Net dividend after tax (20% tax on low-tax, marginal rate on high-tax)
   // Nettoutdelning efter skatt (20% skatt på lågdel, marginalskatt på högdel)
+  const marginalTaxRate = Math.max(0, Number(settings.marginalTaxRate ?? 0));
   const lowTaxNet = lowTaxDividend * 0.8;
-  const highTaxNet = highTaxDividend * (1 - settings.marginalTaxRate / 100);
+  const highTaxNet = highTaxDividend * (1 - marginalTaxRate / 100);
 
-  const netDividend = lowTaxNet + highTaxNet;
+  const netDividend = Math.max(0, lowTaxNet + highTaxNet);
 
   // Total net income per month (salary + dividend) / Total nettoinkomst per månad (lön + utdelning)
   const totalNetMonthly = (netSalaryYearly + netDividend) / 12;
 
   // Equivalent gross salary that would give the same net income
   // Motsvarande bruttolön som skulle ge samma nettoinkomst
-  const equivalentGrossSalaryMonthly = totalNetMonthly / (1 - settings.municipalTax / 100);
+  const safeTaxFactor = 1 - Math.min(0.9999, Math.max(0, effectiveTaxRatePct) / 100);
+  const equivalentGrossSalaryMonthly = safeTaxFactor > 0 ? totalNetMonthly / safeTaxFactor : 0;
 
   // Closing equity (remaining after dividend) / Utgående fritt eget kapital (kvar efter utdelning)
-  const closingEquity = maxDividendByEquity - grossDividend;
+  const closingEquity = Math.max(0, maxDividendByEquity - grossDividend);
 
   // Saved dividend allowance to carry forward / Sparat utdelningsutrymme att föra vidare
   const usedAllowance = Math.min(grossDividend, dividendAllowanceSEK);
-  const savedDividendAllowance = dividendAllowanceSEK - usedAllowance;
+  const savedDividendAllowance = Math.max(0, dividendAllowanceSEK - usedAllowance);
 
   return {
     ...input,
@@ -154,13 +170,11 @@ export function calculateAllYears(
   settings: GlobalSettings
 ): YearCalculation[] {
   const results: YearCalculation[] = [];
-
   for (let i = 0; i < yearInputs.length; i++) {
     const previousYear = i > 0 ? results[i - 1] : null;
     const calculation = calculateYear(yearInputs[i], settings, previousYear, i + 1);
     results.push(calculation);
   }
-
   return results;
 }
 
@@ -170,7 +184,7 @@ export function calculateAllYears(
  */
 export interface HourlyRateInput {
   desiredNetSalary: number;
-  municipalTax: number;
+  municipalTax: number;          // can be total tax if you pass totalTaxRate here
   employerContribution: number;
   regionalSupport?: boolean;
   businessCosts: number;
@@ -192,11 +206,12 @@ export interface HourlyRateResult {
 }
 
 export function calculateHourlyRateFromNetSalary(input: HourlyRateInput): HourlyRateResult {
-  const grossSalary = input.desiredNetSalary / (1 - input.municipalTax / 100);
+  const totalTaxPct = Math.max(0, Number(input.municipalTax ?? 0));
+  const safeFactor = 1 - Math.min(0.9999, totalTaxPct / 100);
+  const grossSalary = safeFactor > 0 ? input.desiredNetSalary / safeFactor : 0;
 
-  const effectiveEmployerContribution = input.regionalSupport
-    ? input.employerContribution - 10
-    : input.employerContribution;
+  const baseAg = Math.max(0, Number(input.employerContribution ?? 0));
+  const effectiveEmployerContribution = input.regionalSupport ? Math.max(0, baseAg - 10) : baseAg;
 
   let employerContributions = grossSalary * (effectiveEmployerContribution / 100);
 
@@ -205,13 +220,17 @@ export function calculateHourlyRateFromNetSalary(input: HourlyRateInput): Hourly
     employerContributions = Math.max(0, employerContributions - monthlyDeduction);
   }
 
-  const baseCost = grossSalary + employerContributions + input.businessCosts + input.savingsGoal;
+  const baseCost = grossSalary
+    + employerContributions
+    + Math.max(0, Number(input.businessCosts ?? 0))
+    + Math.max(0, Number(input.savingsGoal ?? 0));
 
-  const totalMonthlyCost = baseCost * (1 + input.bufferPercentage / 100);
+  const totalMonthlyCost = baseCost * (1 + Math.max(0, Number(input.bufferPercentage ?? 0)) / 100);
 
-  const hourlyRate = totalMonthlyCost / input.billableHours;
+  const hours = Math.max(1, Number(input.billableHours ?? 1));
+  const hourlyRate = totalMonthlyCost / hours;
   const hourlyRateWithVAT = hourlyRate * 1.25;
-  const monthlyRevenue = hourlyRate * input.billableHours;
+  const monthlyRevenue = hourlyRate * hours;
 
   return {
     grossSalary,
@@ -222,7 +241,7 @@ export function calculateHourlyRateFromNetSalary(input: HourlyRateInput): Hourly
     monthlyRevenue,
     annualGrossSalary: grossSalary * 12,
     annualCost: totalMonthlyCost * 12,
-    annualRevenue: hourlyRate * input.billableHours * 12,
+    annualRevenue: monthlyRevenue * 12,
   };
 }
 
