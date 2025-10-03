@@ -10,14 +10,32 @@ export function LonEfterSkatt() {
   const [kommuner, setKommuner] = useState<Kommune[]>([]);
   const [loading, setLoading] = useState(false);
   const [taxTable, setTaxTable] = useState<TaxTableEntry[]>([]);
-  const [selectedColumn, setSelectedColumn] = useState<number>(1);
+  const [selectedColumn, setSelectedColumn] = useState<string>('1');
   const [churchMember, setChurchMember] = useState(false);
   const [showInkomstInfo, setShowInkomstInfo] = useState<boolean>(false);
 
   useEffect(() => {
     loadKommuner();
-    loadTaxTable();
+    loadTaxTable(); // initial fallback
   }, []);
+
+  // --- Helpers ---
+  const getTotalLocalTaxRate = (k: Kommune, includeChurch: boolean) => {
+    const municipalTax = Number(
+      (k as any).Kommunskatt ??
+      (k as any).Kommunalskatt ??
+      (k as any).Kommnskatt ?? 0
+    );
+    const countyTax = Number(
+      (k as any).Landstingsskatt ??
+      (k as any).Regionskatt ?? 0
+    );
+    const churchTax = includeChurch ? Number(
+      (k as any).Kyrkoskatt ??
+      (k as any).Kyrkoavgift ?? 0
+    ) : 0;
+    return municipalTax + countyTax + churchTax; // t.ex. 29.82
+  };
 
   const loadKommuner = async () => {
     setLoading(true);
@@ -36,15 +54,25 @@ export function LonEfterSkatt() {
     }
   };
 
-  const loadTaxTable = async () => {
+  const loadTaxTable = async (tableId?: string) => {
     try {
       const currentYear = new Date().getFullYear();
-      const table = await fetchTaxTable(currentYear, '29', '30B');
+      // Om tableId saknas, ladda t.ex. 30 som baseline
+      const table = await fetchTaxTable(currentYear, tableId ?? '30');
       setTaxTable(table);
     } catch (error) {
       console.error('Failed to load tax table:', error);
     }
   };
+
+  // Ladda rätt skattetabell när kommun/kyrka ändras
+  useEffect(() => {
+    if (!selectedKommun) return;
+    const rate = getTotalLocalTaxRate(selectedKommun, churchMember); // t.ex. 29.82
+    const base = Math.round(rate);                                   // -> 30
+    const tableId = churchMember ? `${base}B` : `${base}`;           // 30 eller 30B
+    loadTaxTable(tableId);
+  }, [selectedKommun, churchMember]);
 
   const handleKommunChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const kommunId = e.target.value;
@@ -59,17 +87,29 @@ export function LonEfterSkatt() {
       return null;
     }
 
-    const taxDeduction = calculateTaxDeduction(grossSalary, taxTable, selectedColumn);
-    const netSalary = grossSalary - taxDeduction;
-    const taxRate = (taxDeduction / grossSalary) * 100;
+    const salary = Math.max(0, Math.round(grossSalary));
+    const td = calculateTaxDeduction(salary, taxTable, Number(selectedColumn));
+    const taxDeduction = Number.isFinite(td) ? td : 0;
+    const netSalary = Math.max(0, salary - taxDeduction);
+    const taxRate = salary > 0 ? (taxDeduction / salary) * 100 : 0;
 
-    const municipalTax = parseFloat(selectedKommun.Kommnskatt);
-    const countyTax = parseFloat(selectedKommun.Landstingsskatt);
-    const churchTax = churchMember ? parseFloat(selectedKommun.Kyrkoskatt || '0') : 0;
+    const municipalTax = Number(
+      (selectedKommun as any).Kommunskatt ??
+      (selectedKommun as any).Kommunalskatt ??
+      (selectedKommun as any).Kommnskatt ?? 0
+    );
+    const countyTax = Number(
+      (selectedKommun as any).Landstingsskatt ??
+      (selectedKommun as any).Regionskatt ?? 0
+    );
+    const churchTax = churchMember ? Number(
+      (selectedKommun as any).Kyrkoskatt ??
+      (selectedKommun as any).Kyrkoavgift ?? 0
+    ) : 0;
     const totalTaxRate = municipalTax + countyTax + churchTax;
 
     return {
-      grossSalary,
+      grossSalary: salary,
       taxDeduction,
       netSalary,
       taxRate,
@@ -127,7 +167,7 @@ export function LonEfterSkatt() {
                 </label>
                 <select
                   value={selectedColumn}
-                  onChange={(e) => setSelectedColumn(Number(e.target.value))}
+                  onChange={(e) => setSelectedColumn(e.target.value)}
                   style={{ minWidth: 100 }}
                 >
                   {Object.entries(TAX_COLUMNS).map(([key, value]) => (
@@ -169,7 +209,7 @@ export function LonEfterSkatt() {
                       boxSizing: 'border-box',
                     }}
                   >
-                    {TAX_COLUMNS[selectedColumn as keyof typeof TAX_COLUMNS].description}
+                    {TAX_COLUMNS[selectedColumn].description}
                   </div>
                 )}
               </div>
