@@ -20,6 +20,11 @@ interface PlatformHeaderProps {
 
 const tools = [
   {
+    name: 'Fakturera rätt timpris',
+    icon: DollarSign,
+    route: '/fakturera-ratt-timpris',
+  },
+  {
     name: 'Lön efter skatt',
     icon: Wallet,
     route: '/lon-efter-skatt',
@@ -34,11 +39,7 @@ const tools = [
     icon: PiggyBank,
     route: '/tjanstepension',
   },
-  {
-    name: 'Fakturera rätt timpris',
-    icon: DollarSign,
-    route: '/fakturera-ratt-timpris',
-  },
+  
   {
     name: 'Belopp och procentsatser',
     icon: FileText,
