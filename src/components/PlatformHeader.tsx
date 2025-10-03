@@ -7,7 +7,8 @@ import { Home,
         Moon,
         Sun,
         FileText,
-        DollarSign
+        DollarSign,
+        Github
        } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import logo from '../imgs/konsultverktyg.svg';
@@ -111,6 +112,16 @@ export function PlatformHeader({ theme, onToggleTheme }: PlatformHeaderProps) {
                 <span className="hidden sm:inline">Hem</span>
               </Link>
             )}
+
+            <a
+              href="https://github.com/hardrockhodl/utdelningsplaneraren"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-[10px] rounded-md text-[#1c1c1c] dark:text-[#f7f8fa] hover:bg-white dark:hover:bg-[#3a3a3a] border border-[#e0e0e0] dark:border-[#3a3a3a] transition-colors duration-200"
+              aria-label="GitHub repository"
+            >
+              <Github size={18} />
+            </a>
 
             <button
               onClick={onToggleTheme}
