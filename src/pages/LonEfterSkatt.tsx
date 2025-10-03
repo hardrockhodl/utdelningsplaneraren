@@ -238,17 +238,18 @@ export function LonEfterSkatt() {
                     ))}
                   </select>
                 )}
-                {/* Kyrkoskatt */}
-                <div className="setting-item">
-                  <label className="checkbox-label">
-                    <input
-                      type="checkbox"
-                      checked={churchMember}
-                      onChange={(e) => setChurchMember(e.target.checked)}
-                    />
-                    Medlem i svenska kyrkan
-                  </label>
-                </div>
+              </div>
+
+              {/* Kyrkoskatt */}
+              <div className="setting-item">
+                <label className="checkbox-label">
+                  <input
+                    type="checkbox"
+                    checked={churchMember}
+                    onChange={(e) => setChurchMember(e.target.checked)}
+                  />
+                  Medlem i svenska kyrkan
+                </label>
               </div>
             </div>
           </div>

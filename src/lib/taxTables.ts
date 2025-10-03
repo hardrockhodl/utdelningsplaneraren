@@ -25,11 +25,10 @@ const TAX_TABLE_API = 'https://skatteverket.entryscape.net/rowstore/dataset/8832
 
 export async function fetchTaxTable(
   year: number,
-  tableNumber: string,
-  periodType: string = '30B'
+  tableNumber: string
 ): Promise<TaxTableEntry[]> {
   try {
-    const query = `år=${year}&tabellnr=${tableNumber}&antal dgr=${periodType}`;
+    const query = `år=${year}&tabellnr=${tableNumber}`;
     const url = `${TAX_TABLE_API}?${encodeURI(query)}&_limit=1000`;
 
     const response = await fetch(url, {
