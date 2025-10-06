@@ -98,6 +98,7 @@ function parseCarRecord(record: ApiRecord): CarRecord | null {
 export function getBrands(records: CarRecord[]): string[] {
   const brands = new Set(records.map(r => r.brand));
   return Array.from(brands).sort();
+  console.log('cars page', {offset, limit, got: data.results?.length});
 }
 
 // Get models for a specific brand
