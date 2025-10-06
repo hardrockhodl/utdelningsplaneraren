@@ -25,6 +25,78 @@ export interface KommunOption {
 let cachedKommunData: KommunOption[] | null = null;
 let cachedKommuner: Kommune[] | null = null;
 
+const KOMMUN_CACHE_KEY = 'skatteverket_kommuner_cache';
+const CACHE_DURATION_MS = 24 * 60 * 60 * 1000;
+
+interface CachedData<T> {
+  data: T;
+  timestamp: number;
+}
+
+function getCachedData<T>(key: string): T | null {
+  try {
+    const cached = localStorage.getItem(key);
+    if (!cached) return null;
+
+    const parsed: CachedData<T> = JSON.parse(cached);
+    const age = Date.now() - parsed.timestamp;
+
+    if (age > CACHE_DURATION_MS) {
+      localStorage.removeItem(key);
+      return null;
+    }
+
+    return parsed.data;
+  } catch {
+    return null;
+  }
+}
+
+function setCachedData<T>(key: string, data: T): void {
+  try {
+    const cached: CachedData<T> = {
+      data,
+      timestamp: Date.now()
+    };
+    localStorage.setItem(key, JSON.stringify(cached));
+  } catch {
+    // localStorage full or unavailable
+  }
+}
+
+async function fetchWithTimeout(url: string, timeoutMs: number = 10000): Promise<Response> {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+
+  try {
+    const response = await fetch(url, { signal: controller.signal });
+    clearTimeout(timeoutId);
+    return response;
+  } catch (error) {
+    clearTimeout(timeoutId);
+    throw error;
+  }
+}
+
+async function retryFetch(url: string, maxRetries: number = 3): Promise<Response> {
+  let lastError: Error | null = null;
+
+  for (let i = 0; i < maxRetries; i++) {
+    try {
+      const response = await fetchWithTimeout(url);
+      if (response.ok) return response;
+      throw new Error(`HTTP ${response.status}`);
+    } catch (error) {
+      lastError = error as Error;
+      if (i < maxRetries - 1) {
+        await new Promise(resolve => setTimeout(resolve, Math.pow(2, i) * 1000));
+      }
+    }
+  }
+
+  throw lastError || new Error('Fetch failed');
+}
+
 export async function fetchKommunTaxData(): Promise<KommunOption[]> {
   if (cachedKommunData) {
     return cachedKommunData;
@@ -96,6 +168,12 @@ export async function fetchKommuner(): Promise<Kommune[]> {
     return cachedKommuner;
   }
 
+  const cached = getCachedData<Kommune[]>(KOMMUN_CACHE_KEY);
+  if (cached) {
+    cachedKommuner = cached;
+    return cached;
+  }
+
   try {
     const kommunMap = new Map<string, Kommune>();
     let offset = 0;
@@ -103,7 +181,7 @@ export async function fetchKommuner(): Promise<Kommune[]> {
     let hasMore = true;
 
     while (hasMore) {
-      const response = await fetch(
+      const response = await retryFetch(
         `https://skatteverket.entryscape.net/rowstore/dataset/c67b320b-ffee-4876-b073-dd9236cd2a99/json?_limit=${limit}&_offset=${offset}`
       );
 
@@ -150,10 +228,17 @@ export async function fetchKommuner(): Promise<Kommune[]> {
       a.Kommun.localeCompare(b.Kommun, 'sv')
     );
 
+    setCachedData(KOMMUN_CACHE_KEY, cachedKommuner);
+
     return cachedKommuner;
   } catch (error) {
     console.error('Error fetching kommuner:', error);
-    return [];
+    const fallback = getCachedData<Kommune[]>(KOMMUN_CACHE_KEY);
+    if (fallback) {
+      cachedKommuner = fallback;
+      return fallback;
+    }
+    throw error;
   }
 }
 

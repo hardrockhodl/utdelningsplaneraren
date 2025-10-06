@@ -9,6 +9,80 @@ export interface CarRecord {
 }
 
 const API_BASE = 'https://skatteverket.entryscape.net/rowstore/dataset/fad86bf9-67e3-4d68-829c-7b9a23bc5e42/json';
+const CAR_CACHE_KEY = 'skatteverket_cars_cache';
+const CACHE_DURATION_MS = 24 * 60 * 60 * 1000;
+
+interface CachedData<T> {
+  data: T;
+  timestamp: number;
+}
+
+function getCachedData<T>(key: string): T | null {
+  try {
+    const cached = localStorage.getItem(key);
+    if (!cached) return null;
+
+    const parsed: CachedData<T> = JSON.parse(cached);
+    const age = Date.now() - parsed.timestamp;
+
+    if (age > CACHE_DURATION_MS) {
+      localStorage.removeItem(key);
+      return null;
+    }
+
+    return parsed.data;
+  } catch {
+    return null;
+  }
+}
+
+function setCachedData<T>(key: string, data: T): void {
+  try {
+    const cached: CachedData<T> = {
+      data,
+      timestamp: Date.now()
+    };
+    localStorage.setItem(key, JSON.stringify(cached));
+  } catch {
+    // localStorage full or unavailable
+  }
+}
+
+async function fetchWithTimeout(url: string, timeoutMs: number = 10000): Promise<Response> {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+
+  try {
+    const response = await fetch(url, {
+      headers: { Accept: 'application/json' },
+      signal: controller.signal
+    });
+    clearTimeout(timeoutId);
+    return response;
+  } catch (error) {
+    clearTimeout(timeoutId);
+    throw error;
+  }
+}
+
+async function retryFetch(url: string, maxRetries: number = 2): Promise<Response> {
+  let lastError: Error | null = null;
+
+  for (let i = 0; i < maxRetries; i++) {
+    try {
+      const response = await fetchWithTimeout(url);
+      if (response.ok) return response;
+      throw new Error(`HTTP ${response.status}`);
+    } catch (error) {
+      lastError = error as Error;
+      if (i < maxRetries - 1) {
+        await new Promise(resolve => setTimeout(resolve, Math.pow(2, i) * 1000));
+      }
+    }
+  }
+
+  throw lastError || new Error('Fetch failed');
+}
 
 // Robust number parsing helper
 const toNumber = (v?: string) => Number(String(v ?? '').replace(/[^\d.-]/g, '')) || 0;
@@ -34,6 +108,12 @@ export async function fetchAllCars(
   limit = 500,
   onChunk?: (chunk: CarRecord[]) => void
 ): Promise<CarRecord[]> {
+  const cached = getCachedData<CarRecord[]>(CAR_CACHE_KEY);
+  if (cached && cached.length > 0) {
+    if (onChunk) onChunk(cached);
+    return cached;
+  }
+
   const records: CarRecord[] = [];
   let offset = 0;
   const maxRecords = 5000;
@@ -41,7 +121,7 @@ export async function fetchAllCars(
   try {
     while (records.length < maxRecords) {
       const url = `${API_BASE}?_limit=${limit}&_offset=${offset}`;
-      const res = await fetch(url, { headers: { Accept: 'application/json' } });
+      const res = await retryFetch(url);
       if (!res.ok) break;
       const data: ApiResponse = await res.json();
       if (!data.results?.length) break;
@@ -55,15 +135,24 @@ export async function fetchAllCars(
         }
       }
 
-      // NEW: push partial result so UI kan visa märken direkt
       if (onChunk && chunk.length) onChunk(chunk);
 
       if (data.results.length < limit) break;
       offset += limit;
     }
+
+    if (records.length > 0) {
+      setCachedData(CAR_CACHE_KEY, records);
+    }
+
     return records;
-  } catch {
-    return [];
+  } catch (error) {
+    const fallback = getCachedData<CarRecord[]>(CAR_CACHE_KEY);
+    if (fallback && fallback.length > 0) {
+      if (onChunk) onChunk(fallback);
+      return fallback;
+    }
+    throw error;
   }
 }
 
@@ -98,7 +187,6 @@ function parseCarRecord(record: ApiRecord): CarRecord | null {
 export function getBrands(records: CarRecord[]): string[] {
   const brands = new Set(records.map(r => r.brand));
   return Array.from(brands).sort();
-  console.log('cars page', {offset, limit, got: data.results?.length});
 }
 
 // Get models for a specific brand

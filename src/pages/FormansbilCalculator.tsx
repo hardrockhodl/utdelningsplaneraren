@@ -12,12 +12,14 @@ export function FormansbilCalculator() {
   const [selectedKommun, setSelectedKommun] = useState<Kommune | null>(null);
   const [kommuner, setKommuner] = useState<Kommune[]>([]);
   const [loading, setLoading] = useState(false);
+  const [kommunError, setKommunError] = useState<string | null>(null);
   const [taxTable, setTaxTable] = useState<TaxTableEntry[]>([]);
   const [churchMember, setChurchMember] = useState(false);
 
   // Car selection
   const [carRecords, setCarRecords] = useState<CarRecord[]>([]);
   const [loadingCars, setLoadingCars] = useState(false);
+  const [carsError, setCarsError] = useState<string | null>(null);
   const [selectedBrand, setSelectedBrand] = useState<string>('');
   const [selectedModel, setSelectedModel] = useState<string>('');
   const [selectedYear, setSelectedYear] = useState<number>(0);
@@ -106,16 +108,22 @@ export function FormansbilCalculator() {
 
   const loadKommuner = async () => {
     setLoading(true);
+    setKommunError(null);
     try {
       const data = await fetchKommuner();
       setKommuner(data);
 
-      const stockholm = findKommun(data, 'Stockholm');
-      if (stockholm) {
-        setSelectedKommun(stockholm);
+      if (data.length === 0) {
+        setKommunError('Kunde inte ladda kommundata. Försök igen.');
+      } else {
+        const stockholm = findKommun(data, 'Stockholm');
+        if (stockholm) {
+          setSelectedKommun(stockholm);
+        }
       }
     } catch (error) {
       console.error('Failed to load kommuner:', error);
+      setKommunError('Fel vid hämtning av kommundata. Kontrollera din internetanslutning och försök igen.');
     } finally {
       setLoading(false);
     }
@@ -139,21 +147,27 @@ export function FormansbilCalculator() {
     }
   };
 
-  // src/pages/FormansbilCalculator.tsx
-    const loadCars = async () => {
-      setLoadingCars(true);
-      try {
-        const all: CarRecord[] = [];
-        await fetchAllCars(500, (chunk) => {
-          all.push(...chunk);
-          setCarRecords(prev => [...prev, ...chunk]);   // incremental update
-          if (all.length >= 200 && loadingCars) setLoadingCars(false); // släpp spinnare när vi har något
-        });
-        setLoadingCars(false);
-      } catch {
-        setLoadingCars(false);
+  const loadCars = async () => {
+    setLoadingCars(true);
+    setCarsError(null);
+    setCarRecords([]);
+    try {
+      const all: CarRecord[] = [];
+      await fetchAllCars(500, (chunk) => {
+        all.push(...chunk);
+        setCarRecords(prev => [...prev, ...chunk]);
+        if (all.length >= 200 && loadingCars) setLoadingCars(false);
+      });
+      setLoadingCars(false);
+      if (all.length === 0) {
+        setCarsError('Kunde inte ladda bildata från Skatteverket.');
       }
-    };
+    } catch (error) {
+      console.error('Failed to load cars:', error);
+      setCarsError('Fel vid hämtning av bildata. Kontrollera din internetanslutning och försök igen.');
+      setLoadingCars(false);
+    }
+  };
 
   const handleKommunChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const kommunId = e.target.value;
@@ -234,6 +248,26 @@ export function FormansbilCalculator() {
                     <Loader size={16} className="spinner" />
                     <span>Laddar kommuner...</span>
                   </div>
+                ) : kommunError ? (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                    <div style={{ color: 'var(--accent-red)', fontSize: '0.875rem' }}>
+                      {kommunError}
+                    </div>
+                    <button
+                      onClick={loadKommuner}
+                      style={{
+                        padding: '0.5rem 1rem',
+                        background: 'var(--accent-blue)',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: '4px',
+                        cursor: 'pointer',
+                        fontSize: '0.875rem'
+                      }}
+                    >
+                      Försök igen
+                    </button>
+                  </div>
                 ) : (
                   <select
                     value={selectedKommun?.KommunId || ''}
@@ -295,10 +329,51 @@ export function FormansbilCalculator() {
                     {loadingCars ? (
                       <div className="loading-container">
                         <Loader size={16} className="spinner" />
-                        <span>Laddar bilar...</span>
+                        <span>Laddar bilar... ({carRecords.length} hittade)</span>
+                      </div>
+                    ) : carsError ? (
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                        <div style={{ color: 'var(--accent-red)', fontSize: '0.875rem' }}>
+                          {carsError}
+                        </div>
+                        <button
+                          onClick={loadCars}
+                          style={{
+                            padding: '0.5rem 1rem',
+                            background: 'var(--accent-blue)',
+                            color: 'white',
+                            border: 'none',
+                            borderRadius: '4px',
+                            cursor: 'pointer',
+                            fontSize: '0.875rem'
+                          }}
+                        >
+                          Försök igen
+                        </button>
+                        <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
+                          Tips: Aktivera "Ange värden manuellt" för att fortsätta utan bildata
+                        </div>
                       </div>
                     ) : brands.length === 0 ? (
-                  <div className="text-sm text-gray-500">Inga träffar från API:t. Ange manuellt eller försök igen.</div>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                        <div style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
+                          Inga bilar laddade. Klicka för att ladda bildata.
+                        </div>
+                        <button
+                          onClick={loadCars}
+                          style={{
+                            padding: '0.5rem 1rem',
+                            background: 'var(--accent-blue)',
+                            color: 'white',
+                            border: 'none',
+                            borderRadius: '4px',
+                            cursor: 'pointer',
+                            fontSize: '0.875rem'
+                          }}
+                        >
+                          Ladda bildata
+                        </button>
+                      </div>
                     ) : (
                       <select
                         value={selectedBrand}
