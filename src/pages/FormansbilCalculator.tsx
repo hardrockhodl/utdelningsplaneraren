@@ -3,7 +3,7 @@ import { Car, Calculator, Loader, Info } from 'lucide-react';
 import { Kommune } from '../types';
 import { fetchKommuner, findKommun } from '../lib/skatteverket';
 import { fetchTaxTable, calculateTaxDeduction, TaxTableEntry } from '../lib/taxTables';
-import { calculateFormansbil, FormansbilInput, getBestDeductionModel } from '../lib/formansbilCalculations';
+import { calculateFormansbil, FormansbilInput, getBestDeductionModel, calculateAllScenarios } from '../lib/formansbilCalculations';
 import { fetchAllCars, getYears, getBrandsForYear, getModelsForYearAndBrand, findCarRecord, calculateFormansvarde, CarRecord } from '../lib/cars';
 import { AdSenseUnit } from '../components/AdSenseUnit';
 
@@ -802,6 +802,121 @@ export function FormansbilCalculator() {
                   Förmånen upphör när bilen avställs för en hel kalendermånad eller när du inte längre
                   har tillgång till den för privat bruk.
                 </p>
+              </div>
+            </div>
+
+            <div className="results-section">
+              <h2 className="section-title">Jämförelse av alternativ</h2>
+              <div className="settings-panel">
+                <div style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
+                  gap: '1rem'
+                }}>
+                  {(() => {
+                    const scenarios = calculateAllScenarios(
+                      {
+                        grossSalary,
+                        municipalTax: getTotalLocalTaxRate(selectedKommun!, churchMember),
+                        formansvarde,
+                        deductionModel,
+                        bruttoDeduction,
+                        nettoDeduction,
+                        privatLeasing,
+                        businessLeasing,
+                        employerContribution: 31.42
+                      },
+                      taxTable,
+                      1,
+                      nybilspris,
+                      fordonsskatt
+                    );
+
+                    const bestScenario = scenarios.reduce((best, current) =>
+                      current.netSalaryImpact > best.netSalaryImpact ? current : best
+                    );
+
+                    return scenarios.map((scenario) => (
+                      <div
+                        key={scenario.scenario}
+                        style={{
+                          padding: '1.25rem',
+                          background: scenario.scenario === bestScenario.scenario
+                            ? 'rgba(39, 180, 35, 0.08)'
+                            : 'var(--card-bg)',
+                          border: scenario.scenario === bestScenario.scenario
+                            ? '2px solid var(--accent-green)'
+                            : '1px solid var(--border-color)',
+                          borderRadius: '8px',
+                          position: 'relative'
+                        }}
+                      >
+                        {scenario.scenario === bestScenario.scenario && (
+                          <div style={{
+                            position: 'absolute',
+                            top: '-10px',
+                            right: '10px',
+                            background: 'var(--accent-green)',
+                            color: 'white',
+                            padding: '4px 12px',
+                            borderRadius: '12px',
+                            fontSize: '0.75rem',
+                            fontWeight: 600
+                          }}>
+                            Bäst
+                          </div>
+                        )}
+
+                        <div style={{
+                          fontSize: '1.1rem',
+                          fontWeight: 600,
+                          marginBottom: '0.5rem',
+                          color: 'var(--text-primary)'
+                        }}>
+                          {scenario.scenario}
+                        </div>
+
+                        <div style={{
+                          fontSize: '0.875rem',
+                          color: 'var(--text-secondary)',
+                          marginBottom: '1rem'
+                        }}>
+                          {scenario.description}
+                        </div>
+
+                        <div style={{
+                          fontSize: '0.875rem',
+                          marginBottom: '0.5rem',
+                          color: 'var(--text-secondary)'
+                        }}>
+                          Månadskostnad:
+                        </div>
+                        <div style={{
+                          fontSize: '1.5rem',
+                          fontWeight: 700,
+                          color: 'var(--accent-blue)',
+                          marginBottom: '1rem'
+                        }}>
+                          {scenario.monthlyCost !== null
+                            ? `${scenario.monthlyCost.toLocaleString('sv-SE')} kr`
+                            : '-'
+                          }
+                        </div>
+
+                        <div style={{
+                          paddingTop: '1rem',
+                          borderTop: '1px solid var(--border-color)',
+                          fontSize: '0.875rem',
+                          color: 'var(--text-secondary)'
+                        }}>
+                          Nettolön kvar: <strong style={{ color: 'var(--text-primary)' }}>
+                            {scenario.netSalaryImpact.toLocaleString('sv-SE')} kr
+                          </strong>
+                        </div>
+                      </div>
+                    ));
+                  })()}
+                </div>
               </div>
             </div>
           </>
