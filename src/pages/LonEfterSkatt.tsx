@@ -57,16 +57,38 @@ export function LonEfterSkatt() {
   const loadTaxTable = async (tableId?: string) => {
     try {
       const currentYear = new Date().getFullYear();
-      const table = await fetchTaxTable(currentYear, tableId ?? '30');
+      const allEntries = await fetchTaxTable(currentYear, tableId ?? '30');
+      
+      // Filter for monthly tax tables (30 days)
+      const monthlyEntries = allEntries.filter(entry => {
+        const days = entry['antal dgr'];
+        return days === '30' || days === 30;
+      });
+      
+      const table = monthlyEntries.length > 0 ? monthlyEntries : allEntries;
       setTaxTable(table);
       
       // DEBUG: Log tax table info
       console.log('Tax table loaded:', {
         tableId: tableId ?? '30',
         year: currentYear,
-        entries: table.length,
+        totalEntries: allEntries.length,
+        monthlyEntries: monthlyEntries.length,
+        usingMonthly: monthlyEntries.length > 0,
         firstEntry: table[0],
         lastEntry: table[table.length - 1]
+      });
+      
+      // Check a few entries to understand the income ranges
+      console.log('Sample tax table entries:');
+      table.slice(0, 5).forEach(entry => {
+        console.log({
+          from: entry['inkomst fr.o.m.'],
+          to: entry['inkomst t.o.m.'],
+          days: entry['antal dgr'],
+          col1: entry['kolumn 1'],
+          col2: entry['kolumn 2']
+        });
       });
     } catch (error) {
       console.error('Failed to load tax table:', error);
@@ -103,6 +125,17 @@ export function LonEfterSkatt() {
     const salary = Math.max(0, Math.round(grossSalary));
     const td = calculateTaxDeduction(salary, taxTable, Number(selectedColumn));
     const taxDeduction = Number.isFinite(td) ? td : 0;
+    
+    // DEBUG: Find the actual entry being used
+    const columnKey = `kolumn ${selectedColumn}` as keyof TaxTableEntry;
+    const usedEntry = taxTable.find((row) => {
+      const toNumber = (v: string): number => Number(String(v).replace(/[^\d-]/g, '')) || 0;
+      const from = toNumber(row['inkomst fr.o.m.']);
+      const to = toNumber(row['inkomst t.o.m.']);
+      return salary >= from && salary <= to;
+    });
+    
+    console.log('Tax table entry used:', usedEntry);
     
     // DEBUG: Log calculation
     console.log('Net salary calculation:', {
