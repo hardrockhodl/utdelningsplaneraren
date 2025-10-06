@@ -83,11 +83,23 @@ export function LonEfterSkatt() {
       console.log('Sample tax table entries:');
       table.slice(0, 5).forEach(entry => {
         console.log({
+          tabellnr: entry['tabellnr'],
           from: entry['inkomst fr.o.m.'],
           to: entry['inkomst t.o.m.'],
           days: entry['antal dgr'],
+          year: entry['år'],
           col1: entry['kolumn 1'],
           col2: entry['kolumn 2']
+        });
+      });
+      
+      // Also check the LAST few entries to see the max income range
+      console.log('Last tax table entries:');
+      table.slice(-3).forEach(entry => {
+        console.log({
+          from: entry['inkomst fr.o.m.'],
+          to: entry['inkomst t.o.m.'],
+          col1: entry['kolumn 1']
         });
       });
     } catch (error) {
