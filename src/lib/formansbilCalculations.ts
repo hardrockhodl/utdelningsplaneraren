@@ -8,6 +8,7 @@ export interface FormansbilInput {
   bruttoDeduction: number;
   nettoDeduction: number;
   privatLeasing: number;
+  businessLeasing: number;
   employerContribution: number;
 }
 
@@ -24,6 +25,7 @@ export interface FormansbilResult {
   // Comparison
   monthlyDifference: number;
   comparedToPrivateLeasing: number;
+  comparedToBusinessLeasing: number;
 
   // Employer costs
   employerCostForman: number;
@@ -47,6 +49,7 @@ export function calculateFormansbil(
     bruttoDeduction,
     nettoDeduction,
     privatLeasing,
+    businessLeasing,
     employerContribution
   } = input;
 
@@ -95,6 +98,9 @@ export function calculateFormansbil(
   const comparedToPrivateLeasing = privatLeasing > 0
     ? monthlyDifference + privatLeasing
     : 0;
+  const comparedToBusinessLeasing = businessLeasing > 0
+    ? monthlyDifference + businessLeasing
+    : 0;
 
   return {
     netSalaryWithoutCar,
@@ -104,6 +110,7 @@ export function calculateFormansbil(
     effectiveFormansvarde,
     monthlyDifference,
     comparedToPrivateLeasing,
+    comparedToBusinessLeasing,
     employerCostForman,
     employerCostTotal,
     adjustedGrossSalary,

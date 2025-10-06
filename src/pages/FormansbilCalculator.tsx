@@ -193,6 +193,7 @@ export function FormansbilCalculator() {
       bruttoDeduction,
       nettoDeduction,
       privatLeasing,
+      businessLeasing,
       employerContribution: 31.42
     };
 
@@ -704,6 +705,24 @@ export function FormansbilCalculator() {
                       </div>
                       <div className="card-sublabel">
                         {results.result.comparedToPrivateLeasing >= 0 ? 'Billigare' : 'Dyrare'}
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {businessLeasing > 0 && (
+                  <div className="total-card">
+                    <div className="card-icon" style={{ backgroundColor: 'rgba(20, 184, 166, 0.15)' }}>
+                      <Calculator size={24} style={{ color: 'rgb(20, 184, 166)' }} />
+                    </div>
+                    <div className="card-content">
+                      <div className="card-label">Jämfört med businessleasing</div>
+                      <div className="card-value">
+                        {results.result.comparedToBusinessLeasing >= 0 ? '+' : ''}
+                        {results.result.comparedToBusinessLeasing.toLocaleString('sv-SE')} kr
+                      </div>
+                      <div className="card-sublabel">
+                        {results.result.comparedToBusinessLeasing >= 0 ? 'Billigare' : 'Dyrare'}
                       </div>
                     </div>
                   </div>
