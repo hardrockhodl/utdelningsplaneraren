@@ -117,7 +117,7 @@ export function getYearsForModel(records: CarRecord[], brand: string, model: str
       .filter(r => r.brand === brand && r.model === model)
       .map(r => r.modelYear)
   );
-  return Array.from(years).sort((a, b) => b - a);
+  return Array.from(years).filter(y => y > 0).sort((a, b) => b - a);
 }
 
 // Find specific car record
