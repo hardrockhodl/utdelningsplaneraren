@@ -3,6 +3,7 @@ import { Calculator, Loader, Wallet, TrendingUp, Clock } from 'lucide-react';
 import { calculateHourlyRateFromNetSalary, HourlyRateInput } from '../lib/calculations';
 import { Kommune } from '../types';
 import { fetchKommuner, findKommun } from '../lib/skatteverket';
+import { AdSenseUnit } from '../components/AdSenseUnit';
 
 const DEFAULT_SCENARIO_HOURS = [117, 133, 150] as const;
 
@@ -238,6 +239,13 @@ export function FaktureraRattTimpris() {
               <span className="setting-hint">Valfritt: extra sparande eller vinst</span>
             </div>
           </div>
+        </div>
+
+        <div style={{ margin: '20px 0' }}>
+          <AdSenseUnit
+            adSlot="1234567897"
+            style={{ display: 'block', textAlign: 'center' }}
+          />
         </div>
 
         <div className="results-section">
@@ -530,6 +538,13 @@ export function FaktureraRattTimpris() {
                 </tbody>
               </table>
           </div>
+        </div>
+
+        <div style={{ margin: '20px 0' }}>
+          <AdSenseUnit
+            adSlot="1234567898"
+            style={{ display: 'block', textAlign: 'center' }}
+          />
         </div>
       </main>
     </div>

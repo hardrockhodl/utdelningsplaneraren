@@ -1,4 +1,5 @@
 import { FileText } from 'lucide-react';
+import { AdSenseUnit } from '../components/AdSenseUnit';
 
 type Year = 2020 | 2021 | 2022 | 2023 | 2024 | 2025;
 type K10Map<T> = Record<Year, T>;
@@ -144,6 +145,13 @@ export function K10Blankett() {
       </header>
 
       <main className="app-main">
+        <div style={{ margin: '20px 0' }}>
+          <AdSenseUnit
+            adSlot="1234567896"
+            style={{ display: 'block', textAlign: 'center' }}
+          />
+        </div>
+
         <div className="results-section">
           <div
             style={{

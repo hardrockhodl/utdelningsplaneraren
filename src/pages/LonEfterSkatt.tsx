@@ -3,6 +3,7 @@ import { Calculator, Loader } from 'lucide-react';
 import { Kommune } from '../types';
 import { fetchKommuner, findKommun } from '../lib/skatteverket';
 import { fetchTaxTable, calculateTaxDeduction, TaxTableEntry, TAX_COLUMNS } from '../lib/taxTables';
+import { AdSenseUnit } from '../components/AdSenseUnit';
 
 export function LonEfterSkatt() {
   const [grossSalary, setGrossSalary] = useState<number>(35000);
@@ -317,6 +318,13 @@ export function LonEfterSkatt() {
               </div>
             </div>
           )}
+        </div>
+
+        <div style={{ margin: '20px 0' }}>
+          <AdSenseUnit
+            adSlot="1234567894"
+            style={{ display: 'block', textAlign: 'center' }}
+          />
         </div>
 
         {/* Skatteuppdelning */}

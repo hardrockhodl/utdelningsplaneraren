@@ -6,6 +6,7 @@ import { SettingsPanel } from '../components/SettingsPanel';
 import { YearTable } from '../components/YearTable';
 import { TotalsCards } from '../components/TotalsCards';
 import { DebugView } from '../components/DebugView';
+import { AdSenseUnit } from '../components/AdSenseUnit';
 
 export function Utdelningsplaneraren() {
   const [settings, setSettings] = useState<GlobalSettings>({
@@ -102,6 +103,13 @@ export function Utdelningsplaneraren() {
       <main className="app-main">
         <SettingsPanel settings={settings} onChange={setSettings} />
 
+        <div style={{ margin: '20px 0' }}>
+          <AdSenseUnit
+            adSlot="1234567892"
+            style={{ display: 'block', textAlign: 'center' }}
+          />
+        </div>
+
         <div className="results-section">
           <h2 className="section-title">Översikt</h2>
           <YearTable years={calculations} onUpdateYear={handleUpdateYear} />
@@ -110,6 +118,13 @@ export function Utdelningsplaneraren() {
         <div className="results-section">
           <h2 className="section-title">Sammanfattning</h2>
           <TotalsCards years={calculations} />
+        </div>
+
+        <div style={{ margin: '20px 0' }}>
+          <AdSenseUnit
+            adSlot="1234567893"
+            style={{ display: 'block', textAlign: 'center' }}
+          />
         </div>
 
         <DebugView settings={settings} years={calculations} />

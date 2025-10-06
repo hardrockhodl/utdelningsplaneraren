@@ -1,5 +1,6 @@
 import { Calculator, Wallet, ArrowRight, PiggyBank, FileText, DollarSign } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { AdSenseUnit } from '../components/AdSenseUnit';
 
 export function HomePage() {
   const tools = [
@@ -57,7 +58,15 @@ export function HomePage() {
             Alla verktyg är gratis att använda och kräver ingen registrering. Din data sparas lokalt i din webbläsare.
           </p>
         </div>
-        
+
+        <div className="mb-2">
+          <AdSenseUnit
+            adSlot="1234567890"
+            className="my-4"
+            style={{ display: 'block', textAlign: 'center' }}
+          />
+        </div>
+
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-[14px] mb-2">
           {tools.map((tool) => {
             const Icon = tool.icon;
@@ -93,6 +102,14 @@ export function HomePage() {
               </Link>
             );
           })}
+        </div>
+
+        <div className="mb-2">
+          <AdSenseUnit
+            adSlot="1234567891"
+            className="my-4"
+            style={{ display: 'block', textAlign: 'center' }}
+          />
         </div>
       </div>
     </div>

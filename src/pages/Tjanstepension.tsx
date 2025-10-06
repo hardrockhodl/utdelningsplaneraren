@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { PiggyBank, Calculator } from 'lucide-react';
+import { AdSenseUnit } from '../components/AdSenseUnit';
 
 const IBB_VALUES: Record<number, number> = {
   2025: 81700,
@@ -245,6 +246,13 @@ export function Tjanstepension() {
               </div>
             </div>
           </div>
+        </div>
+
+        <div style={{ margin: '20px 0' }}>
+          <AdSenseUnit
+            adSlot="1234567895"
+            style={{ display: 'block', textAlign: 'center' }}
+          />
         </div>
 
         <div className="results-section">
