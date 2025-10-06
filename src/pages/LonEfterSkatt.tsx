@@ -55,15 +55,25 @@ export function LonEfterSkatt() {
   };
 
   const loadTaxTable = async (tableId?: string) => {
-    try {
-      const currentYear = new Date().getFullYear();
-      // Om tableId saknas, ladda t.ex. 30 som baseline
-      const table = await fetchTaxTable(currentYear, tableId ?? '30');
-      setTaxTable(table);
-    } catch (error) {
-      console.error('Failed to load tax table:', error);
+  try {
+    const currentYear = new Date().getFullYear();
+    const requestedTable = tableId ?? '30';
+    
+    // Try to fetch the requested table
+    let table = await fetchTaxTable(currentYear, requestedTable);
+    
+    // If we got 0 results and this was a "B" table, try without the B
+    if (table.length === 0 && requestedTable.endsWith('B')) {
+      const fallbackTable = requestedTable.slice(0, -1); // Remove the "B"
+      console.log(`Table ${requestedTable} not found, trying ${fallbackTable} instead`);
+      table = await fetchTaxTable(currentYear, fallbackTable);
     }
-  };
+    
+    setTaxTable(table);
+  } catch (error) {
+    console.error('Failed to load tax table:', error);
+  }
+};
 
   // Ladda rätt skattetabell när kommun/kyrka ändras
   useEffect(() => {
