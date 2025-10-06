@@ -31,6 +31,7 @@ export function FormansbilCalculator() {
   const [fordonsskatt, setFordonsskatt] = useState<number>(360);
   const [extrautrustning, setExtrautrustning] = useState<number>(0);
   const [milReducering, setMilReducering] = useState(false);
+  const [businessLeasing, setBusinessLeasing] = useState<number>(0);
 
   // Deduction model
   const [deductionModel, setDeductionModel] = useState<'brutto' | 'netto'>('netto');
@@ -475,6 +476,20 @@ export function FormansbilCalculator() {
                     onChange={(e) => setExtrautrustning(Number(e.target.value))}
                     min="0"
                     step="5000"
+                  />
+                  <span className="suffix">kr</span>
+                </div>
+              </div>
+
+              <div className="setting-item">
+                <label className="setting-label">Businessleasing per månad</label>
+                <div className="input-with-suffix">
+                  <input
+                    type="number"
+                    value={businessLeasing}
+                    onChange={(e) => setBusinessLeasing(Number(e.target.value))}
+                    min="0"
+                    step="1000"
                   />
                   <span className="suffix">kr</span>
                 </div>
