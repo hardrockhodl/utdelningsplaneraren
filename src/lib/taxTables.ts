@@ -30,9 +30,12 @@ export async function fetchTaxTable(
   tableNumber: string
 ): Promise<TaxTableEntry[]> {
   try {
+    // Fetch ALL entries by using a very high limit
     const query = `år=${year}&tabellnr=${tableNumber}`;
-    const url = `${TAX_TABLE_API}?${encodeURI(query)}&_limit=1000`;
-
+    const url = `${TAX_TABLE_API}?${encodeURI(query)}&_limit=10000`;
+    
+    console.log('Fetching tax table:', url);
+    
     const response = await fetch(url, {
       headers: {
         'Accept': 'application/json',
@@ -44,7 +47,35 @@ export async function fetchTaxTable(
     }
 
     const data: TaxTableResponse = await response.json();
-    return data.results;
+    
+    console.log('API returned:', {
+      resultCount: data.resultCount,
+      limit: data.limit,
+      offset: data.offset,
+      actualResults: data.results.length,
+      hasNext: !!data.next
+    });
+    
+    // If there are more results, fetch them too
+    let allResults = data.results;
+    let nextUrl = data.next;
+    
+    while (nextUrl && allResults.length < 5000) {
+      console.log('Fetching next page:', nextUrl);
+      const nextResponse = await fetch(nextUrl, {
+        headers: { 'Accept': 'application/json' }
+      });
+      
+      if (!nextResponse.ok) break;
+      
+      const nextData: TaxTableResponse = await nextResponse.json();
+      allResults = [...allResults, ...nextData.results];
+      nextUrl = nextData.next;
+    }
+    
+    console.log('Total entries fetched:', allResults.length);
+    
+    return allResults;
   } catch (error) {
     console.error('Error fetching tax table:', error);
     throw error;
