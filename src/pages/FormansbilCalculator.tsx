@@ -40,7 +40,6 @@ export function FormansbilCalculator() {
 
   useEffect(() => {
     loadKommuner();
-    loadCars();
   }, []);
 
   useEffect(() => {
@@ -50,7 +49,13 @@ export function FormansbilCalculator() {
     const tableId = churchMember ? `${base}B` : `${base}`;
     loadTaxTable(tableId);
   }, [selectedKommun, churchMember]);
-
+  
+  useEffect(() => {
+  if (!manualMode && carRecords.length === 0) {
+    loadCars();
+  }
+}, [manualMode]); 
+  
   // Update förmånsvärde when manual inputs change
   useEffect(() => {
     if (manualMode) {
