@@ -142,7 +142,7 @@ export function FormansbilCalculator() {
   const loadCars = async () => {
     setLoadingCars(true);
     try {
-      const cars = await fetchAllCars(100);
+      const cars = await fetchAllCars(1000);
       setCarRecords(cars);
     } catch (error) {
       console.error('Failed to load cars:', error);
