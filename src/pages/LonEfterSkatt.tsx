@@ -34,7 +34,7 @@ export function LonEfterSkatt() {
       (k as any).Kyrkoskatt ??
       (k as any).Kyrkoavgift ?? 0
     ) : 0;
-    return municipalTax + countyTax + churchTax; // t.ex. 29.82
+    return municipalTax + countyTax + churchTax;
   };
 
   const loadKommuner = async () => {
@@ -57,9 +57,17 @@ export function LonEfterSkatt() {
   const loadTaxTable = async (tableId?: string) => {
     try {
       const currentYear = new Date().getFullYear();
-      // Om tableId saknas, ladda t.ex. 30 som baseline
       const table = await fetchTaxTable(currentYear, tableId ?? '30');
       setTaxTable(table);
+      
+      // DEBUG: Log tax table info
+      console.log('Tax table loaded:', {
+        tableId: tableId ?? '30',
+        year: currentYear,
+        entries: table.length,
+        firstEntry: table[0],
+        lastEntry: table[table.length - 1]
+      });
     } catch (error) {
       console.error('Failed to load tax table:', error);
     }
@@ -68,9 +76,10 @@ export function LonEfterSkatt() {
   // Ladda rätt skattetabell när kommun/kyrka ändras
   useEffect(() => {
     if (!selectedKommun) return;
-    const rate = getTotalLocalTaxRate(selectedKommun, churchMember); // t.ex. 29.82
-    const base = Math.round(rate);                                   // -> 30
-    const tableId = churchMember ? `${base}B` : `${base}`;           // 30 eller 30B
+    const rate = getTotalLocalTaxRate(selectedKommun, churchMember);
+    const base = Math.round(rate);
+    const tableId = churchMember ? `${base}B` : `${base}`;
+    console.log('Loading tax table:', { rate, base, tableId, churchMember });
     loadTaxTable(tableId);
   }, [selectedKommun, churchMember]);
 
@@ -84,14 +93,34 @@ export function LonEfterSkatt() {
 
   const calculateNetSalary = () => {
     if (!selectedKommun || taxTable.length === 0) {
+      console.log('Cannot calculate - missing data:', { 
+        hasKommun: !!selectedKommun, 
+        taxTableLength: taxTable.length 
+      });
       return null;
     }
 
     const salary = Math.max(0, Math.round(grossSalary));
     const td = calculateTaxDeduction(salary, taxTable, Number(selectedColumn));
     const taxDeduction = Number.isFinite(td) ? td : 0;
+    
+    // DEBUG: Log calculation
+    console.log('Net salary calculation:', {
+      grossSalary: salary,
+      rawTaxDeduction: td,
+      finalTaxDeduction: taxDeduction,
+      selectedColumn: selectedColumn,
+      taxTableEntries: taxTable.length
+    });
+    
     const netSalary = Math.max(0, salary - taxDeduction);
     const taxRate = salary > 0 ? (taxDeduction / salary) * 100 : 0;
+
+    console.log('Result:', {
+      netSalary,
+      taxRate: taxRate.toFixed(2) + '%',
+      calculation: `${salary} - ${taxDeduction} = ${netSalary}`
+    });
 
     const municipalTax = Number(
       (selectedKommun as any).Kommunskatt ??
@@ -141,9 +170,7 @@ export function LonEfterSkatt() {
               <h2>Inställningar</h2>
             </div>
 
-            {/* --- SETTINGS GRID SOM RAD --- */}
             <div className="settings-grid" style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-              {/* Bruttolön */}
               <div className="setting-item">
                 <label className="setting-label" title="Din månadslön före skatt">
                   Bruttolön per månad
@@ -160,7 +187,6 @@ export function LonEfterSkatt() {
                 </div>
               </div>
 
-              {/* Inkomsttyp */}
               <div className="setting-item">
                 <label className="setting-label" title="Välj typ av inkomst för korrekt skattetabell">
                   Inkomsttyp
@@ -214,7 +240,6 @@ export function LonEfterSkatt() {
                 )}
               </div>
 
-              {/* Kommun */}
               <div className="setting-item">
                 <label className="setting-label" title="Välj din kommun för att få rätt skattesatser">
                   Kommun
@@ -240,7 +265,6 @@ export function LonEfterSkatt() {
                 )}
               </div>
 
-              {/* Kyrkoskatt */}
               <div className="setting-item">
                 <label className="checkbox-label">
                   <input
@@ -254,13 +278,11 @@ export function LonEfterSkatt() {
             </div>
           </div>
 
-          {/* --- RESULTAT --- */}
           {result && (
             <div>
               <div className="results-section">
                 <h2 className="section-title">Resultat</h2>
                 <div className="totals-grid">
-                  {/* Brutto */}
                   <div className="total-card">
                     <div className="card-icon" style={{ backgroundColor: 'rgba(15, 146, 233, 0.15)' }}>
                       <Calculator size={24} style={{ color: 'var(--accent-blue)' }} />
@@ -271,7 +293,6 @@ export function LonEfterSkatt() {
                     </div>
                   </div>
 
-                  {/* Skatt */}
                   <div className="total-card">
                     <div className="card-icon" style={{ backgroundColor: 'rgba(215, 38, 56, 0.15)' }}>
                       <Calculator size={24} style={{ color: 'var(--accent-red)' }} />
@@ -282,7 +303,6 @@ export function LonEfterSkatt() {
                     </div>
                   </div>
 
-                  {/* Netto */}
                   <div className="total-card">
                     <div className="card-icon" style={{ backgroundColor: 'rgba(39, 180, 35, 0.15)' }}>
                       <Calculator size={24} style={{ color: 'var(--accent-green)' }} />
@@ -293,7 +313,6 @@ export function LonEfterSkatt() {
                     </div>
                   </div>
 
-                  {/* Effektiv */}
                   <div className="total-card">
                     <div className="card-icon" style={{ backgroundColor: 'rgba(249, 220, 92, 0.15)' }}>
                       <Calculator size={24} style={{ color: 'var(--accent-orange)' }} />
@@ -309,7 +328,6 @@ export function LonEfterSkatt() {
           )}
         </div>
 
-        {/* Skatteuppdelning */}
         {result && selectedKommun && (
           <div className="results-section">
             <h2 className="section-title">Skatteuppdelning i {selectedKommun.Kommun}</h2>
