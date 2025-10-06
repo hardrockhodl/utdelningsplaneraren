@@ -94,13 +94,12 @@ interface ApiResponse {
 }
 
 interface ApiRecord {
-  Fabrikat?: string;
-  Modell?: string;
-  Modellår?: string;
-  'Nybilspris exkl moms'?: string;
-  Fordonsskatt?: string;
-  'CO2-utsläpp'?: string;
-  Drivmedel?: string;
+  marke?: string;
+  modell?: string;
+  tillverkningsar?: string;
+  nybilspris?: string;
+  fordonsskatt?: string;
+  bransletyp?: string;
 }
 
 // Fetch all car records with pagination
@@ -159,13 +158,13 @@ export async function fetchAllCars(
 // Parse API record to typed CarRecord
 function parseCarRecord(record: ApiRecord): CarRecord | null {
   try {
-    const brand = record.Fabrikat?.trim();
-    const model = record.Modell?.trim();
-    const modelYear = toNumber(record.Modellår);
-    const nybilspris = toNumber(record['Nybilspris exkl moms']);
-    const fordonsskatt = toNumber(record.Fordonsskatt);
-    const co2 = toNumber(record['CO2-utsläpp']);
-    const drivmedel = record.Drivmedel?.trim() || '';
+    const brand = record.marke?.trim();
+    const model = record.modell?.trim();
+    const modelYear = toNumber(record.tillverkningsar);
+    const nybilspris = toNumber(record.nybilspris);
+    const fordonsskatt = toNumber(record.fordonsskatt);
+    const co2 = 0;
+    const drivmedel = record.bransletyp?.trim() || '';
 
     if (!brand || !model) { return null; }
 
