@@ -24,9 +24,9 @@ export function FormansbilCalculator() {
   const [manualMode, setManualMode] = useState(true);
 
   // Förmån inputs
-  const [formansvarde, setFormansvarde] = useState<number>(6000);
+  const [formansvarde, setFormansvarde] = useState<number>(5000);
   const [nybilspris, setNybilspris] = useState<number>(400000);
-  const [fordonsskatt, setFordonsskatt] = useState<number>(3600);
+  const [fordonsskatt, setFordonsskatt] = useState<number>(360);
   const [extrautrustning, setExtrautrustning] = useState<number>(0);
   const [milReducering, setMilReducering] = useState(false);
 
