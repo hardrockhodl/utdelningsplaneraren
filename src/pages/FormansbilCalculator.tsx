@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Car, Calculator, Loader, Info } from 'lucide-react';
-import { Kommune } from '../types';
+import { Kommune, Actor } from '../types';
 import { fetchKommuner, findKommun } from '../lib/skatteverket';
-import { fetchTaxTable, calculateTaxDeduction, TaxTableEntry } from '../lib/taxTables';
+import { fetchTaxTable, TaxTableEntry } from '../lib/taxTables';
 import { calculateFormansbil, FormansbilInput, getBestDeductionModel, calculateAllScenarios } from '../lib/formansbilCalculations';
 import { fetchAllCars, getYears, getBrandsForYear, getModelsForYearAndBrand, findCarRecord, calculateFormansvarde, CarRecord } from '../lib/cars';
 import { AdSenseUnit } from '../components/AdSenseUnit';
@@ -38,6 +38,7 @@ export function FormansbilCalculator() {
   const [bruttoDeduction, setBruttoDeduction] = useState<number>(6000);
   const [nettoDeduction, setNettoDeduction] = useState<number>(6000);
   const [privatLeasing, setPrivatLeasing] = useState<number>(0);
+  const [actor, setActor] = useState<Actor>('ab');
 
   const [showInfo, setShowInfo] = useState(false);
 
@@ -296,6 +297,38 @@ export function FormansbilCalculator() {
                   Medlem i svenska kyrkan
                 </label>
               </div>
+
+              <div className="setting-item">
+                <label className="setting-label">Vem är du?</label>
+                <select
+                  value={actor}
+                  onChange={(e) => setActor(e.target.value as Actor)}
+                >
+                  <option value="ab">Egenföretagare (AB)</option>
+                  <option value="enskild">Enskild firma</option>
+                  <option value="anstalld">Anställd</option>
+                </select>
+                <div style={{
+                  marginTop: '0.5rem',
+                  padding: '0.75rem',
+                  background: 'var(--card-bg)',
+                  border: '1px solid var(--border-color)',
+                  borderRadius: '4px',
+                  fontSize: '0.875rem',
+                  lineHeight: 1.5,
+                  color: 'var(--text-secondary)'
+                }}>
+                  {actor === 'anstalld' && (
+                    <p>Businessleasing hanteras av arbetsgivaren. Din privata ekonomi påverkas främst via förmånsvärdet (och ev. netto/bruttolöneavdrag). Jämförelse mot businessleasing visas därför inte här.</p>
+                  )}
+                  {actor === 'ab' && (
+                    <p>Du är arbetsgivaren. Businessleasing är en faktisk kostnad i bolaget och ingår i TCO (Total Cost of Ownership). Nettolönen påverkas indirekt via hur mycket lön/utdelning du kan ta ut.</p>
+                  )}
+                  {actor === 'enskild' && (
+                    <p>Bilen ligger i rörelsen. Leasing och drift är företagskostnader som sänker resultatet. Här visar vi TCO och hur det indirekt påverkar din privata ekonomi.</p>
+                  )}
+                </div>
+              </div>
             </div>
           </div>
 
@@ -482,19 +515,31 @@ export function FormansbilCalculator() {
                 </div>
               </div>
 
-              <div className="setting-item">
-                <label className="setting-label">Businessleasing per månad</label>
-                <div className="input-with-suffix">
-                  <input
-                    type="number"
-                    value={businessLeasing}
-                    onChange={(e) => setBusinessLeasing(Number(e.target.value))}
-                    min="0"
-                    step="1000"
-                  />
-                  <span className="suffix">kr</span>
+              {actor !== 'anstalld' && (
+                <div className="setting-item">
+                  <label className="setting-label">
+                    Businessleasing per månad
+                    <span style={{
+                      marginLeft: '0.5rem',
+                      fontSize: '0.75rem',
+                      color: 'var(--text-secondary)',
+                      fontWeight: 'normal'
+                    }}>
+                      (Bolagets månadskostnad)
+                    </span>
+                  </label>
+                  <div className="input-with-suffix">
+                    <input
+                      type="number"
+                      value={businessLeasing}
+                      onChange={(e) => setBusinessLeasing(Number(e.target.value))}
+                      min="0"
+                      step="1000"
+                    />
+                    <span className="suffix">kr</span>
+                  </div>
                 </div>
-              </div>
+              )}
 
               <div className="setting-item">
                 <label className="checkbox-label">
@@ -684,8 +729,11 @@ export function FormansbilCalculator() {
                     <Calculator size={24} style={{ color: 'var(--accent-red)' }} />
                   </div>
                   <div className="card-content">
-                    <div className="card-label">Månadskostnad förmånsbil</div>
-                    <div className="card-value">{Math.abs(results.result.monthlyDifference).toLocaleString('sv-SE')} kr</div>
+                    <div className="card-label">Nettolönsförändring</div>
+                    <div className="card-value">
+                      {results.result.monthlyDifference >= 0 ? '+' : ''}
+                      {results.result.monthlyDifference.toLocaleString('sv-SE')} kr
+                    </div>
                     <div className="card-sublabel">
                       {results.result.monthlyDifference >= 0 ? 'Högre nettolön' : 'Lägre nettolön'}
                     </div>
@@ -710,13 +758,13 @@ export function FormansbilCalculator() {
                   </div>
                 )}
 
-                {businessLeasing > 0 && (
+                {actor !== 'anstalld' && businessLeasing > 0 && (
                   <div className="total-card">
                     <div className="card-icon" style={{ backgroundColor: 'rgba(20, 184, 166, 0.15)' }}>
                       <Calculator size={24} style={{ color: 'rgb(20, 184, 166)' }} />
                     </div>
                     <div className="card-content">
-                      <div className="card-label">Jämfört med businessleasing (bolagsperspektiv)</div>
+                      <div className="card-label">Bolagets kostnad jämfört med businessleasing</div>
                       <div className="card-value">
                         {results.result.comparedToBusinessLeasing >= 0 ? '+' : ''}
                         {results.result.comparedToBusinessLeasing.toLocaleString('sv-SE')} kr
@@ -728,19 +776,21 @@ export function FormansbilCalculator() {
                   </div>
                 )}
 
-                <div className="total-card">
-                  <div className="card-icon" style={{ backgroundColor: 'rgba(100, 116, 139, 0.15)' }}>
-                    <Calculator size={24} style={{ color: 'rgb(100, 116, 139)' }} />
-                  </div>
-                  <div className="card-content">
-                    <div className="card-label">Bolagets TCO (med bil)</div>
-                    <div className="card-value">{results.result.tcoWithCar.toLocaleString('sv-SE')} kr</div>
-                    <div className="card-sublabel">
-                      Diff mot utan bil: {results.result.tcoDelta >= 0 ? '+' : ''}
-                      {results.result.tcoDelta.toLocaleString('sv-SE')} kr
+                {actor !== 'anstalld' && (
+                  <div className="total-card">
+                    <div className="card-icon" style={{ backgroundColor: 'rgba(100, 116, 139, 0.15)' }}>
+                      <Calculator size={24} style={{ color: 'rgb(100, 116, 139)' }} />
+                    </div>
+                    <div className="card-content">
+                      <div className="card-label">Bolagets TCO (med bil)</div>
+                      <div className="card-value">{results.result.tcoWithCar.toLocaleString('sv-SE')} kr</div>
+                      <div className="card-sublabel">
+                        Diff mot utan bil: {results.result.tcoDelta >= 0 ? '+' : ''}
+                        {results.result.tcoDelta.toLocaleString('sv-SE')} kr
+                      </div>
                     </div>
                   </div>
-                </div>
+                )}
               </div>
             </div>
 
@@ -799,6 +849,10 @@ export function FormansbilCalculator() {
                   <li>Bilens miljöklass och CO2-utsläpp</li>
                   <li>Om du kör minst 3 000 mil i tjänsten under året (25% reducering av förmånsvärdet)</li>
                 </ul>
+
+                <p style={{ marginTop: '1rem', padding: '0.75rem', background: 'rgba(249, 220, 92, 0.1)', borderLeft: '3px solid var(--accent-orange)', fontSize: '0.875rem' }}>
+                  <strong>Obs!</strong> Förmånsvärdet här är förenklat. För exakt värde – använd Skatteverkets beräkning eller din lönespec och mata in beloppet manuellt.
+                </p>
 
                 <p style={{ marginBottom: '1rem' }}>
                   <strong>När uppstår bilförmån?</strong>

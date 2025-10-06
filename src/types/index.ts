@@ -64,3 +64,5 @@ export interface Kommune {
   Slutskatt: string;
   År: string;
 }
+
+export type Actor = 'anstalld' | 'ab' | 'enskild';
