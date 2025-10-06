@@ -716,17 +716,31 @@ export function FormansbilCalculator() {
                       <Calculator size={24} style={{ color: 'rgb(20, 184, 166)' }} />
                     </div>
                     <div className="card-content">
-                      <div className="card-label">Jämfört med businessleasing</div>
+                      <div className="card-label">Jämfört med businessleasing (bolagsperspektiv)</div>
                       <div className="card-value">
                         {results.result.comparedToBusinessLeasing >= 0 ? '+' : ''}
                         {results.result.comparedToBusinessLeasing.toLocaleString('sv-SE')} kr
                       </div>
                       <div className="card-sublabel">
-                        {results.result.comparedToBusinessLeasing >= 0 ? 'Billigare' : 'Dyrare'}
+                        {results.result.comparedToBusinessLeasing >= 0 ? 'Förmånsbil dyrare' : 'Förmånsbil billigare'}
                       </div>
                     </div>
                   </div>
                 )}
+
+                <div className="total-card">
+                  <div className="card-icon" style={{ backgroundColor: 'rgba(100, 116, 139, 0.15)' }}>
+                    <Calculator size={24} style={{ color: 'rgb(100, 116, 139)' }} />
+                  </div>
+                  <div className="card-content">
+                    <div className="card-label">Bolagets TCO (med bil)</div>
+                    <div className="card-value">{results.result.tcoWithCar.toLocaleString('sv-SE')} kr</div>
+                    <div className="card-sublabel">
+                      Diff mot utan bil: {results.result.tcoDelta >= 0 ? '+' : ''}
+                      {results.result.tcoDelta.toLocaleString('sv-SE')} kr
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
 

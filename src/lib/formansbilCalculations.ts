@@ -31,6 +31,11 @@ export interface FormansbilResult {
   employerCostForman: number;
   employerCostTotal: number;
 
+  // TCO (Total Cost of Ownership) - Company perspective
+  tcoWithCar: number;
+  tcoWithoutCar: number;
+  tcoDelta: number;
+
   // Details
   adjustedGrossSalary: number;
   taxableForman: number;
@@ -90,8 +95,26 @@ export function calculateFormansbil(
   }
 
   // Employer costs
-  const employerCostForman = effectiveFormansvarde * (employerContribution / 100);
-  const employerCostTotal = adjustedGrossSalary * (employerContribution / 100) + employerCostForman;
+  const r = employerContribution / 100;
+  const employerCostForman = effectiveFormansvarde * r;
+
+  // TCO calculations - Company perspective
+  const tcoWithoutCar = grossSalary * (1 + r);
+
+  let tcoWithCar: number;
+  if (deductionModel === 'brutto') {
+    // Brutto: lower gross salary → lower salary cost + AGA, benefit remains, + business leasing
+    tcoWithCar = adjustedGrossSalary * (1 + r) + employerCostForman + (businessLeasing || 0);
+  } else {
+    // Netto: gross salary unchanged, but net payout reduced by privatePayment
+    // => company pays less cash out. Model as minus in TCO.
+    tcoWithCar = grossSalary * (1 + r) + employerCostForman + (businessLeasing || 0) - (privatePayment || 0);
+  }
+
+  const tcoDelta = tcoWithCar - tcoWithoutCar;
+
+  // Keep for backward compatibility
+  const employerCostTotal = tcoWithCar;
 
   // Comparison
   const monthlyDifference = netSalaryWithCar - netSalaryWithoutCar;
@@ -99,7 +122,7 @@ export function calculateFormansbil(
     ? monthlyDifference + privatLeasing
     : 0;
   const comparedToBusinessLeasing = businessLeasing > 0
-    ? monthlyDifference + businessLeasing
+    ? (tcoWithCar - (tcoWithoutCar + businessLeasing))
     : 0;
 
   return {
@@ -113,6 +136,9 @@ export function calculateFormansbil(
     comparedToBusinessLeasing,
     employerCostForman,
     employerCostTotal,
+    tcoWithCar,
+    tcoWithoutCar,
+    tcoDelta,
     adjustedGrossSalary,
     taxableForman,
     privatePayment
