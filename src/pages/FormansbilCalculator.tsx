@@ -832,9 +832,14 @@ export function FormansbilCalculator() {
                       fordonsskatt
                     );
 
-                    const bestScenario = scenarios.reduce((best, current) =>
-                      current.netSalaryImpact > best.netSalaryImpact ? current : best
-                    );
+                    const validScenarios = scenarios.filter(s => s.monthlyCost !== null);
+                    const bestScenario = validScenarios.length > 0
+                      ? validScenarios.reduce((best, current) =>
+                          current.netSalaryImpact > best.netSalaryImpact ? current : best
+                        )
+                      : scenarios.reduce((best, current) =>
+                          current.netSalaryImpact > best.netSalaryImpact ? current : best
+                        );
 
                     return scenarios.map((scenario) => (
                       <div
