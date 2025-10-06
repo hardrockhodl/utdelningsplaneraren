@@ -88,9 +88,7 @@ function parseCarRecord(record: ApiRecord): CarRecord | null {
     const co2 = toNumber(record['CO2-utsläpp']);
     const drivmedel = record.Drivmedel?.trim() || '';
 
-    if (!brand || !model || !modelYear || !nybilspris) {
-      return null;
-    }
+    if (!brand || !model || !modelYear) { return null; }
 
     return {
       brand,
