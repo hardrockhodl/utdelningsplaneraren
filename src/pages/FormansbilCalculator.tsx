@@ -4,7 +4,7 @@ import { Kommune } from '../types';
 import { fetchKommuner, findKommun } from '../lib/skatteverket';
 import { fetchTaxTable, calculateTaxDeduction, TaxTableEntry } from '../lib/taxTables';
 import { calculateFormansbil, FormansbilInput, getBestDeductionModel } from '../lib/formansbilCalculations';
-import { fetchAllCars, getBrands, getModelsForBrand, getYearsForModel, findCarRecord, calculateFormansvarde, CarRecord } from '../lib/cars';
+import { fetchAllCars, getYears, getBrandsForYear, getModelsForYearAndBrand, findCarRecord, calculateFormansvarde, CarRecord } from '../lib/cars';
 import { AdSenseUnit } from '../components/AdSenseUnit';
 
 export function FormansbilCalculator() {
@@ -87,7 +87,7 @@ export function FormansbilCalculator() {
         setFormansvarde(calculated);
       }
     }
-  }, [selectedBrand, selectedModel, selectedYear, extrautrustning, milReducering, manualMode, carRecords]);
+  }, [selectedYear, selectedBrand, selectedModel, extrautrustning, milReducering, manualMode, carRecords]);
 
   const getTotalLocalTaxRate = (k: Kommune, includeChurch: boolean) => {
     const municipalTax = Number(
@@ -203,9 +203,9 @@ export function FormansbilCalculator() {
 
   const results = calculateResults();
 
-  const brands = getBrands(carRecords);
-  const models = selectedBrand ? getModelsForBrand(carRecords, selectedBrand) : [];
-  const years = selectedBrand && selectedModel ? getYearsForModel(carRecords, selectedBrand, selectedModel) : [];
+  const years = getYears(carRecords);
+  const brands = selectedYear ? getBrandsForYear(carRecords, selectedYear) : [];
+  const models = selectedYear && selectedBrand ? getModelsForYearAndBrand(carRecords, selectedYear, selectedBrand) : [];
 
   return (
     <div className="app">
@@ -325,7 +325,7 @@ export function FormansbilCalculator() {
               {!manualMode && (
                 <>
                   <div className="setting-item">
-                    <label className="setting-label">Märke</label>
+                    <label className="setting-label">Tillverkningsår</label>
                     {loadingCars ? (
                       <div className="loading-container">
                         <Loader size={16} className="spinner" />
@@ -354,7 +354,7 @@ export function FormansbilCalculator() {
                           Tips: Aktivera "Ange värden manuellt" för att fortsätta utan bildata
                         </div>
                       </div>
-                    ) : brands.length === 0 ? (
+                    ) : years.length === 0 ? (
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                         <div style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
                           Inga bilar laddade. Klicka för att ladda bildata.
@@ -376,11 +376,31 @@ export function FormansbilCalculator() {
                       </div>
                     ) : (
                       <select
+                        value={selectedYear}
+                        onChange={(e) => {
+                          setSelectedYear(Number(e.target.value));
+                          setSelectedBrand('');
+                          setSelectedModel('');
+                        }}
+                      >
+                        <option value={0}>Välj år</option>
+                        {years.map((year) => (
+                          <option key={year} value={year}>
+                            {year}
+                          </option>
+                        ))}
+                      </select>
+                    )}
+                  </div>
+
+                  {selectedYear > 0 && (
+                    <div className="setting-item">
+                      <label className="setting-label">Märke</label>
+                      <select
                         value={selectedBrand}
                         onChange={(e) => {
                           setSelectedBrand(e.target.value);
                           setSelectedModel('');
-                          setSelectedYear(0);
                         }}
                       >
                         <option value="">Välj märke</option>
@@ -390,40 +410,22 @@ export function FormansbilCalculator() {
                           </option>
                         ))}
                       </select>
-                    )}
-                  </div>
+                    </div>
+                  )}
 
-                  {selectedBrand && (
+                  {selectedYear > 0 && selectedBrand && (
                     <div className="setting-item">
                       <label className="setting-label">Modell</label>
                       <select
                         value={selectedModel}
                         onChange={(e) => {
                           setSelectedModel(e.target.value);
-                          setSelectedYear(0);
                         }}
                       >
                         <option value="">Välj modell</option>
                         {models.map((model) => (
                           <option key={model} value={model}>
                             {model}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                  )}
-
-                  {selectedBrand && selectedModel && (
-                    <div className="setting-item">
-                      <label className="setting-label">Årsmodell</label>
-                      <select
-                        value={selectedYear}
-                        onChange={(e) => setSelectedYear(Number(e.target.value))}
-                      >
-                        <option value={0}>Välj år</option>
-                        {years.map((year) => (
-                          <option key={year} value={year}>
-                            {year}
                           </option>
                         ))}
                       </select>

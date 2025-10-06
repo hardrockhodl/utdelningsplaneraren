@@ -182,6 +182,32 @@ function parseCarRecord(record: ApiRecord): CarRecord | null {
   }
 }
 
+// Get unique years from records
+export function getYears(records: CarRecord[]): number[] {
+  const years = new Set(records.map(r => r.modelYear));
+  return Array.from(years).filter(y => y > 0).sort((a, b) => b - a);
+}
+
+// Get brands for a specific year
+export function getBrandsForYear(records: CarRecord[], year: number): string[] {
+  const brands = new Set(
+    records
+      .filter(r => r.modelYear === year)
+      .map(r => r.brand)
+  );
+  return Array.from(brands).sort();
+}
+
+// Get models for a specific year and brand
+export function getModelsForYearAndBrand(records: CarRecord[], year: number, brand: string): string[] {
+  const models = new Set(
+    records
+      .filter(r => r.modelYear === year && r.brand === brand)
+      .map(r => r.model)
+  );
+  return Array.from(models).sort();
+}
+
 // Get unique brands from records
 export function getBrands(records: CarRecord[]): string[] {
   const brands = new Set(records.map(r => r.brand));
