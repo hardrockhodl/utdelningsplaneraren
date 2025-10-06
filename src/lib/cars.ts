@@ -9,7 +9,7 @@ export interface CarRecord {
 }
 
 const API_BASE = 'https://skatteverket.entryscape.net/rowstore/dataset/fad86bf9-67e3-4d68-829c-7b9a23bc5e42/json';
-const CACHE_VERSION = 'v2';
+const CACHE_VERSION = 'v3';
 const CAR_CACHE_KEY = `skatteverket_cars_cache_${CACHE_VERSION}`;
 const CACHE_DURATION_MS = 24 * 60 * 60 * 1000;
 
@@ -20,6 +20,7 @@ interface CachedData<T> {
 
 function getCachedData<T>(key: string): T | null {
   try {
+    if (typeof window === 'undefined' || !('localStorage' in window)) return null;
     const cached = localStorage.getItem(key);
     if (!cached) return null;
 
@@ -39,6 +40,7 @@ function getCachedData<T>(key: string): T | null {
 
 function setCachedData<T>(key: string, data: T): void {
   try {
+    if (typeof window === 'undefined' || !('localStorage' in window)) return;
     const cached: CachedData<T> = {
       data,
       timestamp: Date.now()
@@ -77,7 +79,9 @@ async function retryFetch(url: string, maxRetries: number = 2): Promise<Response
     } catch (error) {
       lastError = error as Error;
       if (i < maxRetries - 1) {
-        await new Promise(resolve => setTimeout(resolve, Math.pow(2, i) * 1000));
+        const base = Math.pow(2, i) * 1000;
+        const jitter = Math.floor(Math.random() * 400);
+        await new Promise(resolve => setTimeout(resolve, base + jitter));
       }
     }
   }
@@ -105,7 +109,7 @@ interface ApiRecord {
 
 // Fetch all car records with pagination
 export async function fetchAllCars(
-  limit = 500,
+  limit = 1000,
   onChunk?: (chunk: CarRecord[]) => void
 ): Promise<CarRecord[]> {
   const cached = getCachedData<CarRecord[]>(CAR_CACHE_KEY);
@@ -115,37 +119,60 @@ export async function fetchAllCars(
   }
 
   const records: CarRecord[] = [];
-  let offset = 0;
-  const maxRecords = 5000;
+  const maxRecords = 25000;
 
   try {
-    while (records.length < maxRecords) {
-      const url = `${API_BASE}?_limit=${limit}&_offset=${offset}`;
-      const res = await retryFetch(url);
-      if (!res.ok) break;
-      const data: ApiResponse = await res.json();
-      if (!data.results?.length) break;
+    const ranges = [
+      { start: 70000, count: 5000 },
+      { start: 60000, count: 5000 },
+      { start: 45000, count: 5000 },
+      { start: 30000, count: 5000 },
+      { start: 15000, count: 5000 },
+    ];
 
-      const chunk: CarRecord[] = [];
-      for (const r of data.results) {
-        const parsed = parseCarRecord(r);
-        if (parsed) {
-          records.push(parsed);
-          chunk.push(parsed);
+    for (const range of ranges) {
+      let offset = range.start;
+      let fetched = 0;
+
+      while (fetched < range.count) {
+        const url = `${API_BASE}?_limit=${limit}&_offset=${offset}`;
+        const res = await retryFetch(url);
+        if (!res.ok) break;
+        const data: ApiResponse = await res.json();
+        if (!data.results?.length) break;
+
+        const chunk: CarRecord[] = [];
+        for (const r of data.results) {
+          const parsed = parseCarRecord(r);
+          if (parsed) {
+            records.push(parsed);
+            chunk.push(parsed);
+          }
         }
+
+        if (onChunk && chunk.length) onChunk(chunk);
+
+        fetched += data.results.length;
+        if (data.results.length < limit) break;
+        offset += limit;
+
+        if (records.length >= maxRecords) break;
       }
 
-      if (onChunk && chunk.length) onChunk(chunk);
-
-      if (data.results.length < limit) break;
-      offset += limit;
+      if (records.length >= maxRecords) break;
     }
 
-    if (records.length > 0) {
-      setCachedData(CAR_CACHE_KEY, records);
+    const uniq = new Map<string, CarRecord>();
+    for (const r of records) {
+      uniq.set(`${r.brand.toLowerCase()}|${r.model.toLowerCase()}|${r.modelYear}`, r);
+    }
+    const finalRecords = Array.from(uniq.values());
+
+    if (finalRecords.length > 0) {
+      setCachedData(CAR_CACHE_KEY, finalRecords);
     }
 
-    return records;
+    return finalRecords;
   } catch (error) {
     const fallback = getCachedData<CarRecord[]>(CAR_CACHE_KEY);
     if (fallback && fallback.length > 0) {
@@ -159,8 +186,8 @@ export async function fetchAllCars(
 // Parse API record to typed CarRecord
 function parseCarRecord(record: ApiRecord): CarRecord | null {
   try {
-    const brand = record.marke?.trim();
-    const model = record.modell?.trim();
+    const brand = record.marke?.trim().replace(/\s+/g, ' ');
+    const model = record.modell?.trim().replace(/\s+/g, ' ');
     const modelYear = toNumber(record.tillverkningsar);
     const nybilspris = toNumber(record.nybilspris);
     const fordonsskatt = toNumber(record.fordonsskatt);
@@ -185,7 +212,7 @@ function parseCarRecord(record: ApiRecord): CarRecord | null {
 
 // Get unique years from records
 export function getYears(records: CarRecord[]): number[] {
-  const years = new Set(records.map(r => r.modelYear));
+  const years = new Set(records.map(r => r.modelYear || 0));
   return Array.from(years).filter(y => y > 0).sort((a, b) => b - a);
 }
 
@@ -194,19 +221,20 @@ export function getBrandsForYear(records: CarRecord[], year: number): string[] {
   const brands = new Set(
     records
       .filter(r => r.modelYear === year)
-      .map(r => r.brand)
+      .map(r => r.brand.trim())
   );
-  return Array.from(brands).sort();
+  return Array.from(brands).sort((a, b) => a.localeCompare(b, 'sv'));
 }
 
 // Get models for a specific year and brand
 export function getModelsForYearAndBrand(records: CarRecord[], year: number, brand: string): string[] {
+  const b = brand.toLowerCase();
   const models = new Set(
     records
-      .filter(r => r.modelYear === year && r.brand === brand)
-      .map(r => r.model)
+      .filter(r => r.modelYear === year && r.brand.toLowerCase() === b)
+      .map(r => r.model.trim())
   );
-  return Array.from(models).sort();
+  return Array.from(models).sort((a, b) => a.localeCompare(b, 'sv'));
 }
 
 // Get unique brands from records
@@ -243,7 +271,9 @@ export function findCarRecord(
   year: number
 ): CarRecord | null {
   return records.find(
-    r => r.brand === brand && r.model === model && r.modelYear === year
+    r => r.brand.toLowerCase() === brand.toLowerCase()
+      && r.model.toLowerCase() === model.toLowerCase()
+      && r.modelYear === year
   ) || null;
 }
 
