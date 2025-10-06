@@ -9,7 +9,8 @@ export interface CarRecord {
 }
 
 const API_BASE = 'https://skatteverket.entryscape.net/rowstore/dataset/fad86bf9-67e3-4d68-829c-7b9a23bc5e42/json';
-const CAR_CACHE_KEY = 'skatteverket_cars_cache';
+const CACHE_VERSION = 'v2';
+const CAR_CACHE_KEY = `skatteverket_cars_cache_${CACHE_VERSION}`;
 const CACHE_DURATION_MS = 24 * 60 * 60 * 1000;
 
 interface CachedData<T> {
