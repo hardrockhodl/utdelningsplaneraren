@@ -1,4 +1,4 @@
-import { Calculator, Wallet, ArrowRight, PiggyBank, FileText, DollarSign } from 'lucide-react';
+import { Calculator, Wallet, ArrowRight, PiggyBank, FileText, DollarSign, Car } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { AdSenseUnit } from '../components/AdSenseUnit';
 
@@ -19,6 +19,14 @@ export function HomePage() {
       icon: Wallet,
       route: '/lon-efter-skatt',
       color: '#27b423',
+    },
+    {
+      id: 'formansbil',
+      name: 'Förmånsbilskalkylator',
+      description: 'Räkna ut nettoeffekten av en förmånsbil på din nettolön. Jämför bruttolöneavdrag och nettolöneavdrag, och se vilken modell som ger lägst kostnad.',
+      icon: Car,
+      route: '/formansbil',
+      color: '#8b5cf6',
     },
     {
       id: 'utdelningsplaneraren',

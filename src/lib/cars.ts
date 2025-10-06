@@ -1,0 +1,165 @@
+export interface CarRecord {
+  brand: string;
+  model: string;
+  modelYear: number;
+  nybilspris: number;
+  fordonsskatt: number;
+  co2: number;
+  drivmedel: string;
+}
+
+const API_BASE = 'https://skatteverket.entryscape.net/rowstore/dataset/fad86bf9-67e3-4d68-829c-7b9a23bc5e42/json';
+
+interface ApiResponse {
+  results: ApiRecord[];
+  limit: number;
+  offset: number;
+}
+
+interface ApiRecord {
+  Fabrikat?: string;
+  Modell?: string;
+  Modellår?: string;
+  'Nybilspris exkl moms'?: string;
+  Fordonsskatt?: string;
+  'CO2-utsläpp'?: string;
+  Drivmedel?: string;
+}
+
+// Fetch all car records with pagination
+export async function fetchAllCars(limit = 100): Promise<CarRecord[]> {
+  const records: CarRecord[] = [];
+  let offset = 0;
+  const maxRecords = 500; // Safety limit to avoid excessive requests
+
+  try {
+    while (records.length < maxRecords) {
+      const url = `${API_BASE}?limit=${limit}&offset=${offset}`;
+      const response = await fetch(url, {
+        headers: {
+          'Accept': 'application/json'
+        }
+      });
+
+      if (!response.ok) {
+        console.error('Failed to fetch cars:', response.status);
+        break;
+      }
+
+      const data: ApiResponse = await response.json();
+
+      if (!data.results || data.results.length === 0) {
+        break;
+      }
+
+      data.results.forEach(record => {
+        const parsed = parseCarRecord(record);
+        if (parsed) {
+          records.push(parsed);
+        }
+      });
+
+      // Check if we've reached the end
+      if (data.results.length < limit) {
+        break;
+      }
+
+      offset += limit;
+    }
+
+    return records;
+  } catch (error) {
+    console.error('Error fetching cars:', error);
+    return records;
+  }
+}
+
+// Parse API record to typed CarRecord
+function parseCarRecord(record: ApiRecord): CarRecord | null {
+  try {
+    const brand = record.Fabrikat?.trim();
+    const model = record.Modell?.trim();
+    const modelYear = parseInt(record.Modellår || '0');
+    const nybilspris = parseFloat(record['Nybilspris exkl moms']?.replace(/\s/g, '') || '0');
+    const fordonsskatt = parseFloat(record.Fordonsskatt?.replace(/\s/g, '') || '0');
+    const co2 = parseFloat(record['CO2-utsläpp']?.replace(/\s/g, '') || '0');
+    const drivmedel = record.Drivmedel?.trim() || '';
+
+    if (!brand || !model || !modelYear || !nybilspris) {
+      return null;
+    }
+
+    return {
+      brand,
+      model,
+      modelYear,
+      nybilspris,
+      fordonsskatt,
+      co2,
+      drivmedel
+    };
+  } catch (error) {
+    return null;
+  }
+}
+
+// Get unique brands from records
+export function getBrands(records: CarRecord[]): string[] {
+  const brands = new Set(records.map(r => r.brand));
+  return Array.from(brands).sort();
+}
+
+// Get models for a specific brand
+export function getModelsForBrand(records: CarRecord[], brand: string): string[] {
+  const models = new Set(
+    records
+      .filter(r => r.brand === brand)
+      .map(r => r.model)
+  );
+  return Array.from(models).sort();
+}
+
+// Get years for a specific brand and model
+export function getYearsForModel(records: CarRecord[], brand: string, model: string): number[] {
+  const years = new Set(
+    records
+      .filter(r => r.brand === brand && r.model === model)
+      .map(r => r.modelYear)
+  );
+  return Array.from(years).sort((a, b) => b - a);
+}
+
+// Find specific car record
+export function findCarRecord(
+  records: CarRecord[],
+  brand: string,
+  model: string,
+  year: number
+): CarRecord | null {
+  return records.find(
+    r => r.brand === brand && r.model === model && r.modelYear === year
+  ) || null;
+}
+
+// Calculate förmånsvärde based on car data
+export function calculateFormansvarde(params: {
+  nybilspris: number;
+  fordonsskatt: number;
+  extrautrustning: number;
+  milReducering: boolean; // 3000 mil i tjänsten
+  co2?: number;
+  drivmedel?: string;
+}): number {
+  // Basic calculation: (nybilspris + extrautrustning) * 0.09 / 12 + fordonsskatt / 12
+  // This is a simplified version; actual Skatteverket rules are more complex
+
+  const totalPrice = params.nybilspris + params.extrautrustning;
+  let monthlyForman = (totalPrice * 0.09) / 12 + params.fordonsskatt / 12;
+
+  // Apply 25% reduction if >= 3000 km in work-related driving
+  if (params.milReducering) {
+    monthlyForman *= 0.75;
+  }
+
+  return Math.round(monthlyForman);
+}
