@@ -30,50 +30,40 @@ interface ApiRecord {
 }
 
 // Fetch all car records with pagination
-export async function fetchAllCars(limit = 100): Promise<CarRecord[]> {
+export async function fetchAllCars(
+  limit = 500,
+  onChunk?: (chunk: CarRecord[]) => void
+): Promise<CarRecord[]> {
   const records: CarRecord[] = [];
   let offset = 0;
-  const maxRecords = 500; // Safety limit to avoid excessive requests
+  const maxRecords = 5000;
 
   try {
     while (records.length < maxRecords) {
       const url = `${API_BASE}?_limit=${limit}&_offset=${offset}`;
-      const response = await fetch(url, {
-        headers: {
-          'Accept': 'application/json'
-        }
-      });
+      const res = await fetch(url, { headers: { Accept: 'application/json' } });
+      if (!res.ok) break;
+      const data: ApiResponse = await res.json();
+      if (!data.results?.length) break;
 
-      if (!response.ok) {
-        console.error('Failed to fetch cars:', response.status);
-        break;
-      }
-
-      const data: ApiResponse = await response.json();
-
-      if (!data.results || data.results.length === 0) {
-        break;
-      }
-
-      data.results.forEach(record => {
-        const parsed = parseCarRecord(record);
+      const chunk: CarRecord[] = [];
+      for (const r of data.results) {
+        const parsed = parseCarRecord(r);
         if (parsed) {
           records.push(parsed);
+          chunk.push(parsed);
         }
-      });
-
-      // Check if we've reached the end
-      if (data.results.length < limit) {
-        break;
       }
 
+      // NEW: push partial result so UI kan visa märken direkt
+      if (onChunk && chunk.length) onChunk(chunk);
+
+      if (data.results.length < limit) break;
       offset += limit;
     }
-
     return records;
-  } catch (error) {
-    console.error('Error fetching cars:', error);
-    return records;
+  } catch {
+    return [];
   }
 }
 
