@@ -139,17 +139,21 @@ export function FormansbilCalculator() {
     }
   };
 
-  const loadCars = async () => {
-    setLoadingCars(true);
-    try {
-      const cars = await fetchAllCars(1000);
-      setCarRecords(cars);
-    } catch (error) {
-      console.error('Failed to load cars:', error);
-    } finally {
-      setLoadingCars(false);
-    }
-  };
+  // src/pages/FormansbilCalculator.tsx
+    const loadCars = async () => {
+      setLoadingCars(true);
+      try {
+        const all: CarRecord[] = [];
+        await fetchAllCars(500, (chunk) => {
+          all.push(...chunk);
+          setCarRecords(prev => [...prev, ...chunk]);   // incremental update
+          if (all.length >= 200 && loadingCars) setLoadingCars(false); // släpp spinnare när vi har något
+        });
+        setLoadingCars(false);
+      } catch {
+        setLoadingCars(false);
+      }
+    };
 
   const handleKommunChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const kommunId = e.target.value;
