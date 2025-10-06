@@ -293,6 +293,8 @@ export function FormansbilCalculator() {
                         <Loader size={16} className="spinner" />
                         <span>Laddar bilar...</span>
                       </div>
+                    ) : brands.length === 0 ? (
+                  <div className="text-sm text-gray-500">Inga träffar från API:t. Ange manuellt eller försök igen.</div>
                     ) : (
                       <select
                         value={selectedBrand}
