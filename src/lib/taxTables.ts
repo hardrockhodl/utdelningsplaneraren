@@ -23,6 +23,8 @@ interface TaxTableResponse {
 
 const TAX_TABLE_API = 'https://skatteverket.entryscape.net/rowstore/dataset/88320397-5c32-4c16-ae79-d36d95b17b95';
 
+const toNumber = (v: string): number => Number(String(v).replace(/[^\d-]/g, '')) || 0;
+
 export async function fetchTaxTable(
   year: number,
   tableNumber: string
@@ -57,20 +59,20 @@ export function calculateTaxDeduction(
   const columnKey = `kolumn ${columnNumber}` as keyof TaxTableEntry;
 
   const entry = taxTable.find((row) => {
-    const from = parseInt(row['inkomst fr.o.m.']);
-    const to = parseInt(row['inkomst t.o.m.']);
+    const from = toNumber(row['inkomst fr.o.m.']);
+    const to = toNumber(row['inkomst t.o.m.']);
     return grossSalary >= from && grossSalary <= to;
   });
 
   if (!entry) {
-    if (grossSalary < parseInt(taxTable[0]['inkomst fr.o.m.'])) {
+    if (grossSalary < toNumber(taxTable[0]['inkomst fr.o.m.'])) {
       return 0;
     }
     const lastEntry = taxTable[taxTable.length - 1];
-    return parseInt(lastEntry[columnKey] || '0');
+    return toNumber(lastEntry[columnKey] || '0');
   }
 
-  return parseInt(entry[columnKey] || '0');
+  return toNumber(entry[columnKey] || '0');
 }
 
 export const TAX_COLUMNS = {
