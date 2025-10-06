@@ -69,6 +69,16 @@ Räkna ut din tjänstepension enligt ITP-1 reglerna. Se hur pensionspremien ber�
 - Prisbasbeloppsanpassning
 - Överskjutande löneberäkningar
 
+### 🚗 Förmånsbilskalkylator
+Beräkna nettoeffekten av en förmånsbil på din nettolön. Välj bil från Skatteverkets databas eller ange värden manuellt.
+
+**Funktioner:**
+- Databas med bilmodeller från Skatteverket
+- Automatisk beräkning av förmånsvärde
+- Stöd för nettolöne- och bruttolöneavdrag
+- Jämförelse med privat leasing
+- Reducering för 3000 mil i tjänsten
+
 ### 📄 Belopp och procentsatser
 Skatteuppgifter för fåmansföretag. Hitta gränsbelopp, procentsatser, takbelopp och lönekrav för olika inkomstår.
 
@@ -184,12 +194,18 @@ konsultverktyg/
 │   │   ├── LonEfterSkatt.tsx
 │   │   ├── Utdelningsplaneraren.tsx
 │   │   ├── Tjanstepension.tsx
-│   │   └── K10Blankett.tsx
+│   │   ├── K10Blankett.tsx
+│   │   ├── FormansbilCalculator.tsx
+│   │   └── AdminCarSync.tsx
 │   ├── lib/               # Hjälpfunktioner och beräkningar
 │   │   ├── calculations.ts
 │   │   ├── skatteverket.ts
 │   │   ├── taxTables.ts
-│   │   └── labels.ts
+│   │   ├── labels.ts
+│   │   ├── supabase.ts
+│   │   ├── carsDatabase.ts
+│   │   ├── syncCarData.ts
+│   │   └── formansbilCalculations.ts
 │   ├── hooks/             # Custom React hooks
 │   │   └── useTheme.ts
 │   ├── types/             # TypeScript typdefinitioner
@@ -224,10 +240,33 @@ Applikationen stödjer ljust och mörkt tema. Tema-hantering sker via `useTheme`
 
 ### Skatteverket API
 
-Kommundata hämtas från Skatteverkets öppna API:
+Kommundata och bildata hämtas från Skatteverkets öppna API:
+
+**Kommuner:**
 ```
 https://skatteverket.entryscape.net/store/9/resource/2
 ```
+
+**Bildata:**
+```
+https://skatteverket.entryscape.net/rowstore/dataset/fad86bf9-67e3-4d68-829c-7b9a23bc5e42/json
+```
+
+### Car Data Sync
+
+Förmånsbilskalkylatorn använder en Supabase-databas för att lagra bildata från Skatteverket. Detta ger snabbare laddningstider jämfört med att hämta alla bilar direkt från API:et vid varje sidladdning.
+
+**Första gången:**
+- Applikationen synkar automatiskt bildata från Skatteverket när du besöker förmånsbilskalkylatorn
+- Synkprocessen tar cirka 10-30 sekunder och görs bara en gång
+
+**Uppdatera data:**
+- Besök `/admin/car-sync` för att manuellt synka bildata
+- Använd uppdateringsknappen i förmånsbilskalkylatorn
+
+**Databasstruktur:**
+- `car_records` - Lagrar bilmodeller, priser, fordonsskatt, etc.
+- `car_data_metadata` - Spårar senaste synktidpunkt och status
 
 ## 🤝 Bidra
 

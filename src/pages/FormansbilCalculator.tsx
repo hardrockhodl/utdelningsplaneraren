@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
-import { Car, Calculator, Loader, Info } from 'lucide-react';
+import { Car, Calculator, Loader, Info, RefreshCw } from 'lucide-react';
 import { Kommune } from '../types';
 import { fetchKommuner, findKommun } from '../lib/skatteverket';
 import { fetchTaxTable, calculateTaxDeduction, TaxTableEntry } from '../lib/taxTables';
 import { calculateFormansbil, FormansbilInput, getBestDeductionModel } from '../lib/formansbilCalculations';
-import { fetchAllCars, getBrands, getModelsForBrand, getYearsForModel, findCarRecord, calculateFormansvarde, CarRecord } from '../lib/cars';
+import { getBrands, getModelsForBrand, getYearsForModel, findCarRecord, calculateFormansvarde } from '../lib/carsDatabase';
+import { checkIfDataExists, syncCarDataFromSkatteverket } from '../lib/syncCarData';
+import { CarRecord } from '../lib/supabase';
 import { AdSenseUnit } from '../components/AdSenseUnit';
 
 export function FormansbilCalculator() {
@@ -16,12 +18,18 @@ export function FormansbilCalculator() {
   const [churchMember, setChurchMember] = useState(false);
 
   // Car selection
-  const [carRecords, setCarRecords] = useState<CarRecord[]>([]);
-  const [loadingCars, setLoadingCars] = useState(false);
+  const [brands, setBrands] = useState<string[]>([]);
+  const [models, setModels] = useState<string[]>([]);
+  const [years, setYears] = useState<number[]>([]);
+  const [loadingBrands, setLoadingBrands] = useState(false);
+  const [loadingModels, setLoadingModels] = useState(false);
+  const [loadingYears, setLoadingYears] = useState(false);
   const [selectedBrand, setSelectedBrand] = useState<string>('');
   const [selectedModel, setSelectedModel] = useState<string>('');
   const [selectedYear, setSelectedYear] = useState<number>(0);
   const [manualMode, setManualMode] = useState(true);
+  const [syncing, setSyncing] = useState(false);
+  const [dataExists, setDataExists] = useState(false);
 
   // Förmån inputs
   const [formansvarde, setFormansvarde] = useState<number>(5000);
@@ -40,7 +48,7 @@ export function FormansbilCalculator() {
 
   useEffect(() => {
     loadKommuner();
-    loadCars();
+    initializeCarData();
   }, []);
 
   useEffect(() => {
@@ -64,23 +72,26 @@ export function FormansbilCalculator() {
     }
   }, [nybilspris, fordonsskatt, extrautrustning, milReducering, manualMode]);
 
+  // Load models when brand is selected
+  useEffect(() => {
+    if (!manualMode && selectedBrand) {
+      loadModels(selectedBrand);
+    }
+  }, [selectedBrand, manualMode]);
+
+  // Load years when model is selected
+  useEffect(() => {
+    if (!manualMode && selectedBrand && selectedModel) {
+      loadYears(selectedBrand, selectedModel);
+    }
+  }, [selectedModel, manualMode]);
+
   // Update from selected car
   useEffect(() => {
     if (!manualMode && selectedBrand && selectedModel && selectedYear) {
-      const car = findCarRecord(carRecords, selectedBrand, selectedModel, selectedYear);
-      if (car) {
-        setNybilspris(car.nybilspris);
-        setFordonsskatt(car.fordonsskatt);
-        const calculated = calculateFormansvarde({
-          nybilspris: car.nybilspris,
-          fordonsskatt: car.fordonsskatt,
-          extrautrustning,
-          milReducering
-        });
-        setFormansvarde(calculated);
-      }
+      loadCarDetails(selectedBrand, selectedModel, selectedYear);
     }
-  }, [selectedBrand, selectedModel, selectedYear, extrautrustning, milReducering, manualMode, carRecords]);
+  }, [selectedYear, extrautrustning, milReducering, manualMode]);
 
   const getTotalLocalTaxRate = (k: Kommune, includeChurch: boolean) => {
     const municipalTax = Number(
@@ -134,15 +145,91 @@ export function FormansbilCalculator() {
     }
   };
 
-  const loadCars = async () => {
-    setLoadingCars(true);
+  const initializeCarData = async () => {
     try {
-      const cars = await fetchAllCars(100);
-      setCarRecords(cars);
+      const exists = await checkIfDataExists();
+      setDataExists(exists);
+
+      if (!exists) {
+        await syncCarData();
+      } else {
+        loadBrands();
+      }
     } catch (error) {
-      console.error('Failed to load cars:', error);
+      console.error('Failed to initialize car data:', error);
+    }
+  };
+
+  const syncCarData = async () => {
+    setSyncing(true);
+    try {
+      const result = await syncCarDataFromSkatteverket(1000);
+      if (result.success) {
+        setDataExists(true);
+        loadBrands();
+      }
+    } catch (error) {
+      console.error('Failed to sync car data:', error);
     } finally {
-      setLoadingCars(false);
+      setSyncing(false);
+    }
+  };
+
+  const loadBrands = async () => {
+    setLoadingBrands(true);
+    try {
+      const brandList = await getBrands();
+      setBrands(brandList);
+    } catch (error) {
+      console.error('Failed to load brands:', error);
+    } finally {
+      setLoadingBrands(false);
+    }
+  };
+
+  const loadModels = async (brand: string) => {
+    setLoadingModels(true);
+    setModels([]);
+    setYears([]);
+    try {
+      const modelList = await getModelsForBrand(brand);
+      setModels(modelList);
+    } catch (error) {
+      console.error('Failed to load models:', error);
+    } finally {
+      setLoadingModels(false);
+    }
+  };
+
+  const loadYears = async (brand: string, model: string) => {
+    setLoadingYears(true);
+    setYears([]);
+    try {
+      const yearList = await getYearsForModel(brand, model);
+      setYears(yearList);
+    } catch (error) {
+      console.error('Failed to load years:', error);
+    } finally {
+      setLoadingYears(false);
+    }
+  };
+
+  const loadCarDetails = async (brand: string, model: string, year: number) => {
+    try {
+      const car = await findCarRecord(brand, model, year);
+      if (car) {
+        setNybilspris(car.nybilspris);
+        setFordonsskatt(car.fordonsskatt);
+        const calculated = calculateFormansvarde({
+          nybilspris: car.nybilspris,
+          fordonsskatt: car.fordonsskatt,
+          extrautrustning,
+          milReducering
+        });
+        setFormansvarde(calculated);
+      }
+    } catch (error) {
+      console.error('Failed to load car details:', error);
     }
   };
 
@@ -179,10 +266,6 @@ export function FormansbilCalculator() {
   };
 
   const results = calculateResults();
-
-  const brands = getBrands(carRecords);
-  const models = selectedBrand ? getModelsForBrand(carRecords, selectedBrand) : [];
-  const years = selectedBrand && selectedModel ? getYearsForModel(carRecords, selectedBrand, selectedModel) : [];
 
   return (
     <div className="app">
@@ -281,12 +364,39 @@ export function FormansbilCalculator() {
 
               {!manualMode && (
                 <>
+                  {syncing && (
+                    <div className="setting-item">
+                      <div className="loading-container" style={{ padding: '1rem', background: 'var(--card-bg)', borderRadius: '4px' }}>
+                        <Loader size={16} className="spinner" />
+                        <span>Synkar bildata från Skatteverket (görs en gång)...</span>
+                      </div>
+                    </div>
+                  )}
+
                   <div className="setting-item">
-                    <label className="setting-label">Märke</label>
-                    {loadingCars ? (
+                    <label className="setting-label">
+                      Märke
+                      {dataExists && !syncing && (
+                        <button
+                          onClick={syncCarData}
+                          style={{
+                            marginLeft: '0.5rem',
+                            background: 'none',
+                            border: 'none',
+                            cursor: 'pointer',
+                            color: 'var(--accent-blue)',
+                            padding: 0
+                          }}
+                          title="Uppdatera bildata"
+                        >
+                          <RefreshCw size={14} />
+                        </button>
+                      )}
+                    </label>
+                    {loadingBrands ? (
                       <div className="loading-container">
                         <Loader size={16} className="spinner" />
-                        <span>Laddar bilar...</span>
+                        <span>Laddar märken...</span>
                       </div>
                     ) : (
                       <select
@@ -296,6 +406,7 @@ export function FormansbilCalculator() {
                           setSelectedModel('');
                           setSelectedYear(0);
                         }}
+                        disabled={syncing || brands.length === 0}
                       >
                         <option value="">Välj märke</option>
                         {brands.map((brand) => (
@@ -310,37 +421,51 @@ export function FormansbilCalculator() {
                   {selectedBrand && (
                     <div className="setting-item">
                       <label className="setting-label">Modell</label>
-                      <select
-                        value={selectedModel}
-                        onChange={(e) => {
-                          setSelectedModel(e.target.value);
-                          setSelectedYear(0);
-                        }}
-                      >
-                        <option value="">Välj modell</option>
-                        {models.map((model) => (
-                          <option key={model} value={model}>
-                            {model}
-                          </option>
-                        ))}
-                      </select>
+                      {loadingModels ? (
+                        <div className="loading-container">
+                          <Loader size={16} className="spinner" />
+                          <span>Laddar modeller...</span>
+                        </div>
+                      ) : (
+                        <select
+                          value={selectedModel}
+                          onChange={(e) => {
+                            setSelectedModel(e.target.value);
+                            setSelectedYear(0);
+                          }}
+                        >
+                          <option value="">Välj modell</option>
+                          {models.map((model) => (
+                            <option key={model} value={model}>
+                              {model}
+                            </option>
+                          ))}
+                        </select>
+                      )}
                     </div>
                   )}
 
                   {selectedBrand && selectedModel && (
                     <div className="setting-item">
                       <label className="setting-label">Årsmodell</label>
-                      <select
-                        value={selectedYear}
-                        onChange={(e) => setSelectedYear(Number(e.target.value))}
-                      >
-                        <option value={0}>Välj år</option>
-                        {years.map((year) => (
-                          <option key={year} value={year}>
-                            {year}
-                          </option>
-                        ))}
-                      </select>
+                      {loadingYears ? (
+                        <div className="loading-container">
+                          <Loader size={16} className="spinner" />
+                          <span>Laddar årsmodeller...</span>
+                        </div>
+                      ) : (
+                        <select
+                          value={selectedYear}
+                          onChange={(e) => setSelectedYear(Number(e.target.value))}
+                        >
+                          <option value={0}>Välj år</option>
+                          {years.map((year) => (
+                            <option key={year} value={year}>
+                              {year}
+                            </option>
+                          ))}
+                        </select>
+                      )}
                     </div>
                   )}
                 </>
