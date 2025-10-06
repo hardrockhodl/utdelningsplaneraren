@@ -69,13 +69,13 @@ export function calculateFormansbil(
   } else {
     // Nettolöneavdrag: Gross salary unchanged, reduce förmån by netto payment
     adjustedGrossSalary = grossSalary;
-    effectiveFormansvarde = Math.max(0, formansvarde - nettoDeduction);
+    effectiveFormansvarde = Math.max(0, formansvarde - Math.max(0, nettoDeduction));
     taxableForman = effectiveFormansvarde;
-    privatePayment = Math.min(nettoDeduction, formansvarde);
+    privatePayment = Math.min(Math.max(0, nettoDeduction), formansvarde);
   }
 
   // Calculate tax on adjusted gross + taxable förmån
-  const totalTaxableIncome = adjustedGrossSalary + taxableForman;
+  const totalTaxableIncome = Math.max(0, adjustedGrossSalary + taxableForman);
   const taxWithCar = calculateTaxDeduction(totalTaxableIncome, taxTable, taxColumn);
 
   // Net salary with car

@@ -10,6 +10,9 @@ export interface CarRecord {
 
 const API_BASE = 'https://skatteverket.entryscape.net/rowstore/dataset/fad86bf9-67e3-4d68-829c-7b9a23bc5e42/json';
 
+// Robust number parsing helper
+const toNumber = (v?: string) => Number(String(v ?? '').replace(/[^\d.-]/g, '')) || 0;
+
 interface ApiResponse {
   results: ApiRecord[];
   limit: number;
@@ -34,7 +37,7 @@ export async function fetchAllCars(limit = 100): Promise<CarRecord[]> {
 
   try {
     while (records.length < maxRecords) {
-      const url = `${API_BASE}?limit=${limit}&offset=${offset}`;
+      const url = `${API_BASE}?_limit=${limit}&_offset=${offset}`;
       const response = await fetch(url, {
         headers: {
           'Accept': 'application/json'
@@ -79,10 +82,10 @@ function parseCarRecord(record: ApiRecord): CarRecord | null {
   try {
     const brand = record.Fabrikat?.trim();
     const model = record.Modell?.trim();
-    const modelYear = parseInt(record.Modellår || '0');
-    const nybilspris = parseFloat(record['Nybilspris exkl moms']?.replace(/\s/g, '') || '0');
-    const fordonsskatt = parseFloat(record.Fordonsskatt?.replace(/\s/g, '') || '0');
-    const co2 = parseFloat(record['CO2-utsläpp']?.replace(/\s/g, '') || '0');
+    const modelYear = toNumber(record.Modellår);
+    const nybilspris = toNumber(record['Nybilspris exkl moms']);
+    const fordonsskatt = toNumber(record.Fordonsskatt);
+    const co2 = toNumber(record['CO2-utsläpp']);
     const drivmedel = record.Drivmedel?.trim() || '';
 
     if (!brand || !model || !modelYear || !nybilspris) {
