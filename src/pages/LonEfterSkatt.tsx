@@ -57,44 +57,67 @@ export function LonEfterSkatt() {
   const loadTaxTable = async (tableId?: string) => {
     try {
       const currentYear = new Date().getFullYear();
-      const allEntries = await fetchTaxTable(currentYear, tableId ?? '30');
+      const targetTable = tableId ?? '30';
       
-      // Filter for monthly tax tables (30 days)
-      const monthlyEntries = allEntries.filter(entry => {
-        const days = entry['antal dgr'];
-        return days === '30' || days === 30;
-      });
+      // Fetch all entries for this year
+      const allEntries = await fetchTaxTable(currentYear, targetTable);
       
-      const table = monthlyEntries.length > 0 ? monthlyEntries : allEntries;
-      setTaxTable(table);
-      
-      // DEBUG: Log tax table info
-      console.log('Tax table loaded:', {
-        tableId: tableId ?? '30',
+      // DEBUG: Check what we got
+      console.log('Raw API response:', {
+        tableId: targetTable,
         year: currentYear,
         totalEntries: allEntries.length,
-        monthlyEntries: monthlyEntries.length,
-        usingMonthly: monthlyEntries.length > 0,
+        firstEntry: allEntries[0],
+        lastEntry: allEntries[allEntries.length - 1]
+      });
+      
+      // Check the structure of 'tabellnr' and 'antal dgr' fields
+      const uniqueTables = [...new Set(allEntries.map(e => e['tabellnr']))];
+      const uniqueDays = [...new Set(allEntries.map(e => e['antal dgr']))];
+      
+      console.log('Unique table numbers:', uniqueTables);
+      console.log('Unique antal dgr values:', uniqueDays);
+      
+      // Try to filter for the correct table
+      let table = allEntries.filter(entry => {
+        const tableNr = entry['tabellnr'];
+        return tableNr === targetTable || tableNr === `${targetTable}`;
+      });
+      
+      // If no matches, try filtering by 'antal dgr' if it contains the table number
+      if (table.length === 0) {
+        table = allEntries.filter(entry => {
+          const days = entry['antal dgr'];
+          return days && days.toString().includes(targetTable);
+        });
+      }
+      
+      // If still no matches, use all entries
+      if (table.length === 0) {
+        table = allEntries;
+      }
+      
+      setTaxTable(table);
+      
+      console.log('Filtered table:', {
+        entries: table.length,
         firstEntry: table[0],
         lastEntry: table[table.length - 1]
       });
       
-      // Check a few entries to understand the income ranges
-      console.log('Sample tax table entries:');
-      table.slice(0, 5).forEach(entry => {
+      // Check income ranges
+      console.log('First 3 entries:');
+      table.slice(0, 3).forEach(entry => {
         console.log({
           tabellnr: entry['tabellnr'],
           from: entry['inkomst fr.o.m.'],
           to: entry['inkomst t.o.m.'],
           days: entry['antal dgr'],
-          year: entry['år'],
-          col1: entry['kolumn 1'],
-          col2: entry['kolumn 2']
+          col1: entry['kolumn 1']
         });
       });
       
-      // Also check the LAST few entries to see the max income range
-      console.log('Last tax table entries:');
+      console.log('Last 3 entries:');
       table.slice(-3).forEach(entry => {
         console.log({
           from: entry['inkomst fr.o.m.'],
