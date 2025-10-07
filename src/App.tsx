@@ -7,6 +7,7 @@ import { Tjanstepension } from './pages/Tjanstepension';
 import { K10Blankett } from './pages/K10Blankett';
 import { FaktureraRattTimpris } from './pages/FaktureraRattTimpris';
 import { FormansbilCalculator } from './pages/FormansbilCalculator';
+import { NotFound } from './pages/NotFound';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
           <Route path="/k10-blankett" element={<K10Blankett />} />
           <Route path="/fakturera-ratt-timpris" element={<FaktureraRattTimpris />} />
           <Route path="/formansbil" element={<FormansbilCalculator />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </PlatformLayout>
     </BrowserRouter>

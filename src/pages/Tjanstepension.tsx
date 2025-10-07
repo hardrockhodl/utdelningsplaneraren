@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { PiggyBank, Calculator } from 'lucide-react';
 import { AdSenseUnit } from '../components/AdSenseUnit';
+import { SEO } from '../components/SEO';
+import { StructuredData } from '../components/StructuredData';
 
 const IBB_VALUES: Record<number, number> = {
   2025: 81700,
@@ -11,6 +13,11 @@ const IBB_VALUES: Record<number, number> = {
 };
 
 export function Tjanstepension() {
+  const pageTitle = 'Tjänstepension';
+  const pageDescription = 'Räkna ut din tjänstepension enligt ITP-1 reglerna. Se hur pensionspremien beräknas baserat på lön och inkomstbasbelopp för olika år.';
+  const pageKeywords = 'tjänstepension kalkylator, ITP-1, pensionspremie beräkning, inkomstbasbelopp, pension konsult, tjänstepensionsavgift';
+  const pageUrl = 'https://konsulthjalpen.se/tjanstepension';
+
   const currentYear = new Date().getFullYear();
   const [monthlySalary, setMonthlySalary] = useState<number>(50000);
   const [selectedYear, setSelectedYear] = useState<number>(currentYear);
@@ -49,8 +56,22 @@ export function Tjanstepension() {
   const result = calculatePension();
 
   return (
-    <div className="app">
-      <header className="app-header">
+    <>
+      <SEO
+        title={pageTitle}
+        description={pageDescription}
+        keywords={pageKeywords}
+        canonical={pageUrl}
+        ogUrl={pageUrl}
+      />
+      <StructuredData
+        type="tool"
+        toolName={pageTitle}
+        toolDescription={pageDescription}
+        toolUrl={pageUrl}
+      />
+      <div className="app">
+        <header className="app-header">
         <div className="header-content">
           <div>
             <h1>Räkna ut din tjänstepension</h1>
@@ -312,5 +333,6 @@ export function Tjanstepension() {
         </div>
       </main>
     </div>
+    </>
   );
 }

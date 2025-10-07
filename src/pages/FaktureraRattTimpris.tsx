@@ -4,10 +4,17 @@ import { calculateHourlyRateFromNetSalary, HourlyRateInput } from '../lib/calcul
 import { Kommune } from '../types';
 import { fetchKommuner, findKommun } from '../lib/skatteverket';
 import { AdSenseUnit } from '../components/AdSenseUnit';
+import { SEO } from '../components/SEO';
+import { StructuredData } from '../components/StructuredData';
 
 const DEFAULT_SCENARIO_HOURS = [117, 133, 150] as const;
 
 export function FaktureraRattTimpris() {
+  const pageTitle = 'Fakturera rätt timpris';
+  const pageDescription = 'Beräkna vilket timpris du behöver ta för dina konsulttjänster. Ange önskad nettolön, kostnader och fakturerbara timmar för att få exakt timpris som täcker lön, skatt och utgifter.';
+  const pageKeywords = 'timpris kalkylator, timpris konsult, fakturera timpris, konsultarvode, timarvode beräkning, vad ska jag fakturera, konsult timpris';
+  const pageUrl = 'https://konsulthjalpen.se/fakturera-ratt-timpris';
+
   const [selectedKommun, setSelectedKommun] = useState<Kommune | null>(null);
   const [kommuner, setKommuner] = useState<Kommune[]>([]);
   const [loading, setLoading] = useState(false);
@@ -84,8 +91,22 @@ export function FaktureraRattTimpris() {
   }));
 
   return (
-    <div className="app">
-      <header className="app-header">
+    <>
+      <SEO
+        title={pageTitle}
+        description={pageDescription}
+        keywords={pageKeywords}
+        canonical={pageUrl}
+        ogUrl={pageUrl}
+      />
+      <StructuredData
+        type="tool"
+        toolName={pageTitle}
+        toolDescription={pageDescription}
+        toolUrl={pageUrl}
+      />
+      <div className="app">
+        <header className="app-header">
         <div className="header-content">
           <div>
             <h1>Fakturera rätt timpris</h1>
@@ -548,5 +569,6 @@ export function FaktureraRattTimpris() {
         </div>
       </main>
     </div>
+    </>
   );
 }

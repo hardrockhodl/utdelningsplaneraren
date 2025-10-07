@@ -1,5 +1,12 @@
 import { FileText } from 'lucide-react';
 import { AdSenseUnit } from '../components/AdSenseUnit';
+import { SEO } from '../components/SEO';
+import { StructuredData } from '../components/StructuredData';
+
+const pageTitle = 'Belopp och procentsatser - K10 Blankett';
+const pageDescription = 'Skatteuppgifter för fåmansföretag. Hitta gränsbelopp, procentsatser, takbelopp och lönekrav för olika inkomstår enligt 3:12-reglerna.';
+const pageKeywords = 'K10 blankett, fåmansföretag skatt, gränsbelopp, takbelopp utdelning, lönekrav, 3:12 regler, skatteverket uppgifter';
+const pageUrl = 'https://konsulthjalpen.se/k10-blankett';
 
 type Year = 2020 | 2021 | 2022 | 2023 | 2024 | 2025;
 type K10Map<T> = Record<Year, T>;
@@ -133,8 +140,22 @@ export function K10Blankett() {
   );
 
   return (
-    <div className="app">
-      <header className="app-header">
+    <>
+      <SEO
+        title={pageTitle}
+        description={pageDescription}
+        keywords={pageKeywords}
+        canonical={pageUrl}
+        ogUrl={pageUrl}
+      />
+      <StructuredData
+        type="tool"
+        toolName={pageTitle}
+        toolDescription={pageDescription}
+        toolUrl={pageUrl}
+      />
+      <div className="app">
+        <header className="app-header">
         <div className="header-content">
           <div className="header-text" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <FileText size={20} />
@@ -274,5 +295,6 @@ export function K10Blankett() {
         </div>
       </main>
     </div>
+    </>
   );
 }

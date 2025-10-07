@@ -7,8 +7,15 @@ import { YearTable } from '../components/YearTable';
 import { TotalsCards } from '../components/TotalsCards';
 import { DebugView } from '../components/DebugView';
 import { AdSenseUnit } from '../components/AdSenseUnit';
+import { SEO } from '../components/SEO';
+import { StructuredData } from '../components/StructuredData';
 
 export function Utdelningsplaneraren() {
+  const pageTitle = 'Utdelningsplaneraren';
+  const pageDescription = 'Planera din lön, skatt och utdelning som konsult. Optimera din ekonomi över flera år med hänsyn till 3:12-reglerna och maximera din nettoinkomst.';
+  const pageKeywords = 'utdelningsplaneraren, 3:12 regler, utdelning konsult, lön och utdelning, fåmansföretag utdelning, beskattning utdelning, skatt på utdelning';
+  const pageUrl = 'https://konsulthjalpen.se/utdelningsplaneraren';
+
   const [settings, setSettings] = useState<GlobalSettings>({
     kommun: null,
     municipalTax: 32.0,
@@ -90,8 +97,22 @@ export function Utdelningsplaneraren() {
   };
 
   return (
-    <div className="app">
-      <header className="app-header">
+    <>
+      <SEO
+        title={pageTitle}
+        description={pageDescription}
+        keywords={pageKeywords}
+        canonical={pageUrl}
+        ogUrl={pageUrl}
+      />
+      <StructuredData
+        type="tool"
+        toolName={pageTitle}
+        toolDescription={pageDescription}
+        toolUrl={pageUrl}
+      />
+      <div className="app">
+        <header className="app-header">
         <div className="header-content">
           <div>
             <h1>{labels.site.title.sv}</h1>
@@ -130,5 +151,6 @@ export function Utdelningsplaneraren() {
         <DebugView settings={settings} years={calculations} />
       </main>
     </div>
+    </>
   );
 }

@@ -6,8 +6,15 @@ import { fetchTaxTable, TaxTableEntry } from '../lib/taxTables';
 import { calculateFormansbil, FormansbilInput, getBestDeductionModel, calculateAllScenarios } from '../lib/formansbilCalculations';
 import { fetchAllCars, getYears, getBrandsForYear, getModelsForYearAndBrand, findCarRecord, calculateFormansvarde, CarRecord } from '../lib/cars';
 import { AdSenseUnit } from '../components/AdSenseUnit';
+import { SEO } from '../components/SEO';
+import { StructuredData } from '../components/StructuredData';
 
 export function FormansbilCalculator() {
+  const pageTitle = 'Förmånsbilskalkylator';
+  const pageDescription = 'Räkna ut nettoeffekten av en förmånsbil på din nettolön. Jämför bruttolöneavdrag och nettolöneavdrag för olika bilmodeller och se vilken som ger lägst kostnad.';
+  const pageKeywords = 'förmånsbil kalkylator, förmånsvärde bil, bruttolöneavdrag bil, nettolöneavdrag bil, bilförmån beräkning, firmabil kostnad';
+  const pageUrl = 'https://konsulthjalpen.se/formansbil';
+
   const [grossSalary, setGrossSalary] = useState<number>(53500);
   const [selectedKommun, setSelectedKommun] = useState<Kommune | null>(null);
   const [kommuner, setKommuner] = useState<Kommune[]>([]);
@@ -211,8 +218,22 @@ export function FormansbilCalculator() {
   const models = selectedYear && selectedBrand ? getModelsForYearAndBrand(carRecords, selectedYear, selectedBrand) : [];
 
   return (
-    <div className="app">
-      <header className="app-header">
+    <>
+      <SEO
+        title={pageTitle}
+        description={pageDescription}
+        keywords={pageKeywords}
+        canonical={pageUrl}
+        ogUrl={pageUrl}
+      />
+      <StructuredData
+        type="tool"
+        toolName={pageTitle}
+        toolDescription={pageDescription}
+        toolUrl={pageUrl}
+      />
+      <div className="app">
+        <header className="app-header">
         <div className="header-content">
           <div>
             <h1>Förmånsbilskalkylator</h1>
@@ -993,5 +1014,6 @@ export function FormansbilCalculator() {
         )}
       </main>
     </div>
+    </>
   );
 }

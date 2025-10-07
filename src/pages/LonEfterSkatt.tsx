@@ -4,8 +4,15 @@ import { Kommune } from '../types';
 import { fetchKommuner, findKommun } from '../lib/skatteverket';
 import { fetchTaxTable, calculateTaxDeduction, TaxTableEntry, TAX_COLUMNS } from '../lib/taxTables';
 import { AdSenseUnit } from '../components/AdSenseUnit';
+import { SEO } from '../components/SEO';
+import { StructuredData } from '../components/StructuredData';
 
 export function LonEfterSkatt() {
+  const pageTitle = 'Lön efter skatt';
+  const pageDescription = 'Beräkna din nettolön efter skatt baserat på bruttolön och kommun. Använder Skatteverkets officiella skattetabeller för exakta beräkningar av månadslön.';
+  const pageKeywords = 'lön efter skatt, nettolön kalkylator, bruttolön till nettolön, skattetabell, löneberäkning, skatteavdrag, kommunalskatt, Sverige';
+  const pageUrl = 'https://konsulthjalpen.se/lon-efter-skatt';
+
   const [grossSalary, setGrossSalary] = useState<number>(35000);
   const [selectedKommun, setSelectedKommun] = useState<Kommune | null>(null);
   const [kommuner, setKommuner] = useState<Kommune[]>([]);
@@ -134,8 +141,22 @@ export function LonEfterSkatt() {
   const result = calculateNetSalary();
 
   return (
-    <div className="app">
-      <header className="app-header">
+    <>
+      <SEO
+        title={pageTitle}
+        description={pageDescription}
+        keywords={pageKeywords}
+        canonical={pageUrl}
+        ogUrl={pageUrl}
+      />
+      <StructuredData
+        type="tool"
+        toolName={pageTitle}
+        toolDescription={pageDescription}
+        toolUrl={pageUrl}
+      />
+      <div className="app">
+        <header className="app-header">
         <div className="header-content">
           <div>
             <h1>Lön efter skatt</h1>
@@ -366,5 +387,6 @@ export function LonEfterSkatt() {
         )}
       </main>
     </div>
+    </>
   );
 }
