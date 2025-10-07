@@ -269,12 +269,6 @@ export function Tjanstepension() {
           </div>
         </div>
 
-        <div style={{ margin: '20px 0' }}>
-          <AdSenseUnit
-            adSlot="1234567895"
-            style={{ display: 'block', textAlign: 'center' }}
-          />
-        </div>
 
         <div className="results-section">
           <button
