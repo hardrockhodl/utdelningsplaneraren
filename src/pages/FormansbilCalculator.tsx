@@ -8,7 +8,7 @@ import { fetchAllCars, getYears, getBrandsForYear, getModelsForYearAndBrand, fin
 import { AdSenseUnit } from '../components/AdSenseUnit';
 
 export function FormansbilCalculator() {
-  const [grossSalary, setGrossSalary] = useState<number>(45000);
+  const [grossSalary, setGrossSalary] = useState<number>(53500);
   const [selectedKommun, setSelectedKommun] = useState<Kommune | null>(null);
   const [kommuner, setKommuner] = useState<Kommune[]>([]);
   const [loading, setLoading] = useState(false);
@@ -27,11 +27,11 @@ export function FormansbilCalculator() {
 
   // Förmån inputs
   const [formansvarde, setFormansvarde] = useState<number>(5000);
-  const [nybilspris, setNybilspris] = useState<number>(400000);
+  const [nybilspris, setNybilspris] = useState<number>(600000);
   const [fordonsskatt, setFordonsskatt] = useState<number>(360);
   const [extrautrustning, setExtrautrustning] = useState<number>(0);
   const [milReducering, setMilReducering] = useState(false);
-  const [businessLeasing, setBusinessLeasing] = useState<number>(0);
+  const [businessLeasing, setBusinessLeasing] = useState<number>(6000);
 
   // Deduction model
   const [deductionModel, setDeductionModel] = useState<'brutto' | 'netto'>('netto');
