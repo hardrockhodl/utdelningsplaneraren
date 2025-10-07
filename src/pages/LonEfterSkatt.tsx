@@ -341,12 +341,7 @@ export function LonEfterSkatt() {
           )}
         </div>
 
-        <div style={{ margin: '20px 0' }}>
-          <AdSenseUnit
-            adSlot="1234567894"
-            style={{ display: 'block', textAlign: 'center' }}
-          />
-        </div>
+
 
         {/* Skatteuppdelning */}
         {result && selectedKommun && (
