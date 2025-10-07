@@ -20,7 +20,7 @@ export function SEO({
   ogUrl
 }: SEOProps) {
   useEffect(() => {
-    document.title = `${title} | Konsulthjälpen`;
+    document.title = `${title} | Konsultverktyg`;
 
     const metaDescription = document.querySelector('meta[name="description"]');
     if (metaDescription) {
