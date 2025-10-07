@@ -70,12 +70,7 @@ export function HomePage() {
           </p>
         </div>
 
-        <div className="mb-2">
-          <AdSenseUnit
-            adSlot="1234567890"
-            className="my-4"
-            style={{ display: 'block', textAlign: 'center' }}
-          />
+
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-[14px] mb-2">
@@ -115,12 +110,7 @@ export function HomePage() {
           })}
         </div>
 
-        <div className="mb-2">
-          <AdSenseUnit
-            adSlot="1234567891"
-            className="my-4"
-            style={{ display: 'block', textAlign: 'center' }}
-          />
+
         </div>
       </div>
     </div>
