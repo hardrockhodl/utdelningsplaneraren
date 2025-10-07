@@ -114,12 +114,6 @@ npm install
 cp .env.example .env
 ```
 
-Redigera `.env` och lägg till dina Supabase-uppgifter (om du använder databasen):
-```
-VITE_SUPABASE_URL=your_supabase_url
-VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
-```
-
 4. **Starta utvecklingsservern**
 ```bash
 npm run dev
@@ -227,7 +221,6 @@ Optimerad för svenska sökord inom:
 - **Styling:** Tailwind CSS 3.4
 - **Routing:** React Router 7.9
 - **Icons:** Lucide React
-- **Database:** Supabase
 - **Linting:** ESLint 9.9
 - **SEO:** Custom SEO & StructuredData komponenter
 
