@@ -555,8 +555,6 @@ export function FaktureraRattTimpris() {
           </div>
         </div>
 
-
-        </div>
       </main>
     </div>
     </>
