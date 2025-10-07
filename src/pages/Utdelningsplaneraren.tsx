@@ -124,12 +124,6 @@ export function Utdelningsplaneraren() {
       <main className="app-main">
         <SettingsPanel settings={settings} onChange={setSettings} />
 
-        <div style={{ margin: '20px 0' }}>
-          <AdSenseUnit
-            adSlot="1234567892"
-            style={{ display: 'block', textAlign: 'center' }}
-          />
-        </div>
 
         <div className="results-section">
           <h2 className="section-title">Översikt</h2>
@@ -141,12 +135,7 @@ export function Utdelningsplaneraren() {
           <TotalsCards years={calculations} />
         </div>
 
-        <div style={{ margin: '20px 0' }}>
-          <AdSenseUnit
-            adSlot="1234567893"
-            style={{ display: 'block', textAlign: 'center' }}
-          />
-        </div>
+
 
         <DebugView settings={settings} years={calculations} />
       </main>
