@@ -1,12 +1,13 @@
-# Konsultverktyg
+# Konsulthjälpen
 
 > En komplett verktygslåda för konsulter och företagare i Sverige
 
-Ett webbaserat verktyg som hjälper svenska konsulter och egenföretagare att beräkna timpris, löner, utdelningar och skatter enligt svenska skatteregler.
+Ett webbaserat verktyg som hjälper svenska konsulter och egenföretagare att beräkna timpris, löner, utdelningar och skatter enligt svenska skatteregler. Alla verktyg är gratis att använda och kräver ingen registrering.
 
 [![Built with React](https://img.shields.io/badge/React-18.3-blue.svg)](https://reactjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.5-blue.svg)](https://www.typescriptlang.org/)
 [![Vite](https://img.shields.io/badge/Vite-5.4-646CFF.svg)](https://vitejs.dev/)
+[![SEO Optimized](https://img.shields.io/badge/SEO-Optimized-green.svg)](https://konsulthjalpen.se)
 
 ## 📋 Innehållsförteckning
 
@@ -14,6 +15,7 @@ Ett webbaserat verktyg som hjälper svenska konsulter och egenföretagare att be
 - [Funktioner](#funktioner)
 - [Installation](#installation)
 - [Användning](#användning)
+- [SEO och Prestanda](#seo-och-prestanda)
 - [Teknisk Stack](#teknisk-stack)
 - [Projektstruktur](#projektstruktur)
 - [Utveckling](#utveckling)
@@ -22,14 +24,14 @@ Ett webbaserat verktyg som hjälper svenska konsulter och egenföretagare att be
 
 ## 🎯 Översikt
 
-Konsultverktyg är en svensk kalkylator-plattform som hjälper dig att:
+Konsulthjälpen är en svensk kalkylator-plattform som hjälper dig att:
 
 - **Beräkna rätt timpris** för dina konsulttjänster
 - **Planera lön och utdelningar** enligt 3:12-reglerna
 - **Förstå skattekonsekvenser** i fåmansföretag
 - **Optimera din ekonomi** över flera år
 
-Alla beräkningar följer Skatteverkets officiella regler och skattetabeller.
+Alla beräkningar följer Skatteverkets officiella regler och skattetabeller. Din data sparas lokalt i din webbläsare - ingen registrering krävs.
 
 ## ✨ Funktioner
 
@@ -68,6 +70,15 @@ Räkna ut din tjänstepension enligt ITP-1 reglerna. Se hur pensionspremien ber�
 - Lönebaserade premier
 - Prisbasbeloppsanpassning
 - Överskjutande löneberäkningar
+
+### 🚗 Förmånsbilskalkylator
+Räkna ut nettoeffekten av en förmånsbil på din nettolön. Jämför bruttolöneavdrag och nettolöneavdrag, och se vilken modell som ger lägst kostnad.
+
+**Funktioner:**
+- Beräkning av förmånsvärde för olika bilmodeller
+- Jämförelse mellan bruttolöneavdrag och nettolöneavdrag
+- Integration med bilregister för exakta data
+- Skatteeffektsberäkningar
 
 ### 📄 Belopp och procentsatser
 Skatteuppgifter för fåmansföretag. Hitta gränsbelopp, procentsatser, takbelopp och lönekrav för olika inkomstår.
@@ -154,6 +165,60 @@ Kör TypeScript typkontroll:
 npm run typecheck
 ```
 
+## 🔍 SEO och Prestanda
+
+Konsulthjälpen är optimerad för sökmotorer och prestanda:
+
+### SEO-funktioner
+
+- **Omfattande Meta Tags:** Varje sida har unika, nyckelordsrika meta-taggar på svenska
+- **Open Graph & Twitter Cards:** Optimerade sociala delningar
+- **Structured Data (JSON-LD):** Schema.org markup för WebApplication och SoftwareApplication
+- **XML Sitemap:** Automatiskt genererad sitemap för alla verktyg (`/sitemap.xml`)
+- **Robots.txt:** Konfigurerad för optimal crawling
+- **Dynamiska sidtitlar:** SEO-vänliga titlar för varje kalkylator
+- **Canonical URLs:** Förhindrar duplikat innehåll
+- **Svenska språkdeklarationer:** Korrekt `lang="sv"` och `locale="sv_SE"`
+
+### Prestandaoptimering
+
+- **Code Splitting:** Separata bundles för vendor och lucide-ikoner
+- **Optimerad chunk-storlek:** Hanterad bundle-storlek för snabbare laddning
+- **Preconnect & DNS-Prefetch:** Snabbare anslutningar till externa tjänster
+- **Minifiering:** Optimerad produktionskod
+- **Lazy Loading:** Komponenter laddas vid behov
+
+### Tekniska SEO-förbättringar
+
+```typescript
+// Dynamiska meta tags per sida
+<SEO
+  title="Lön efter skatt"
+  description="Beräkna din nettolön efter skatt..."
+  keywords="lön efter skatt, nettolön kalkylator..."
+  canonical="https://konsulthjalpen.se/lon-efter-skatt"
+/>
+
+// Structured Data för verktyg
+<StructuredData
+  type="tool"
+  toolName="Lön efter skatt"
+  toolDescription="Beräkna din nettolön..."
+  toolUrl="https://konsulthjalpen.se/lon-efter-skatt"
+/>
+```
+
+### Sökordsfokus
+
+Optimerad för svenska sökord inom:
+- Konsultverktyg och kalkylatorer
+- Lön, skatt och nettolön
+- Timpris och konsultarvode
+- Utdelning och 3:12-regler
+- Förmånsbil och bilförmån
+- Tjänstepension ITP-1
+- K10-blankett och fåmansföretag
+
 ## 🛠 Teknisk Stack
 
 - **Frontend Framework:** React 18.3
@@ -164,11 +229,12 @@ npm run typecheck
 - **Icons:** Lucide React
 - **Database:** Supabase
 - **Linting:** ESLint 9.9
+- **SEO:** Custom SEO & StructuredData komponenter
 
 ## 📁 Projektstruktur
 
 ```
-konsultverktyg/
+konsulthjalpen/
 ├── src/
 │   ├── components/         # Återanvändbara komponenter
 │   │   ├── PlatformLayout.tsx
@@ -177,34 +243,44 @@ konsultverktyg/
 │   │   ├── SettingsPanel.tsx
 │   │   ├── TotalsCards.tsx
 │   │   ├── YearTable.tsx
-│   │   └── DebugView.tsx
-│   ├── pages/             # Sidkomponenter
+│   │   ├── DebugView.tsx
+│   │   ├── SEO.tsx              # SEO meta tags hantering
+│   │   ├── StructuredData.tsx   # JSON-LD schema markup
+│   │   └── AdSenseUnit.tsx
+│   ├── pages/                   # Sidkomponenter
 │   │   ├── HomePage.tsx
 │   │   ├── FaktureraRattTimpris.tsx
 │   │   ├── LonEfterSkatt.tsx
+│   │   ├── FormansbilCalculator.tsx
 │   │   ├── Utdelningsplaneraren.tsx
 │   │   ├── Tjanstepension.tsx
-│   │   └── K10Blankett.tsx
-│   ├── lib/               # Hjälpfunktioner och beräkningar
+│   │   ├── K10Blankett.tsx
+│   │   └── NotFound.tsx         # 404-sida
+│   ├── lib/                     # Hjälpfunktioner och beräkningar
 │   │   ├── calculations.ts
 │   │   ├── skatteverket.ts
 │   │   ├── taxTables.ts
+│   │   ├── formansbilCalculations.ts
+│   │   ├── cars.ts
 │   │   └── labels.ts
-│   ├── hooks/             # Custom React hooks
+│   ├── hooks/                   # Custom React hooks
 │   │   └── useTheme.ts
-│   ├── types/             # TypeScript typdefinitioner
+│   ├── types/                   # TypeScript typdefinitioner
 │   │   └── index.ts
-│   ├── imgs/              # Bilder och assets
-│   ├── App.tsx            # Huvudkomponent
-│   ├── main.tsx           # Entry point
-│   └── index.css          # Global CSS
-├── public/                # Statiska filer
-├── .env                   # Miljövariabler (skapas av dig)
-├── package.json           # NPM-beroenden och scripts
-├── tsconfig.json          # TypeScript-konfiguration
-├── vite.config.ts         # Vite-konfiguration
-├── tailwind.config.js     # Tailwind CSS-konfiguration
-└── README.md             # Detta dokument
+│   ├── imgs/                    # Bilder och assets
+│   ├── App.tsx                  # Huvudkomponent
+│   ├── main.tsx                 # Entry point
+│   └── index.css                # Global CSS
+├── public/                      # Statiska filer
+│   ├── robots.txt               # Sökmotorsinstruktioner
+│   ├── sitemap.xml              # XML sitemap
+│   └── Ads.txt                  # Google AdSense
+├── .env                         # Miljövariabler (skapas av dig)
+├── package.json                 # NPM-beroenden och scripts
+├── tsconfig.json                # TypeScript-konfiguration
+├── vite.config.ts               # Vite-konfiguration (med SEO opt.)
+├── tailwind.config.js           # Tailwind CSS-konfiguration
+└── README.md                    # Detta dokument
 ```
 
 ## 🔧 Utveckling
@@ -260,6 +336,21 @@ Detta projekt är licensierat under MIT-licensen - se [LICENSE](LICENSE) filen f
 - [React](https://reactjs.org/) community
 - [Vite](https://vitejs.dev/) team
 - Alla bidragsgivare
+
+## 🚀 SEO Checklista för Driftsättning
+
+När du driftsätter till produktion, säkerställ följande:
+
+- [ ] Uppdatera alla URL:er i `sitemap.xml` till din produktionsdomän
+- [ ] Uppdatera canonical URLs i alla SEO-komponenter
+- [ ] Lägg till Google Search Console verifiering
+- [ ] Skicka in sitemap.xml till Google Search Console
+- [ ] Konfigurera Google Analytics (valfritt)
+- [ ] Verifiera robots.txt är tillgänglig
+- [ ] Testa alla meta tags med [OpenGraph Preview](https://www.opengraph.xyz/)
+- [ ] Verifiera strukturerad data med [Google Rich Results Test](https://search.google.com/test/rich-results)
+- [ ] Lägg till SSL-certifikat (HTTPS)
+- [ ] Konfigurera domän i `.env` filer
 
 ## 📧 Kontakt
 
