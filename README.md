@@ -24,7 +24,7 @@ Ett webbaserat verktyg som hjälper svenska konsulter och egenföretagare att be
 
 ## 🎯 Översikt
 
-Konsulthjälpen är en svensk kalkylator-plattform som hjälper dig att:
+Konsultverktyg är en svensk kalkylator-plattform som hjälper dig att:
 
 - **Beräkna rätt timpris** för dina konsulttjänster
 - **Planera lön och utdelningar** enligt 3:12-reglerna
@@ -167,7 +167,7 @@ npm run typecheck
 
 ## 🔍 SEO och Prestanda
 
-Konsulthjälpen är optimerad för sökmotorer och prestanda:
+Konsultverktyg är optimerad för sökmotorer och prestanda:
 
 ### SEO-funktioner
 
