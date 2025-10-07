@@ -805,11 +805,7 @@ export function FormansbilCalculator() {
           </div>
         </div>
 
-        <div style={{ margin: '20px 0' }}>
-          <AdSenseUnit
-            adSlot="1234567899"
-            style={{ display: 'block', textAlign: 'center' }}
-          />
+
         </div>
 
             <div className="results-section">
