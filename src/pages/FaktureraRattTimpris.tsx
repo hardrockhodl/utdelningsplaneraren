@@ -262,12 +262,6 @@ export function FaktureraRattTimpris() {
           </div>
         </div>
 
-        <div style={{ margin: '20px 0' }}>
-          <AdSenseUnit
-            adSlot="1234567897"
-            style={{ display: 'block', textAlign: 'center' }}
-          />
-        </div>
 
         <div className="results-section">
           <h2>Resultat</h2>
@@ -561,11 +555,7 @@ export function FaktureraRattTimpris() {
           </div>
         </div>
 
-        <div style={{ margin: '20px 0' }}>
-          <AdSenseUnit
-            adSlot="1234567898"
-            style={{ display: 'block', textAlign: 'center' }}
-          />
+
         </div>
       </main>
     </div>
