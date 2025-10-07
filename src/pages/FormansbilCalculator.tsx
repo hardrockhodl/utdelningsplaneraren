@@ -222,6 +222,105 @@ export function FormansbilCalculator() {
       </header>
 
       <main className="app-main">
+        {results && (
+          <>
+            <div className="results-section">
+              <h2 className="section-title">Resultat</h2>
+              <div className="totals-grid">
+                <div className="total-card">
+                  <div className="card-icon" style={{ backgroundColor: 'rgba(15, 146, 233, 0.15)' }}>
+                    <Calculator size={24} style={{ color: 'var(--accent-blue)' }} />
+                  </div>
+                  <div className="card-content">
+                    <div className="card-label">Nettolön utan bil</div>
+                    <div className="card-value">{results.result.netSalaryWithoutCar.toLocaleString('sv-SE')} kr</div>
+                  </div>
+                </div>
+
+                <div className="total-card">
+                  <div className="card-icon" style={{ backgroundColor: 'rgba(39, 180, 35, 0.15)' }}>
+                    <Car size={24} style={{ color: 'var(--accent-green)' }} />
+                  </div>
+                  <div className="card-content">
+                    <div className="card-label">Nettolön med förmånsbil</div>
+                    <div className="card-value">{results.result.netSalaryWithCar.toLocaleString('sv-SE')} kr</div>
+                    {deductionModel === results.bestModel && (
+                      <div className="card-sublabel" style={{ color: 'var(--accent-green)' }}>
+                        Lägst nettokostnad
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                <div className="total-card">
+                  <div className="card-icon" style={{ backgroundColor: 'rgba(215, 38, 56, 0.15)' }}>
+                    <Calculator size={24} style={{ color: 'var(--accent-red)' }} />
+                  </div>
+                  <div className="card-content">
+                    <div className="card-label">Nettolönsförändring</div>
+                    <div className="card-value">
+                      {results.result.monthlyDifference >= 0 ? '+' : ''}
+                      {results.result.monthlyDifference.toLocaleString('sv-SE')} kr
+                    </div>
+                    <div className="card-sublabel">
+                      {results.result.monthlyDifference >= 0 ? 'Högre nettolön' : 'Lägre nettolön'}
+                    </div>
+                  </div>
+                </div>
+
+                {privatLeasing > 0 && (
+                  <div className="total-card">
+                    <div className="card-icon" style={{ backgroundColor: 'rgba(249, 220, 92, 0.15)' }}>
+                      <Calculator size={24} style={{ color: 'var(--accent-orange)' }} />
+                    </div>
+                    <div className="card-content">
+                      <div className="card-label">Jämfört med privat leasing</div>
+                      <div className="card-value">
+                        {results.result.comparedToPrivateLeasing >= 0 ? '+' : ''}
+                        {results.result.comparedToPrivateLeasing.toLocaleString('sv-SE')} kr
+                      </div>
+                      <div className="card-sublabel">
+                        {results.result.comparedToPrivateLeasing >= 0 ? 'Billigare' : 'Dyrare'}
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {actor !== 'anstalld' && businessLeasing > 0 && (
+                  <div className="total-card">
+                    <div className="card-icon" style={{ backgroundColor: 'rgba(20, 184, 166, 0.15)' }}>
+                      <Calculator size={24} style={{ color: 'rgb(20, 184, 166)' }} />
+                    </div>
+                    <div className="card-content">
+                      <div className="card-label">Bolagets kostnad jämfört med businessleasing</div>
+                      <div className="card-value">
+                        {results.result.comparedToBusinessLeasing >= 0 ? '+' : ''}
+                        {results.result.comparedToBusinessLeasing.toLocaleString('sv-SE')} kr
+                      </div>
+                      <div className="card-sublabel">
+                        {results.result.comparedToBusinessLeasing >= 0 ? 'Förmånsbil dyrare' : 'Förmånsbil billigare'}
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {actor !== 'anstalld' && (
+                  <div className="total-card">
+                    <div className="card-icon" style={{ backgroundColor: 'rgba(100, 116, 139, 0.15)' }}>
+                      <Calculator size={24} style={{ color: 'rgb(100, 116, 139)' }} />
+                    </div>
+                    <div className="card-content">
+                      <div className="card-label">Bolagets TCO (med bil)</div>
+                      <div className="card-value">{results.result.tcoWithCar.toLocaleString('sv-SE')} kr</div>
+                      <div className="card-sublabel">
+                        Diff mot utan bil: {results.result.tcoDelta >= 0 ? '+' : ''}
+                        {results.result.tcoDelta.toLocaleString('sv-SE')} kr
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 400px), 1fr))', gap: '1.5rem', alignItems: 'start' }}>
           <div className="settings-panel">
             <div className="panel-header">
@@ -693,106 +792,6 @@ export function FormansbilCalculator() {
             style={{ display: 'block', textAlign: 'center' }}
           />
         </div>
-
-        {results && (
-          <>
-            <div className="results-section">
-              <h2 className="section-title">Resultat</h2>
-              <div className="totals-grid">
-                <div className="total-card">
-                  <div className="card-icon" style={{ backgroundColor: 'rgba(15, 146, 233, 0.15)' }}>
-                    <Calculator size={24} style={{ color: 'var(--accent-blue)' }} />
-                  </div>
-                  <div className="card-content">
-                    <div className="card-label">Nettolön utan bil</div>
-                    <div className="card-value">{results.result.netSalaryWithoutCar.toLocaleString('sv-SE')} kr</div>
-                  </div>
-                </div>
-
-                <div className="total-card">
-                  <div className="card-icon" style={{ backgroundColor: 'rgba(39, 180, 35, 0.15)' }}>
-                    <Car size={24} style={{ color: 'var(--accent-green)' }} />
-                  </div>
-                  <div className="card-content">
-                    <div className="card-label">Nettolön med förmånsbil</div>
-                    <div className="card-value">{results.result.netSalaryWithCar.toLocaleString('sv-SE')} kr</div>
-                    {deductionModel === results.bestModel && (
-                      <div className="card-sublabel" style={{ color: 'var(--accent-green)' }}>
-                        Lägst nettokostnad
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                <div className="total-card">
-                  <div className="card-icon" style={{ backgroundColor: 'rgba(215, 38, 56, 0.15)' }}>
-                    <Calculator size={24} style={{ color: 'var(--accent-red)' }} />
-                  </div>
-                  <div className="card-content">
-                    <div className="card-label">Nettolönsförändring</div>
-                    <div className="card-value">
-                      {results.result.monthlyDifference >= 0 ? '+' : ''}
-                      {results.result.monthlyDifference.toLocaleString('sv-SE')} kr
-                    </div>
-                    <div className="card-sublabel">
-                      {results.result.monthlyDifference >= 0 ? 'Högre nettolön' : 'Lägre nettolön'}
-                    </div>
-                  </div>
-                </div>
-
-                {privatLeasing > 0 && (
-                  <div className="total-card">
-                    <div className="card-icon" style={{ backgroundColor: 'rgba(249, 220, 92, 0.15)' }}>
-                      <Calculator size={24} style={{ color: 'var(--accent-orange)' }} />
-                    </div>
-                    <div className="card-content">
-                      <div className="card-label">Jämfört med privat leasing</div>
-                      <div className="card-value">
-                        {results.result.comparedToPrivateLeasing >= 0 ? '+' : ''}
-                        {results.result.comparedToPrivateLeasing.toLocaleString('sv-SE')} kr
-                      </div>
-                      <div className="card-sublabel">
-                        {results.result.comparedToPrivateLeasing >= 0 ? 'Billigare' : 'Dyrare'}
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                {actor !== 'anstalld' && businessLeasing > 0 && (
-                  <div className="total-card">
-                    <div className="card-icon" style={{ backgroundColor: 'rgba(20, 184, 166, 0.15)' }}>
-                      <Calculator size={24} style={{ color: 'rgb(20, 184, 166)' }} />
-                    </div>
-                    <div className="card-content">
-                      <div className="card-label">Bolagets kostnad jämfört med businessleasing</div>
-                      <div className="card-value">
-                        {results.result.comparedToBusinessLeasing >= 0 ? '+' : ''}
-                        {results.result.comparedToBusinessLeasing.toLocaleString('sv-SE')} kr
-                      </div>
-                      <div className="card-sublabel">
-                        {results.result.comparedToBusinessLeasing >= 0 ? 'Förmånsbil dyrare' : 'Förmånsbil billigare'}
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                {actor !== 'anstalld' && (
-                  <div className="total-card">
-                    <div className="card-icon" style={{ backgroundColor: 'rgba(100, 116, 139, 0.15)' }}>
-                      <Calculator size={24} style={{ color: 'rgb(100, 116, 139)' }} />
-                    </div>
-                    <div className="card-content">
-                      <div className="card-label">Bolagets TCO (med bil)</div>
-                      <div className="card-value">{results.result.tcoWithCar.toLocaleString('sv-SE')} kr</div>
-                      <div className="card-sublabel">
-                        Diff mot utan bil: {results.result.tcoDelta >= 0 ? '+' : ''}
-                        {results.result.tcoDelta.toLocaleString('sv-SE')} kr
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
 
             <div className="results-section">
               <h2 className="section-title">Detaljerad uppdelning</h2>
