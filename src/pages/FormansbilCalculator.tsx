@@ -806,7 +806,6 @@ export function FormansbilCalculator() {
         </div>
 
 
-        </div>
 
             <div className="results-section">
               <h2 className="section-title">Detaljerad uppdelning</h2>
