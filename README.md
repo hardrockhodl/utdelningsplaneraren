@@ -1,4 +1,4 @@
-# Konsulthjälpen
+# Konsultverktyg
 
 > En komplett verktygslåda för konsulter och företagare i Sverige
 
