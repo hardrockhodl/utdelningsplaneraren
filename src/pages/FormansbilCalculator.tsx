@@ -335,7 +335,6 @@ export function FormansbilCalculator() {
                     type="number"
                     value={grossSalary}
                     onChange={(e) => setGrossSalary(Number(e.target.value))}
-                    min="0"
                     step="1000"
                   />
                   <span className="suffix">kr</span>
