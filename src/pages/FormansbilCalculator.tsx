@@ -225,7 +225,6 @@ export function FormansbilCalculator() {
         {results && (
           <>
             <div className="results-section">
-              <h2 className="section-title">Resultat</h2>
               <div className="totals-grid">
                 <div className="total-card">
                   <div className="card-icon" style={{ backgroundColor: 'rgba(15, 146, 233, 0.15)' }}>
